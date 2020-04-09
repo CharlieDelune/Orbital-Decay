@@ -1,0 +1,7 @@
+Output,Output Quantity,Max Stack,Belonging Unit,Input Item,Input Quantity
+Miner,,,Main Base,Metal,10
+,,,,Oil,5
+Refinery,,,Main Base,Metal,10
+,,,,Oil,10
+Metal,1,10,Refinery,Ore,1
+Refined Oil,1,10,Refinery,Oil,1
