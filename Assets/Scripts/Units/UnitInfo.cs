@@ -21,8 +21,9 @@ public class UnitInfo
 		this.unitPrefab = unitPrefab;
 	}
 
-	public Unit InstantiateUnit() {
+	public Unit InstantiateUnit(Faction faction) {
 		Unit unit = GameObject.Instantiate<Unit>(unitPrefab);
+		unit.Faction = faction;
 		unit.SetBaseStats(name: name, maxRange: maxRange, health: health, armor: armor, attack: attack);
 		return unit;
 	}

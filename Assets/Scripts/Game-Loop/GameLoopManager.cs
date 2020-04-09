@@ -29,25 +29,26 @@ public class GameLoopManager : MonoBehaviour {
 
 	public List<Faction> Factions;
 
-	private int nextTurn = 0;
+	/// Subscribable property, useful for UI changes
+	[SerializeField] private IntProperty nextTurn;
 
 	/// could be used by AI to plan moves
-	public int NextTurn
+	public int NextTurn { get => this.nextTurn.Value; }
+
+	[SerializeField] private IntProperty totalRounds;
+	public int TotalRounds { get => this.totalRounds.Value; }
+
+	[SerializeField] private BoolProperty animationPresent;
+	public bool AnimationPresent
 	{
-		get
+		get => this.animationPresent.Value;
+		set
 		{
-			return this.nextTurn;
+			this.animationPresent.Value = value;
 		}
 	}
 
-	private int totalRounds = 0;
-	public int TotalRounds
-	{
-		get
-		{
-			return this.totalRounds;
-		}
-	}
+	[SerializeField] private HeavyGameEvent onPerformAction;
 
 	public void StartGame()
 	{
@@ -59,8 +60,12 @@ public class GameLoopManager : MonoBehaviour {
 		int playerFactionIndex = this.Factions.FindIndex(faction => faction is PlayerFaction);
 		if(playerFactionIndex >= 0)
 		{
-			this.generalTurnDisplay.SetPlayerFactionRef((PlayerFaction)this.Factions[playerFactionIndex]);
+			((PlayerFaction)this.Factions[playerFactionIndex]).LoadPlayer();
 		}
+
+		this.totalRounds.Value = 0;
+		this.animationPresent.Value = false;
+		this.nextTurn.Value = 0;
 
 		this.Factions[0].StartTurn(this.next);
 	}
@@ -68,33 +73,46 @@ public class GameLoopManager : MonoBehaviour {
 	private void next()
 	{
 		/// End of round, when all Factions have gone
-		if(this.nextTurn == this.Factions.Count)
+		if(this.nextTurn.Value == this.Factions.Count)
 		{
-			this.nextTurn = 0;
-			this.totalRounds++;
+			this.nextTurn.Value = 0;
+			this.totalRounds.Value++;
 			// add solar system movement / orbits
-			this.generalTurnDisplay.UpdateDisplay();
 			this.next();
 		}
 		else
 		{
-			int currentTurn = this.nextTurn;
-			this.nextTurn++;
+			int currentTurn = this.nextTurn.Value;
+			this.nextTurn.Value++;
 			this.Factions[currentTurn].StartTurn(this.next);
-			this.generalTurnDisplay.UpdateDisplay(this.Factions[currentTurn]);
 		}
 	}
 
+	/// Raises the onPerformAction event that is listened to by
+	/// units and factions
+	public void PerformAction(HeavyGameEventData data)
+	{
+		this.onPerformAction.Raise(data);
+	}
+
+	/// Connected by a HeavyGameEventListener
 	/// called whenever a faction is defeated
 	public void OnFactionDefeated(Faction faction)
 	{
+		bool decrementNextTurn = false;
+		if(this.Factions.IndexOf(faction) < this.nextTurn.Value)
+		{
+			decrementNextTurn = true;
+		}
+		/// Faction removal must be done before nextTurn.Value decrement
+		this.Factions.Remove(faction);
+
 		/// Decrements nextTurn field to preserve
 		/// proper turn order
-		if(this.Factions.IndexOf(faction) < this.nextTurn)
+		if(decrementNextTurn)
 		{
-			this.nextTurn--;
+			this.nextTurn.Value--;
 		}
-		this.Factions.Remove(faction);
 
 		/// Ends the game when only one faction is remaining
 		if(this.Factions.Count == 1)
@@ -108,4 +126,10 @@ public class GameLoopManager : MonoBehaviour {
 	{
 		throw new Exception("End Game!");
 	}
+}
+
+public enum TurnState
+{
+	None,
+	Animation,
 }

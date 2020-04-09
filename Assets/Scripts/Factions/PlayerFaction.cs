@@ -1,11 +1,20 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerFaction : Faction
 {
 
-	protected override void useTurn()
+	[SerializeField] private PlayerViewState playerViewState;
+
+	public void LoadPlayer()
 	{
+		this.playerViewState.LoadPlayer(this);
+	}
+
+	protected override IEnumerator useTurn()
+	{
+		yield return null;
 	}
 
 	/// Called when the player ends their turn

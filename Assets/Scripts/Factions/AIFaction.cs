@@ -6,16 +6,20 @@ using UnityEngine;
 public class AIFaction : Faction
 {
 
-	protected override void useTurn()
+	protected override IEnumerator useTurn()
 	{
-		/// AI would move around its units
-		/// before ending its turn
-		this.StartCoroutine(this.delayedNext());
-	}
+		while(true)
+		{
+			if(!GameLoopManager.Instance.AnimationPresent)
+			{
+				/// performs actions
 
-	private IEnumerator delayedNext()
-	{
-		yield return new WaitForSeconds(1.0f);
+				/// then, under a certain condition, break out of the loop
+				yield return new WaitForSeconds(1.0f);
+				break;
+			}
+			yield return null;
+		}
 		this.next();
 	}
 }
