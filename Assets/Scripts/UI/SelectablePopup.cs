@@ -15,6 +15,8 @@ public class SelectablePopup : MonoBehaviour
 	[SerializeField] private Transform buttonsParent;
 	private List<Button> buttons = new List<Button>();
 
+	[SerializeField] private IntGameEvent onActionSelectedEvent;
+
 	/// Loads the popup based on the selectable
 	public void LoadPopup(Selectable selectable)
 	{
@@ -45,23 +47,10 @@ public class SelectablePopup : MonoBehaviour
 	private void onButtonPress(SelectableActionType actionType)
 	{
 		Debug.Log("Selected action: " + actionType.ToString());
+		onActionSelectedEvent.Raise((int)actionType);
 		if(actionType == SelectableActionType.Build)
 		{
 			this.loadBuildOptions();
 		}
-		this.selectedAction = actionType;
-	}
-
-	/// Returns whether or not the parentSelectable should be unselected
-	/// in the PlayerViewState
-	/// Performs action on targetNode
-	public bool SelectGridNode(PlaceholderNode targetNode)
-	{
-		if(this.parentSelectable != null && this.selectedAction != null)
-		{
-			bool validAction = this.parentSelectable.TryPerformAction((SelectableActionType)this.selectedAction, targetNode, this.selectedUnitToBuild);
-			Debug.Log("Valid action: " + validAction);
-		}
-		return false;
 	}
 }

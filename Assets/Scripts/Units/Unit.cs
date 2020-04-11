@@ -113,7 +113,7 @@ public class Unit : Selectable
 		data.TargetNode = targetNode;
 		data.StringValue = unitName;
 		data.ActionType = SelectableActionType.Build;
-		GameLoopManager.Instance.PerformAction(data);
+		GameStateManager.Instance.PerformAction(data);
 	}
 
 	/// Raises an attack action
@@ -124,7 +124,7 @@ public class Unit : Selectable
 		data.TargetNode = targetNode;
 		data.IntValue = this.attack;
 		data.ActionType = SelectableActionType.Attack;
-		GameLoopManager.Instance.PerformAction(data);
+		GameStateManager.Instance.PerformAction(data);
 	}
 
 	/// Raises a move action
@@ -138,7 +138,7 @@ public class Unit : Selectable
 		data.TargetNode = targetNode;
 		/// Should increase by how far moved
 		this.MovesLeft--;
-		GameLoopManager.Instance.PerformAction(data);
+		GameStateManager.Instance.PerformAction(data);
 	}
 
 	/// Raises an enhance action
@@ -148,7 +148,7 @@ public class Unit : Selectable
 		data.SourceNode = this.ParentNode;
 		data.TargetNode = this.ParentNode;
 		data.StringValue = param;
-		GameLoopManager.Instance.PerformAction(data);
+		GameStateManager.Instance.PerformAction(data);
 	}
 
 	/// Returns list of valid actions based on the current turn state

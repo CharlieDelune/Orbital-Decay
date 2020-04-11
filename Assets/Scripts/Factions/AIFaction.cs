@@ -10,7 +10,7 @@ public class AIFaction : Faction
 	{
 		while(true)
 		{
-			if(!GameLoopManager.Instance.AnimationPresent)
+			if(!GameStateManager.Instance.AnimationPresent)
 			{
 				/// performs actions
 

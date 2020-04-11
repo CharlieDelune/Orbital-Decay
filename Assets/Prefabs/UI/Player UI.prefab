@@ -117,8 +117,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -300, y: 200}
-  m_SizeDelta: {x: 300, y: 100}
+  m_AnchoredPosition: {x: -150, y: 70}
+  m_SizeDelta: {x: 200, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &954131785189890596
 CanvasRenderer:
@@ -295,6 +295,7 @@ MonoBehaviour:
   buttonPrefab: {fileID: 6942663540889365766, guid: b06252028ec8d4d24a057d424071430e,
     type: 3}
   buttonsParent: {fileID: 954131786325571499}
+  onActionSelectedEvent: {fileID: 0}
 --- !u!1 &954131785898248628
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,8 +407,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -351, y: -150}
-  m_SizeDelta: {x: -802, y: 200}
+  m_AnchoredPosition: {x: -265, y: -150}
+  m_SizeDelta: {x: -630, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &954131786082157086
 CanvasRenderer:
@@ -529,7 +530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4286341801050931704
 RectTransform:
   m_ObjectHideFlags: 0
@@ -682,13 +683,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04dcf4d0f804d488082df1f3561a12ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridInView: {fileID: 0}
   toggleableOnTurnPlayerUI: {fileID: 4286341801050931705}
   endTurnButton: {fileID: 954131785189890594}
   selectablePopup: {fileID: 954131786107522702}
   onPlayerViewStateChangeEvent: {fileID: 11400000, guid: 3d5d8f20b28c74ad3a84fe4ca441d922,
     type: 2}
-  isPlayerTurn: {fileID: 11400000, guid: c7198dc47365f466bb970c0995914230, type: 2}
+  onNodeSelectedEvent: {fileID: 0}
+  onTargetSelectedEvent: {fileID: 0}
+  onPlayerTurnEndedEvent: {fileID: 11400000, guid: aa6cf7d5c22ca0f49a37b4042269dd64,
+    type: 2}
 --- !u!114 &4286341801050931655
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,6 +29,7 @@ public class HeavyGameEventData
 
 public enum SelectableActionType
 {
+	None,
 	Attack,
 	Build,
 	Enhance,

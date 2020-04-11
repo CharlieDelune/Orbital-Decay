@@ -15,7 +15,7 @@ public class GeneralTurnDisplay : MonoBehaviour
 	/// the environment
 	public void OnChangeTurn(int nextTurn)
     {
-    	Faction faction = (nextTurn == 0) ? null : GameLoopManager.Instance.Factions?[nextTurn - 1];
+    	Faction faction = (nextTurn == 0) ? null : GameStateManager.Instance.Factions?[nextTurn - 1];
 
 		/// Display current faction and round info
 		if(faction != null)

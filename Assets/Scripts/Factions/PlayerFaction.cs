@@ -5,11 +5,12 @@ using UnityEngine;
 public class PlayerFaction : Faction
 {
 
-	[SerializeField] private PlayerViewState playerViewState;
+	[SerializeField] private PlayerViewManager playerViewManager;
 
 	public void LoadPlayer()
 	{
-		this.playerViewState.LoadPlayer(this);
+		GameStateManager.Instance.LoadPlayer(this);
+		this.playerViewManager.LoadPlayer(this);
 	}
 
 	protected override IEnumerator useTurn()

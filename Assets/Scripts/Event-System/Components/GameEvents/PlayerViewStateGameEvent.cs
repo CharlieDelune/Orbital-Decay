@@ -3,6 +3,6 @@ using UnityEngine;
 
 [Serializable]
 [CreateAssetMenu(menuName = "GameEvent/PlayerViewState")]
-public class PlayerViewStateGameEvent : SubscribableAsset<PlayerViewState>
+public class PlayerViewManagerGameEvent : SubscribableAsset<PlayerViewManager>
 {
 }

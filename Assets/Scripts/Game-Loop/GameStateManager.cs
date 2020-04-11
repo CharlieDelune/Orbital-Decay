@@ -5,13 +5,13 @@ using UnityEngine;
 
 /// GameLoopManager is a singleton that handles
 /// round-based gameplay
-public class GameLoopManager : MonoBehaviour {
+public class GameStateManager : MonoBehaviour {
 
 	/// Sets up class as Singleton
 
-	private static GameLoopManager _instance;
+	private static GameStateManager _instance;
 
-	public static GameLoopManager Instance { get { return _instance; } }
+	public static GameStateManager Instance { get { return _instance; } }
 
 	/// Raises Exception if multiple singleton instances are present at once
 
@@ -38,6 +38,15 @@ public class GameLoopManager : MonoBehaviour {
 	[SerializeField] private IntProperty totalRounds;
 	public int TotalRounds { get => this.totalRounds.Value; }
 
+	[SerializeField] private BoolProperty isPlayerTurn;
+	public bool IsPlayerTurn { 
+		get => this.isPlayerTurn.Value; 
+		set {
+			this.isPlayerTurn.Value = value;
+			this.onChange();
+		}
+	}
+
 	[SerializeField] private BoolProperty animationPresent;
 	public bool AnimationPresent
 	{
@@ -49,6 +58,52 @@ public class GameLoopManager : MonoBehaviour {
 	}
 
 	[SerializeField] private HeavyGameEvent onPerformAction;
+
+	/// The grid the player's view is focused on
+	[SerializeField] private PlaceholderGrid gridInView;
+	public PlaceholderGrid GridInView
+	{
+		get => this.gridInView;
+		set
+		{
+			if(value != this.gridInView)
+			{
+				this.gridInView = value;
+				this.onChange();
+			}
+		}
+	}
+
+	/// The selected Node
+	private PlaceholderNode selectedNode;
+	public PlaceholderNode SelectedNode
+	{
+		get => this.selectedNode;
+		set
+		{
+			if(value != this.selectedNode)
+			{
+				this.selectedNode = value;
+				this.onChange();
+			}
+		}
+	}
+	private SelectableActionType selectedAction;
+	public SelectableActionType SelectedAction
+	{
+		get => this.selectedAction;
+		set
+		{
+			if(value != this.selectedAction)
+			{
+				this.selectedAction = value;
+				this.onChange();
+			}
+		}
+	}
+
+	[SerializeField] private MonoBehaviourGameEvent onGameStateUpdatedEvent;
+	private PlayerFaction playerFaction;
 
 	public void StartGame()
 	{
@@ -66,6 +121,9 @@ public class GameLoopManager : MonoBehaviour {
 		this.totalRounds.Value = 0;
 		this.animationPresent.Value = false;
 		this.nextTurn.Value = 0;
+		this.isPlayerTurn.Value = false;
+
+		this.onChange();
 
 		this.Factions[0].StartTurn(this.next);
 	}
@@ -83,6 +141,14 @@ public class GameLoopManager : MonoBehaviour {
 		else
 		{
 			int currentTurn = this.nextTurn.Value;
+			if(this.Factions[currentTurn] == playerFaction)
+			{
+				this.IsPlayerTurn = true;
+			}
+			else
+			{
+				this.IsPlayerTurn = false;
+			}
 			this.nextTurn.Value++;
 			this.Factions[currentTurn].StartTurn(this.next);
 		}
@@ -125,6 +191,46 @@ public class GameLoopManager : MonoBehaviour {
 	private void endGame()
 	{
 		throw new Exception("End Game!");
+	}
+
+	public void LoadPlayer(PlayerFaction _playerFaction)
+	{
+		this.playerFaction = _playerFaction;
+		this.IsPlayerTurn = false;
+	}
+
+	public void OnNodeSelected(MonoBehaviour _newNode)
+	{
+		this.selectedNode = (PlaceholderNode)_newNode;
+	}
+
+	public void OnActionSelected(int _action)
+	{
+		this.selectedAction = (SelectableActionType)_action;
+	}
+
+	public void OnTargetSelected(MonoBehaviour _node)
+	{
+		bool validAction = false;
+		PlaceholderNode targetNode = (PlaceholderNode)_node;
+		if(this.SelectedNode.Selectable != null && SelectedAction != SelectableActionType.None && targetNode != null)
+		{
+			//Build is an empty string for now because we haven't implemented it yet
+			validAction = this.SelectedNode.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetNode, "");
+			Debug.Log("Valid action: " + validAction);
+		}
+		this.SelectedNode = null;
+		this.SelectedAction = SelectableActionType.None;
+	}
+
+	private void onChange()
+    {
+    	this.onGameStateUpdatedEvent.Raise(this);
+    }
+
+	public void OnPlayerTurnEnded()
+	{
+		playerFaction.EndTurn();
 	}
 }
 
