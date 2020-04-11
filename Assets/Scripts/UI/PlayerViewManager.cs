@@ -62,8 +62,14 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
     {
     	if(!(this.isPlayerTurn && GameStateManager.Instance.AnimationPresent))
 	    {
-	        Vector3 mousePosition = pointerEventData.position;
-	        PlaceholderNode clickedNode = this.gridInView.GetNode(mousePosition);
+			Vector3 mousePosition = pointerEventData.position;
+
+			Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+			RaycastHit rHit;
+			Physics.Raycast(ray, out rHit, Mathf.Infinity, LayerMask.GetMask("Grid"));
+			Vector3 hitPoint = rHit.point;
+
+			PlaceholderNode clickedNode = this.gridInView.GetNode(hitPoint);
 
 			/// Mouse was clicked outside the grid
 			if(clickedNode == null)
@@ -82,7 +88,10 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 				{
 					selectedNode = clickedNode;
 					onNodeSelectedEvent.Raise(clickedNode);
-					ShowPopUp(clickedNode);
+					if(selectedNode.Selectable != null)
+					{
+						ShowPopUp(clickedNode);
+					}
 				}
 			}
 	    }

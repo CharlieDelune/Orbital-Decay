@@ -680,7 +680,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4286341801050931706}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04dcf4d0f804d488082df1f3561a12ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d8e5f2298b7c18428757b41b6a90ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   toggleableOnTurnPlayerUI: {fileID: 4286341801050931705}
@@ -688,8 +688,10 @@ MonoBehaviour:
   selectablePopup: {fileID: 954131786107522702}
   onPlayerViewStateChangeEvent: {fileID: 11400000, guid: 3d5d8f20b28c74ad3a84fe4ca441d922,
     type: 2}
-  onNodeSelectedEvent: {fileID: 0}
-  onTargetSelectedEvent: {fileID: 0}
+  onNodeSelectedEvent: {fileID: 11400000, guid: e643618cf7ed90648bc8720c9ac4eee8,
+    type: 2}
+  onTargetSelectedEvent: {fileID: 11400000, guid: 97eaf15ecd915da44ac94a59549a5da2,
+    type: 2}
   onPlayerTurnEndedEvent: {fileID: 11400000, guid: aa6cf7d5c22ca0f49a37b4042269dd64,
     type: 2}
 --- !u!114 &4286341801050931655
