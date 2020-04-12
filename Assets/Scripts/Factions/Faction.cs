@@ -28,6 +28,11 @@ public abstract class Faction : MonoBehaviour
 		this.StartCoroutine(this.useTurn());
 	}
 
+	public void AddUnit(Unit unitIn)
+	{
+		units.Add(unitIn);
+	}
+
 	/// Calls the UpdatePreTurn method of all the Faction's units
 	protected virtual void updateUnits()
 	{

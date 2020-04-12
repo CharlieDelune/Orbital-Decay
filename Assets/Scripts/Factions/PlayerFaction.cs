@@ -22,6 +22,10 @@ public class PlayerFaction : Faction
 	/// Should be connected to the UI
 	public void EndTurn()
 	{
+		foreach(Unit unit in this.units)
+		{
+			unit.TakeOutstandingMoves();
+		}
 		this.next();
 	}
 }

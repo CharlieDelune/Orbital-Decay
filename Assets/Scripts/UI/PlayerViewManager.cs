@@ -23,8 +23,8 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 
 	private bool isPlayerTurn;
 	private List<Faction> factions;
-	private PlaceholderNode selectedNode;
-	private PlaceholderGrid gridInView;
+	private GridCell selectedNode;
+	private CircularGrid gridInView;
 	private SelectableActionType selectedAction;
 
 	private void Awake()
@@ -69,7 +69,7 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 			Physics.Raycast(ray, out rHit, Mathf.Infinity, LayerMask.GetMask("Grid"));
 			Vector3 hitPoint = rHit.point;
 
-			PlaceholderNode clickedNode = this.gridInView.GetNode(hitPoint);
+			GridCell clickedNode = this.gridInView.GetGridCell(hitPoint);
 
 			/// Mouse was clicked outside the grid
 			if(clickedNode == null)
@@ -102,7 +102,7 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
     	this.onPlayerViewStateChangeEvent.Raise(this);
     }
 
-	private void ShowPopUp(PlaceholderNode node)
+	private void ShowPopUp(GridCell node)
 	{
 		this.selectablePopup.gameObject.SetActive(true);
 		this.selectablePopup.LoadPopup(node.Selectable);

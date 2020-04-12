@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Unit : Selectable
@@ -11,17 +12,27 @@ public class Unit : Selectable
 	private int attack;
 
 	private bool baseStatsSet;
+    private bool moving = false;
+    private GridCell target;
+    private List<Vector3> targetPath;
+    private int currentPathIndex;
+    private GridCell parentCell;
+    private List<GridCell> cellPath;
+    private bool tapped;
+    private int movesMade;
 
 	/// for quick debugging
 	[SerializeField] private bool debug = false;
 
-	public Faction Faction;
+	public Faction faction;
 
-	/// Turn State Fields
-	/// Reset in UpdatePreTurn
+	new private SelectableActionType[] validActionTypes = 
+		{SelectableActionType.Attack, 
+		SelectableActionType.Build, 
+		SelectableActionType.Move, 
+		SelectableActionType.Enhance};
 
-	/// Indicates how many more moves the unit has for this turn
-	public int MovesLeft = 0;
+	public int movesLeft = 0;
 
 	void Awake()
 	{
@@ -36,6 +47,14 @@ public class Unit : Selectable
 		}
 	}
 
+    void Update()
+    {
+        if (moving)
+        {
+            HandleMovement();
+        }
+    }
+
 	public void SetBaseStats(string name, int maxRange, int health, int armor, int attack) {
 		gameObject.name = name;
 		this.maxRange = maxRange;
@@ -49,7 +68,9 @@ public class Unit : Selectable
 	/// Updates / Resets the turn fields for the Unit to get ready for the turn
 	public void UpdatePreTurn()
 	{
-		this.MovesLeft = this.maxRange;
+		this.movesLeft = this.maxRange;
+		tapped = false;
+        movesMade = 0;
 	}
 
 	/// Connected by a HeavyGameEventListener
@@ -62,7 +83,7 @@ public class Unit : Selectable
 		}
 	}
 
-	public override bool CanPerformAction(SelectableActionType actionType, PlaceholderNode targetNode, string param)
+	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetNode, string param)
 	{
 		if(this.GetValidActionTypes().Contains(actionType))
 		{
@@ -74,7 +95,7 @@ public class Unit : Selectable
 				case SelectableActionType.Attack:
 					/// Attacks if the targetNode has a selectable and if the Faction belonging to the selectable is
 					/// not the current faction
-					return targetNode.Selectable is Unit && ((Unit)targetNode.Selectable).Faction != this.Faction;
+					return targetNode.Selectable is Unit && ((Unit)targetNode.Selectable).faction != this.faction;
 				case SelectableActionType.Enhance:
 					/// Enhances if the target node is the same node
 					return targetNode?.Selectable == this;
@@ -86,7 +107,7 @@ public class Unit : Selectable
 		return false;
 	}
 
-	public override void PerformAction(SelectableActionType actionType, PlaceholderNode targetNode, string param)
+	public override void PerformAction(SelectableActionType actionType, GridCell targetNode, string param)
 	{
 		switch(actionType)
 		{
@@ -100,13 +121,13 @@ public class Unit : Selectable
 				this.performEnhance(param);
 			break;
 			case SelectableActionType.Move:
-				this.performMove(targetNode);
+				this.PerformMove(targetNode);
 			break;
 		}
 	}
 
 	/// Raises a build action
-	protected virtual void performBuild(PlaceholderNode targetNode, string unitName)
+	protected virtual void performBuild(GridCell targetNode, string unitName)
 	{
 		HeavyGameEventData data = new HeavyGameEventData();
 		data.SourceNode = this.ParentNode;
@@ -117,7 +138,7 @@ public class Unit : Selectable
 	}
 
 	/// Raises an attack action
-	protected virtual void performAttack(PlaceholderNode targetNode)
+	protected virtual void performAttack(GridCell targetNode)
 	{
 		HeavyGameEventData data = new HeavyGameEventData();
 		data.SourceNode = this.ParentNode;
@@ -131,15 +152,81 @@ public class Unit : Selectable
 	/// Note:
 	/// Should change MovesLeft variable to properly reflect
 	/// the move instead of just decrementing the value
-	protected virtual void performMove(PlaceholderNode targetNode)
-	{
-		HeavyGameEventData data = new HeavyGameEventData();
+    protected virtual void PerformMove(GridCell targetIn)
+    {
+        HeavyGameEventData data = new HeavyGameEventData();
 		data.SourceNode = this.ParentNode;
-		data.TargetNode = targetNode;
-		/// Should increase by how far moved
-		this.MovesLeft--;
-		GameStateManager.Instance.PerformAction(data);
-	}
+		data.TargetNode = targetIn;
+        target = targetIn;
+        currentPathIndex = 0;
+        cellPath = GridManager.Instance.pathfinder.FindPath(parentCell.layer, parentCell.slice, targetIn.layer, targetIn.slice);
+        targetPath = GridManager.Instance.pathfinder.FindVectorPath(cellPath);
+        moving = true;
+        GameStateManager.Instance.PerformAction(data);
+    }
+
+    public void SetParentCell(GridCell cellIn)
+    {
+        parentCell = cellIn;
+		cellIn.Selectable = this;
+    }
+
+    public GridCell GetParentCell()
+    {
+        return parentCell;
+    }
+
+    public void SetMaxRange(int maxRangeIn)
+    {
+        maxRange = maxRangeIn;
+    }
+
+    public int GetMaxRange()
+    {
+        return maxRange;
+    }
+    
+    private void HandleMovement()
+    {
+		if(!tapped){
+			if (targetPath != null && currentPathIndex < targetPath.Count)
+			{
+				Vector3 targetPosition = targetPath[currentPathIndex];
+				float step = 30 * Time.deltaTime;
+				//TODO: Change from .Distance to sqr magnitudes to save on calculation
+				if (Vector3.Distance(transform.position, targetPosition) > step)
+				{
+					Vector3 moveDir = (targetPosition - transform.position).normalized;
+
+					//TODO: Change from .Distance to sqr magnitudes to save on calculation
+					float distanceBefore = Vector3.Distance(transform.position, targetPosition);
+					transform.position = transform.position + moveDir * 30.0f * Time.deltaTime;
+				}
+				else
+				{
+					cellPath[currentPathIndex].Selectable = null;
+					currentPathIndex++;
+					if(currentPathIndex > 1)
+					{
+						movesMade++;
+						movesLeft--;
+					}
+					if (movesMade == maxRange)
+					{
+						tapped = true;
+					}
+					if (currentPathIndex == maxRange+1 && !(currentPathIndex >= targetPath.Count+1))
+					{
+						EndMoveInMiddle();
+					}
+					if (Vector3.Distance(transform.position, target.transform.position) <= 0.05f)
+					{
+						EndMove();
+					}
+				}
+			}
+		}
+    }
 
 	/// Raises an enhance action
 	protected virtual void performEnhance(string param)
@@ -155,7 +242,7 @@ public class Unit : Selectable
 	public override List<SelectableActionType> GetValidActionTypes()
 	{
 		List<SelectableActionType> actionTypes = new List<SelectableActionType>(this.validActionTypes);
-		if(this.MovesLeft <= 0)
+		if(this.movesLeft <= 0)
 		{
 			actionTypes.Remove(SelectableActionType.Move);
 		}
@@ -168,4 +255,39 @@ public class Unit : Selectable
 	public virtual void processAction(HeavyGameEventData data)
 	{
 	}
+    
+    private void EndMove()
+    {
+        moving = false;
+        SetParentCell(target);
+        currentPathIndex = 1;
+        transform.position = target.transform.position;
+        target = null;
+    }
+
+    private void EndMoveInMiddle()
+    {
+        moving = false;
+        transform.position = targetPath[currentPathIndex-1];
+        SetParentCell(cellPath[currentPathIndex-1]);
+        targetPath = targetPath.Skip(currentPathIndex-1).ToList();
+        cellPath = cellPath.Skip(currentPathIndex-1).ToList();
+    }
+
+    public void PrepareForNextTurn()
+    {
+        tapped = false;
+        movesMade = 0;
+    }
+
+    public void TakeOutstandingMoves()
+    {
+		if (!tapped)
+		{
+			if(target != null)
+			{
+				PerformMove(target);
+			}
+		}
+    }
 }

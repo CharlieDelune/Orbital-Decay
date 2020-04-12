@@ -14,12 +14,11 @@ public class GameStateManager : MonoBehaviour {
 	public static GameStateManager Instance { get { return _instance; } }
 
 	/// Raises Exception if multiple singleton instances are present at once
-
 	private void Awake()
 	{
 		if (_instance != null && _instance != this)
 		{
-			throw new System.Exception("Multiple GameLoopManager instances are present. There should only be one instance of a Singleton.");
+			throw new System.Exception("Multiple GameStateManager instances are present. There should only be one instance of a Singleton.");
 		} else {
 			_instance = this;
 		}
@@ -60,8 +59,8 @@ public class GameStateManager : MonoBehaviour {
 	[SerializeField] private HeavyGameEvent onPerformAction;
 
 	/// The grid the player's view is focused on
-	[SerializeField] private PlaceholderGrid gridInView;
-	public PlaceholderGrid GridInView
+	[SerializeField] private CircularGrid gridInView;
+	public CircularGrid GridInView
 	{
 		get => this.gridInView;
 		set
@@ -75,8 +74,8 @@ public class GameStateManager : MonoBehaviour {
 	}
 
 	/// The selected Node
-	private PlaceholderNode selectedNode;
-	public PlaceholderNode SelectedNode
+	private GridCell selectedNode;
+	public GridCell SelectedNode
 	{
 		get => this.selectedNode;
 		set
@@ -104,6 +103,8 @@ public class GameStateManager : MonoBehaviour {
 
 	[SerializeField] private MonoBehaviourGameEvent onGameStateUpdatedEvent;
 	private PlayerFaction playerFaction;
+
+	public CircularGrid solarSystemGrid;
 
 	public void StartGame()
 	{
@@ -135,7 +136,7 @@ public class GameStateManager : MonoBehaviour {
 		{
 			this.nextTurn.Value = 0;
 			this.totalRounds.Value++;
-			// add solar system movement / orbits
+			PlanetManager.Instance.RevolveAllPlanets();
 			this.next();
 		}
 		else
@@ -201,18 +202,25 @@ public class GameStateManager : MonoBehaviour {
 
 	public void OnNodeSelected(MonoBehaviour _newNode)
 	{
-		this.selectedNode = (PlaceholderNode)_newNode;
+		this.selectedNode = (GridCell)_newNode;
 	}
 
 	public void OnActionSelected(int _action)
 	{
 		this.selectedAction = (SelectableActionType)_action;
+		if(this.selectedAction == SelectableActionType.ChangeGrid)
+		{
+			this.GridInView = ((Planet)this.selectedNode.Selectable).grid;
+			Camera.main.transform.position = this.GridInView.transform.position + new Vector3(0, 60, -45);
+			this.SelectedAction = SelectableActionType.None;
+			this.SelectedNode = null;
+		}
 	}
 
 	public void OnTargetSelected(MonoBehaviour _node)
 	{
 		bool validAction = false;
-		PlaceholderNode targetNode = (PlaceholderNode)_node;
+		GridCell targetNode = (GridCell)_node;
 		if(this.SelectedNode.Selectable != null && SelectedAction != SelectableActionType.None && targetNode != null)
 		{
 			//Build is an empty string for now because we haven't implemented it yet
@@ -230,7 +238,29 @@ public class GameStateManager : MonoBehaviour {
 
 	public void OnPlayerTurnEnded()
 	{
+		SelectedAction = SelectableActionType.None;
+		SelectedNode = null;
 		playerFaction.EndTurn();
+	}
+
+	public void AddPlayerUnit(Unit unitIn)
+	{
+		playerFaction.AddUnit(unitIn);
+	}
+
+	public void OnTryChangeGrid(MonoBehaviour _grid)
+	{
+		if (_grid == null)
+		{
+			this.GridInView = solarSystemGrid;
+		}
+		else
+		{
+			CircularGrid grid = (CircularGrid)_grid;
+			this.GridInView = grid;
+		}
+		this.selectedNode = null;
+		this.selectedAction = SelectableActionType.None;
 	}
 }
 

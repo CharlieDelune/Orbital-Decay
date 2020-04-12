@@ -16,8 +16,10 @@ public class HeavyGameEventData
 	public Faction SourceFaction;
 	public Faction TargetFaction;
 
-	public PlaceholderNode SourceNode;
-	public PlaceholderNode TargetNode;
+	public GridCell SourceNode;
+	public GridCell TargetNode;
+
+	public GameObject targetObject;
 
 	public int IntValue;
 	public bool BoolValue;
@@ -36,4 +38,5 @@ public enum SelectableActionType
 	Move,
 	ResourceGain,
 	ResourceLose,
+	ChangeGrid,
 }
