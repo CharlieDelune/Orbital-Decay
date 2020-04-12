@@ -152,9 +152,11 @@ public class Planet : Selectable, Revolving
     public void EndMove()
     {
         parentCell.passable = true;
+        parentCell.Selectable = null;
         moving = false;
         SetParentCell(targetCell);
         transform.position = targetCell.transform.position;
+        targetCell.Selectable = this;
         targetCell = null;
     }
 }
