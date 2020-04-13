@@ -15,7 +15,7 @@ public class GameData : MonoBehaviour
 
 	private Dictionary<string, InGameResource> nameToResource;
 	private Dictionary<string, UnitInfo> nameToUnitInfo;
-	private Dictionary<string, List<Recipe>> unitNameToRecipes;
+	private Dictionary<string, Recipe> nameToRecipes;
 
 	private UnitInfo mainBaseUnitInfo;
 	private List<InGameResource> baseResources;
@@ -23,8 +23,8 @@ public class GameData : MonoBehaviour
 	public List<InGameResource> BaseResources { get { return baseResources; }}
 	public UnitInfo MainBaseUnitInfo { get { return mainBaseUnitInfo; }}
 
-	public List<Recipe> GetRecipes(string unitName) {
-		return unitNameToRecipes[unitName];
+	public Recipe GetRecipe(string recipeName) {
+		return nameToRecipes[recipeName];
 	}
 
 	public UnitInfo GetUnitInfo(string unitName) {
@@ -33,6 +33,16 @@ public class GameData : MonoBehaviour
 
 	public InGameResource GetResource(string resourceName) {
 		return nameToResource[resourceName];
+	}
+
+	public Dictionary<InGameResource, int> GetInitialFactionResources()
+	{
+		Dictionary<InGameResource, int> initialResources = new Dictionary<InGameResource, int>();
+		foreach(KeyValuePair<string, InGameResource> item in this.nameToResource)
+		{
+			initialResources[item.Value] = 0;
+		}
+		return initialResources;
 	}
 
 	void Awake()
@@ -74,7 +84,7 @@ public class GameData : MonoBehaviour
 		using (StringReader reader = new StringReader(unitsFile.text))
 		{
 			string[] headers = reader.ReadLine().Split(',');
-			string[] expectedHeaders = {"Name", "Range", "Health", "Armor", "Attack"};
+			string[] expectedHeaders = {"Name", "Range", "Health", "Armor", "Attack", "Extra"};
 			CheckFileHeaders("units", expectedHeaders, headers);
 			
 			while (reader.Peek() != -1) 
@@ -93,6 +103,7 @@ public class GameData : MonoBehaviour
 												 health: int.Parse(fields[2]),
 												 armor: int.Parse(fields[3]),
 												 attack: int.Parse(fields[4]),
+												 extra: fields[5],
 												 unitPrefab: unitPrefab);
 
 				nameToUnitInfo[fields[0]] = unitInfo;
@@ -104,11 +115,11 @@ public class GameData : MonoBehaviour
 		}
 
 		// Load Recipes
-		unitNameToRecipes = new Dictionary<string, List<Recipe>>();
+		nameToRecipes = new Dictionary<string, Recipe>();
 		using (StringReader reader = new StringReader(recipesFile.text))
 		{
 			string[] headers = reader.ReadLine().Split(',');
-			string[] expectedHeaders = {"Output", "Output Quantity", "Max Stack", "Belonging Unit", "Input Item", "Input Quantity"};
+			string[] expectedHeaders = {"Recipe Name", "Output", "Output Quantity", "Max Stack", "Input Item", "Input Quantity"};
 			CheckFileHeaders("recipes", expectedHeaders, headers);
 			
 
@@ -126,21 +137,21 @@ public class GameData : MonoBehaviour
 					}
 
 					// Check whether the recipe creates a resource or a unit
-					if(nameToResource.ContainsKey(fields[0]))
+					if(nameToResource.ContainsKey(fields[1]))
 					{
-						recipe = new ResourceRecipe(outputName: fields[0],
-													belongingUnit: fields[3],
-													outputQuantity: int.Parse(fields[1]),
-													maxStack: int.Parse(fields[2]));
+						recipe = new ResourceRecipe(recipeName: fields[0],
+													outputName: fields[1],
+													outputQuantity: int.Parse(fields[2]),
+													maxStack: int.Parse(fields[3]));
 					}
 					else
 					{
-						recipe = new UnitRecipe(outputName: fields[0],
-												belongingUnit: fields[3]);
+						recipe = new UnitRecipe(
+												recipeName: fields[0],
+												outputName: fields[1]);
 					}
+					recipe.AddInput(nameToResource[fields[4]], int.Parse(fields[5]));
 				}
-
-				recipe.AddInput(nameToResource[fields[4]], int.Parse(fields[5]));
 			}
 			
 			RegisterRecipe(recipe);
@@ -150,15 +161,7 @@ public class GameData : MonoBehaviour
 	private void RegisterRecipe(Recipe recipe)
 	{
 		recipe.FinalizeRecipe();
-
-		List<Recipe> recipes = null;
-		unitNameToRecipes.TryGetValue(recipe.BelongingUnit, out recipes);
-		if(recipes == null)
-		{
-			recipes = new List<Recipe>();
-		}
-		recipes.Add(recipe);
-		unitNameToRecipes[recipe.BelongingUnit] = recipes;
+		nameToRecipes[recipe.RecipeName] = recipe;
 	}
 
 	private void CheckFileHeaders(string file, string[] expectedHeaders, string[] actualHeaders)

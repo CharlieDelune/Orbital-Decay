@@ -20,9 +20,13 @@ public abstract class Selectable : MonoBehaviour
 
 	public abstract void PerformAction(SelectableActionType actionType, GridCell targetNode, string param);
 
-	public abstract List<SelectableActionType> GetValidActionTypes();
+	public virtual List<SelectableActionType> GetValidActionTypes()
+	{
+		return new List<SelectableActionType>(this.validActionTypes);
+	}
 
-	[SerializeField] protected SelectableActionType[] validActionTypes;
+	/// Should be set on the prefab rather than programmatically
+	[SerializeField] protected SelectableActionType[] validActionTypes = {};
 
 	public GridCell ParentNode;
 }

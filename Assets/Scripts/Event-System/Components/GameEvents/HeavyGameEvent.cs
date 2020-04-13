@@ -15,7 +15,7 @@ public class HeavyGameEvent : ScriptableObject, ISubscribable<HeavyGameEventData
 	{
 		this.listeners = new SortedSet<HeavyGameEventListener>(
             Comparer<HeavyGameEventListener>.Create(
-                (a, b) => a.Priority.CompareTo(b.Priority)
+                (a, b) => a.CompareTo(b)
             )
         );
 	}
@@ -26,7 +26,7 @@ public class HeavyGameEvent : ScriptableObject, ISubscribable<HeavyGameEventData
         {
             this.listeners = new SortedSet<HeavyGameEventListener>(
                 Comparer<HeavyGameEventListener>.Create(
-                    (a, b) => a.Priority.CompareTo(b.Priority)
+                    (a, b) => a.CompareTo(b)
                 )
             );
         }

@@ -1,4 +1,4 @@
-﻿Name,Range,Health,Armor,Attack
-Main Base,1,100,10,10
-Miner,2,1,0,0
-Refinery,1,1,0,0
+﻿Name,Range,Health,Armor,Attack,Extra
+Main Base,1,100,10,10,
+Miner,2,1,0,0,
+Refinery,1,1,0,0,

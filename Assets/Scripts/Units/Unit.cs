@@ -6,99 +6,124 @@ using UnityEngine;
 
 public class Unit : Selectable
 {
-	private int maxRange;
-	private int health;
-	private int armor;
-	private int attack;
 
-	private bool baseStatsSet;
+	/// Basic stats
+	protected int maxRange;
+	protected int health;
+	protected int armor;
+	protected int attack;
+	protected bool baseStatsSet;
+
     private bool moving = false;
-    private GridCell target;
     private List<Vector3> targetPath;
     private int currentPathIndex;
-    private GridCell parentCell;
     private List<GridCell> cellPath;
     private bool tapped;
     private int movesMade;
 
+    /// When not active, maybe it could display a faded out
+	/// unit in the game - active state mostly applies to certain units
+	/// ex - refineries
+	public virtual bool IsActive { get => true; }
+
+    private GridCell target;
+
+	[SerializeField] protected MonoBehaviourGameEvent onUnitDestroyed;
+
+	public Faction Faction;
+	private GridCell parentCell;
+
 	/// for quick debugging
 	[SerializeField] private bool debug = false;
+	public string ExtraOverride;
 
-	public Faction faction;
-
-	new private SelectableActionType[] validActionTypes = 
-		{SelectableActionType.Attack, 
-		SelectableActionType.Build, 
-		SelectableActionType.Move, 
-		SelectableActionType.Enhance};
+	/// Turn State Fields
+	/// Reset in UpdatePreTurn
 
 	public int movesLeft = 0;
 
-	void Awake()
+	private void Awake()
 	{
-		baseStatsSet = false;
+		this.baseStatsSet = false;
 	}
 
-	void Start()
+	private void Start()
 	{
-		if(!baseStatsSet && !this.debug)
+		if(this.debug)
+		{
+			this.setExtra(this.ExtraOverride);
+		}
+		if(!this.baseStatsSet && !this.debug)
 		{
 			throw new System.Exception("Unit was instantiated, but no base stats were set. Make sure you are instantiating through UnitInfo");
 		}
 	}
 
-    void Update()
+    private void Update()
     {
-        if (moving)
+        if (this.moving)
         {
-            HandleMovement();
+            this.HandleMovement();
         }
     }
 
-	public void SetBaseStats(string name, int maxRange, int health, int armor, int attack) {
+	public virtual void SetBaseStats(string name, int maxRange, int health, int armor, int attack, string extra) {
 		gameObject.name = name;
 		this.maxRange = maxRange;
 		this.health = health;
 		this.armor = armor;
 		this.attack = attack;
 
-		baseStatsSet = true;
+		this.baseStatsSet = true;
+
+		this.setExtra(extra);
 	}
 
+	/// Further initialization based on the extra parameter
+	/// Useful for subchildren of the Unit class
+	protected virtual void setExtra(string extra)
+	{
+	}
+
+	/// Attached to the NextTurn IntProperty
 	/// Updates / Resets the turn fields for the Unit to get ready for the turn
-	public void UpdatePreTurn()
+	public virtual void OnStartFactionTurn(Faction faction)
+	{
+		if(faction == this.Faction)
+		{
+			this.updatePreTurn();
+		}
+	}
+
+	/// Called at the start of the turn
+	protected virtual void updatePreTurn()
 	{
 		this.movesLeft = this.maxRange;
-		tapped = false;
-        movesMade = 0;
+		this.tapped = false;
+        this.movesMade = 0;
 	}
 
 	/// Connected by a HeavyGameEventListener
 	/// Initial check to see if the fired HeavyGameEventData has to do with this unit
-	public virtual void OnFilterGameEvent(HeavyGameEventData data)
+	public virtual void OnFilterReceiveGameEvent(HeavyGameEventData data)
 	{
-		if(data.SourceNode == this.ParentNode || data.TargetNode == this.ParentNode)
+		if(data.TargetNode == this.ParentNode)
 		{
-			this.processAction(data);
+			this.receiveAction(data);
 		}
 	}
 
+	/// Returns whether or not the action can be performed
 	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetNode, string param)
 	{
 		if(this.GetValidActionTypes().Contains(actionType))
 		{
 			switch(actionType)
 			{
-				case SelectableActionType.Build:
-					/// maybe it should check to see if the param string refers to a unit
-					return targetNode.Selectable == null && param != "";
 				case SelectableActionType.Attack:
 					/// Attacks if the targetNode has a selectable and if the Faction belonging to the selectable is
 					/// not the current faction
-					return targetNode.Selectable is Unit && ((Unit)targetNode.Selectable).faction != this.faction;
-				case SelectableActionType.Enhance:
-					/// Enhances if the target node is the same node
-					return targetNode?.Selectable == this;
+					return targetNode.Selectable is Unit && ((Unit)targetNode.Selectable).Faction != this.Faction;
 				case SelectableActionType.Move:
 					/// Moves if the targetNode is empty
 					return targetNode.Selectable == null;
@@ -111,30 +136,13 @@ public class Unit : Selectable
 	{
 		switch(actionType)
 		{
-			case SelectableActionType.Build:
-				this.performBuild(targetNode, param);
-			break;
 			case SelectableActionType.Attack:
 				this.performAttack(targetNode);
 			break;
-			case SelectableActionType.Enhance:
-				this.performEnhance(param);
-			break;
 			case SelectableActionType.Move:
-				this.PerformMove(targetNode);
+				this.performMove(targetNode);
 			break;
 		}
-	}
-
-	/// Raises a build action
-	protected virtual void performBuild(GridCell targetNode, string unitName)
-	{
-		HeavyGameEventData data = new HeavyGameEventData();
-		data.SourceNode = this.ParentNode;
-		data.TargetNode = targetNode;
-		data.StringValue = unitName;
-		data.ActionType = SelectableActionType.Build;
-		GameStateManager.Instance.PerformAction(data);
 	}
 
 	/// Raises an attack action
@@ -152,22 +160,27 @@ public class Unit : Selectable
 	/// Note:
 	/// Should change MovesLeft variable to properly reflect
 	/// the move instead of just decrementing the value
-    protected virtual void PerformMove(GridCell targetIn)
+    protected virtual void performMove(GridCell targetIn)
     {
         HeavyGameEventData data = new HeavyGameEventData();
 		data.SourceNode = this.ParentNode;
 		data.TargetNode = targetIn;
-        target = targetIn;
-        currentPathIndex = 0;
-        cellPath = GridManager.Instance.pathfinder.FindPath(parentCell.layer, parentCell.slice, targetIn.layer, targetIn.slice);
-        targetPath = GridManager.Instance.pathfinder.FindVectorPath(cellPath);
-        moving = true;
+        this.target = targetIn;
+        this.currentPathIndex = 0;
+        this.cellPath = GridManager.Instance.pathfinder.FindPath(parentCell.layer, parentCell.slice, targetIn.layer, targetIn.slice);
+        this.targetPath = GridManager.Instance.pathfinder.FindVectorPath(cellPath);
+        this.moving = true;
         GameStateManager.Instance.PerformAction(data);
     }
 
+    /// Should be implemented in base Unit class for
+    /// leveling up / upgrading Units
+    protected virtual void performEnhance(string param)
+    {}
+
     public void SetParentCell(GridCell cellIn)
     {
-        parentCell = cellIn;
+        this.parentCell = cellIn;
 		cellIn.Selectable = this;
     }
 
@@ -178,7 +191,7 @@ public class Unit : Selectable
 
     public void SetMaxRange(int maxRangeIn)
     {
-        maxRange = maxRangeIn;
+        this.maxRange = maxRangeIn;
     }
 
     public int GetMaxRange()
@@ -188,55 +201,46 @@ public class Unit : Selectable
     
     private void HandleMovement()
     {
-		if(!tapped){
-			if (targetPath != null && currentPathIndex < targetPath.Count)
+		if(!this.tapped)
+		{
+			if (this.targetPath != null && this.currentPathIndex < this.targetPath.Count)
 			{
-				Vector3 targetPosition = targetPath[currentPathIndex];
+				Vector3 targetPosition = this.targetPath[this.currentPathIndex];
 				float step = 30 * Time.deltaTime;
 				//TODO: Change from .Distance to sqr magnitudes to save on calculation
-				if (Vector3.Distance(transform.position, targetPosition) > step)
+				if (Vector3.Distance(this.transform.position, targetPosition) > step)
 				{
-					Vector3 moveDir = (targetPosition - transform.position).normalized;
+					Vector3 moveDir = (targetPosition - this.transform.position).normalized;
 
 					//TODO: Change from .Distance to sqr magnitudes to save on calculation
-					float distanceBefore = Vector3.Distance(transform.position, targetPosition);
-					transform.position = transform.position + moveDir * 30.0f * Time.deltaTime;
+					float distanceBefore = Vector3.Distance(this.transform.position, targetPosition);
+					this.transform.position = this.transform.position + moveDir * 30.0f * Time.deltaTime;
 				}
 				else
 				{
-					cellPath[currentPathIndex].Selectable = null;
-					currentPathIndex++;
-					if(currentPathIndex > 1)
+					this.cellPath[this.currentPathIndex].Selectable = null;
+					this.currentPathIndex++;
+					if(this.currentPathIndex > 1)
 					{
-						movesMade++;
-						movesLeft--;
+						this.movesMade++;
+						this.movesLeft--;
 					}
-					if (movesMade == maxRange)
+					if (this.movesMade == this.maxRange)
 					{
-						tapped = true;
+						this.tapped = true;
 					}
-					if (currentPathIndex == maxRange+1 && !(currentPathIndex >= targetPath.Count+1))
+					if (this.currentPathIndex == this.maxRange+1 && !(this.currentPathIndex >= this.targetPath.Count+1))
 					{
-						EndMoveInMiddle();
+						this.endMoveInMiddle();
 					}
-					if (Vector3.Distance(transform.position, target.transform.position) <= 0.05f)
+					if (Vector3.Distance(this.transform.position, this.target.transform.position) <= 0.05f)
 					{
-						EndMove();
+						this.endMove();
 					}
 				}
 			}
 		}
     }
-
-	/// Raises an enhance action
-	protected virtual void performEnhance(string param)
-	{
-		HeavyGameEventData data = new HeavyGameEventData();
-		data.SourceNode = this.ParentNode;
-		data.TargetNode = this.ParentNode;
-		data.StringValue = param;
-		GameStateManager.Instance.PerformAction(data);
-	}
 
 	/// Returns list of valid actions based on the current turn state
 	public override List<SelectableActionType> GetValidActionTypes()
@@ -252,41 +256,43 @@ public class Unit : Selectable
 	/// processes performed action
 	/// if the unit is damaged, for example,
 	/// this is where it could react to that
-	public virtual void processAction(HeavyGameEventData data)
+	public virtual void receiveAction(HeavyGameEventData data)
 	{
+		if(data.ActionType == SelectableActionType.Attack)
+		{
+			this.health -= data.IntValue;
+			if(this.health < 0)
+			{
+				this.onUnitDestroyed.Raise(this);
+			}
+		}
 	}
     
-    private void EndMove()
+    private void endMove()
     {
-        moving = false;
-        SetParentCell(target);
-        currentPathIndex = 1;
-        transform.position = target.transform.position;
-        target = null;
+        this.moving = false;
+        this.SetParentCell(this.target);
+        this.currentPathIndex = 1;
+        this.transform.position = this.target.transform.position;
+        this.target = null;
     }
 
-    private void EndMoveInMiddle()
+    private void endMoveInMiddle()
     {
-        moving = false;
-        transform.position = targetPath[currentPathIndex-1];
-        SetParentCell(cellPath[currentPathIndex-1]);
-        targetPath = targetPath.Skip(currentPathIndex-1).ToList();
-        cellPath = cellPath.Skip(currentPathIndex-1).ToList();
-    }
-
-    public void PrepareForNextTurn()
-    {
-        tapped = false;
-        movesMade = 0;
+        this.moving = false;
+        this.transform.position = this.targetPath[this.currentPathIndex-1];
+        SetParentCell(this.cellPath[this.currentPathIndex-1]);
+        this.targetPath = this.targetPath.Skip(this.currentPathIndex-1).ToList();
+        this.cellPath = this.cellPath.Skip(this.currentPathIndex-1).ToList();
     }
 
     public void TakeOutstandingMoves()
     {
-		if (!tapped)
+		if (!this.tapped)
 		{
-			if(target != null)
+			if(this.target != null)
 			{
-				PerformMove(target);
+				this.performMove(this.target);
 			}
 		}
     }

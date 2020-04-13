@@ -1,7 +1,7 @@
-Output,Output Quantity,Max Stack,Belonging Unit,Input Item,Input Quantity
-Miner,,,Main Base,Metal,10
+Recipe Name,Output,Output Quantity,Max Stack,Input Item,Input Quantity
+,Miner,,,Metal,10
 ,,,,Oil,5
-Refinery,,,Main Base,Metal,10
+,Refinery,,,Metal,10
 ,,,,Oil,10
-Metal,1,10,Refinery,Ore,1
-Refined Oil,1,10,Refinery,Oil,1
+ORE_TO_METAL,Metal,1,10,Ore,1
+OIL_TO_REFINED_OIL,Refined Oil,1,10,Oil,1

@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
 
-public class HeavyGameEventListener : MonoBehaviour, IListener<HeavyGameEventData>, IComparable
+public abstract class FactionBaseListener : MonoBehaviour, IListener<Faction>, IComparable
 {
 
-    [SerializeField] public HeavyGameEvent target;
-    [SerializeField] protected HeavyGameEventCallback callback;
+    [SerializeField] protected FactionGameEvent target;
+    public FactionGameEvent Target { get => this.target; }
 
     [SerializeField] protected int priority;
     public int Priority { get => this.priority; }
@@ -25,7 +25,7 @@ public class HeavyGameEventListener : MonoBehaviour, IListener<HeavyGameEventDat
         {
             return 1;
         }
-        HeavyGameEventListener other = obj as HeavyGameEventListener;
+        FactionBaseListener other = obj as FactionBaseListener;
         if(this.Priority > other.Priority)
         {
             return -1;
@@ -33,8 +33,5 @@ public class HeavyGameEventListener : MonoBehaviour, IListener<HeavyGameEventDat
         return 1;
     }
 
-    public void OnRaise(HeavyGameEventData data)
-    {
-    	this.callback.Invoke(data);
-    }
+    public abstract void OnRaise(Faction data);
 }

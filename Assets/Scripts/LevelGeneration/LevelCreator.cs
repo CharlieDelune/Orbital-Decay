@@ -13,7 +13,7 @@ public class LevelCreator : MonoBehaviour
     [SerializeField]
     private ResourcePlacer resourcePlacer;
 
-    void Start()
+    public void StartLevelCreation()
     {
         gridBuilder.BuildLevel();
         unitPlacer.PlaceUnits();

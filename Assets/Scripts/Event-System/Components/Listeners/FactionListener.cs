@@ -1,15 +1,22 @@
 using UnityEngine;
-using UnityEngine.Events;
 
-/// Listener that has a Callback that is invoked when the
-/// subcribed FactionGameEvent is raised
-public class FactionListener : BaseListener<Faction>
+public class FactionListener : FactionBaseListener
 {
 
     [SerializeField] protected FactionCallback callback;
 
+    void OnEnable()
+    {
+        this.target.Subscribe(this);
+    }
+
+    void OnDisable()
+    {
+        this.target.Unsubscribe(this);
+    }
+
     public override void OnRaise(Faction data)
     {
-        this.callback.Invoke(data);
+    	this.callback.Invoke(data);
     }
 }

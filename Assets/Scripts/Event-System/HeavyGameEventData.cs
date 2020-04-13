@@ -21,12 +21,38 @@ public class HeavyGameEventData
 
 	public GameObject targetObject;
 
+	public InGameResource ResourceValue;
+
 	public int IntValue;
 	public bool BoolValue;
 	public float FloatValue;
 	public string StringValue;
 
 	public SelectableActionType ActionType;
+
+	public HeavyGameEventData(
+		Faction sourceFaction = null,
+		Faction targetFaction = null,
+		GridCell sourceNode = null,
+		GridCell targetNode = null,
+		InGameResource resourceValue = null,
+		int intValue = 0,
+		bool boolValue = false,
+		float floatValue = 0.0f,
+		string stringValue = "",
+		SelectableActionType actionType = SelectableActionType.None)
+	{
+		this.SourceFaction = sourceFaction;
+		this.TargetFaction = targetFaction;
+		this.SourceNode = sourceNode;
+		this.TargetNode = targetNode;
+		this.ResourceValue = resourceValue;
+		this.IntValue = intValue;
+		this.BoolValue = boolValue;
+		this.FloatValue = floatValue;
+		this.StringValue = stringValue;
+		this.ActionType = actionType;
+	}
 }
 
 public enum SelectableActionType
@@ -38,5 +64,7 @@ public enum SelectableActionType
 	Move,
 	ResourceGain,
 	ResourceLose,
+	Activate,
+	Deactivate,
 	ChangeGrid,
 }

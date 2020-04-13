@@ -3,7 +3,7 @@ public class ResourceRecipe : Recipe
 	private int outputQuantity;
 	private int maxStack;
 
-	public ResourceRecipe(string outputName, string belongingUnit, int outputQuantity, int maxStack) : base(outputName, belongingUnit)
+	public ResourceRecipe(string recipeName, string outputName, int outputQuantity, int maxStack) : base(recipeName, outputName)
 	{
 		this.outputQuantity = outputQuantity;
 		this.maxStack = maxStack;

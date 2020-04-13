@@ -23,6 +23,6 @@ public class UIIntPropertyDisplay : BaseListener<int>
 
     private void updateText()
     {
-        this.text.text = preText + this.intProperty.Value + postText;
+        this.text.text = this.preText + this.intProperty.Value + this.postText;
     }
 }

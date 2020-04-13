@@ -3,16 +3,17 @@ using System.Collections.Generic;
 
 public abstract class Recipe
 {
+	private string recipeName;
 	private string outputName;
 	private string belongingUnit;
 	private List<(InGameResource, int)> inputs;
 
 	private bool isFinalized;
 
-	public Recipe(string outputName, string belongingUnit)
+	public Recipe(string recipeName, string outputName)
 	{
+		this.recipeName = recipeName;
 		this.outputName = outputName;
-		this.belongingUnit = belongingUnit;
 		this.inputs = new List<(InGameResource, int)>();
 
 		isFinalized = false;
@@ -40,7 +41,8 @@ public abstract class Recipe
 		isFinalized = true;
 	}
 
-	public string OuputName { get { return outputName; } }
+	public string RecipeName { get { return recipeName; } }
+	public string OutputName { get { return outputName; } }
 	public string BelongingUnit { get { return belongingUnit; } }
 	public List<(InGameResource, int)> Inputs { get { return inputs; } }
 }

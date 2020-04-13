@@ -22,6 +22,8 @@ public class GameStateManager : MonoBehaviour {
 		} else {
 			_instance = this;
 		}
+
+		this.setupPlayer();
 	}
 
 	[SerializeField] private GeneralTurnDisplay generalTurnDisplay;
@@ -106,17 +108,20 @@ public class GameStateManager : MonoBehaviour {
 
 	public CircularGrid solarSystemGrid;
 
+	private void setupPlayer()
+	{
+		int playerFactionIndex = this.Factions.FindIndex(faction => faction is PlayerFaction);
+		if(playerFactionIndex >= 0)
+		{
+			((PlayerFaction)this.Factions[playerFactionIndex]).LoadPlayer();
+		}
+	}
+
 	public void StartGame()
 	{
 		if(this.Factions.Count <= 1)
 		{
 			throw new System.Exception("Number of Factions must be at least 2");
-		}
-
-		int playerFactionIndex = this.Factions.FindIndex(faction => faction is PlayerFaction);
-		if(playerFactionIndex >= 0)
-		{
-			((PlayerFaction)this.Factions[playerFactionIndex]).LoadPlayer();
 		}
 
 		this.totalRounds.Value = 0;
@@ -221,7 +226,7 @@ public class GameStateManager : MonoBehaviour {
 	{
 		bool validAction = false;
 		GridCell targetNode = (GridCell)_node;
-		if(this.SelectedNode.Selectable != null && SelectedAction != SelectableActionType.None && targetNode != null)
+		if(this.SelectedNode?.Selectable != null && SelectedAction != SelectableActionType.None && targetNode != null)
 		{
 			//Build is an empty string for now because we haven't implemented it yet
 			validAction = this.SelectedNode.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetNode, "");
