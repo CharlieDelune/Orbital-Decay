@@ -109,12 +109,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d0905a40c19c4388babd2843f8f9615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  validActionTypes: 
+  validActionTypes: 040000000100000003000000
   ParentNode: {fileID: 0}
   ExtraOverride: 
   debug: 0
   onUnitDestroyed: {fileID: 0}
   Faction: {fileID: 0}
+  selectableType: 1
+  onMoveEvent: {fileID: 11400000, guid: f5be3cc5f5ff4314f9c2d40e5017ecdd, type: 2}
   movesLeft: 0
 --- !u!114 &7516539151877113001
 MonoBehaviour:

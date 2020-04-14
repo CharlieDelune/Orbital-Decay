@@ -8,6 +8,7 @@ public class GridCell : MonoBehaviour, INodable
     public int layer, slice, gCost, hCost, fCost;
     public int nodeValue {get; set;}
     public int id { get; set; }
+    public CircularGrid parentGrid;
     [SerializeField]
     private List<GridCell> neighbors;
     public Selectable Selectable;

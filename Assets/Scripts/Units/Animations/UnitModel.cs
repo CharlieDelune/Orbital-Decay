@@ -21,7 +21,7 @@ public class UnitModel : MonoBehaviour
 
 	public virtual void OnFilterReceiveAction(HeavyGameEventData data)
 	{
-		if(data.SourceNode.Selectable == this.parentUnit)
+		if(data.SourceCell.Selectable == this.parentUnit)
 		{
 			this.receiveAction(data);
 		}

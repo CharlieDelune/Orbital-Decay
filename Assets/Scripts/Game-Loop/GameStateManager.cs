@@ -75,16 +75,16 @@ public class GameStateManager : MonoBehaviour {
 		}
 	}
 
-	/// The selected Node
-	private GridCell selectedNode;
-	public GridCell SelectedNode
+	/// The selected Cell
+	private GridCell selectedCell;
+	public GridCell SelectedCell
 	{
-		get => this.selectedNode;
+		get => this.selectedCell;
 		set
 		{
-			if(value != this.selectedNode)
+			if(value != this.selectedCell)
 			{
-				this.selectedNode = value;
+				this.selectedCell = value;
 				this.onChange();
 			}
 		}
@@ -205,9 +205,9 @@ public class GameStateManager : MonoBehaviour {
 		this.IsPlayerTurn = false;
 	}
 
-	public void OnNodeSelected(MonoBehaviour _newNode)
+	public void OnCellSelected(MonoBehaviour _newCell)
 	{
-		this.selectedNode = (GridCell)_newNode;
+		this.selectedCell = (GridCell)_newCell;
 	}
 
 	public void OnActionSelected(int _action)
@@ -215,24 +215,24 @@ public class GameStateManager : MonoBehaviour {
 		this.selectedAction = (SelectableActionType)_action;
 		if(this.selectedAction == SelectableActionType.ChangeGrid)
 		{
-			this.GridInView = ((Planet)this.selectedNode.Selectable).grid;
+			this.GridInView = ((Planet)this.selectedCell.Selectable).grid;
 			Camera.main.transform.position = this.GridInView.transform.position + new Vector3(0, 60, -45);
 			this.SelectedAction = SelectableActionType.None;
-			this.SelectedNode = null;
+			this.SelectedCell = null;
 		}
 	}
 
-	public void OnTargetSelected(MonoBehaviour _node)
+	public void OnTargetSelected(MonoBehaviour _cell)
 	{
 		bool validAction = false;
-		GridCell targetNode = (GridCell)_node;
-		if(this.SelectedNode?.Selectable != null && SelectedAction != SelectableActionType.None && targetNode != null)
+		GridCell targetCell = (GridCell)_cell;
+		if(this.SelectedCell?.Selectable != null && SelectedAction != SelectableActionType.None && targetCell != null)
 		{
 			//Build is an empty string for now because we haven't implemented it yet
-			validAction = this.SelectedNode.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetNode, "");
+			validAction = this.SelectedCell.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetCell, "");
 			Debug.Log("Valid action: " + validAction);
 		}
-		this.SelectedNode = null;
+		this.SelectedCell = null;
 		this.SelectedAction = SelectableActionType.None;
 	}
 
@@ -244,7 +244,7 @@ public class GameStateManager : MonoBehaviour {
 	public void OnPlayerTurnEnded()
 	{
 		SelectedAction = SelectableActionType.None;
-		SelectedNode = null;
+		SelectedCell = null;
 		playerFaction.EndTurn();
 	}
 
@@ -264,7 +264,7 @@ public class GameStateManager : MonoBehaviour {
 			CircularGrid grid = (CircularGrid)_grid;
 			this.GridInView = grid;
 		}
-		this.selectedNode = null;
+		this.selectedCell = null;
 		this.selectedAction = SelectableActionType.None;
 	}
 }

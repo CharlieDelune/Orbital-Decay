@@ -16,8 +16,9 @@ public class HeavyGameEventData
 	public Faction SourceFaction;
 	public Faction TargetFaction;
 
-	public GridCell SourceNode;
-	public GridCell TargetNode;
+	public GridCell SourceCell;
+	public GridCell TargetCell;
+	public CircularGrid targetGrid;
 
 	public GameObject targetObject;
 
@@ -29,29 +30,32 @@ public class HeavyGameEventData
 	public string StringValue;
 
 	public SelectableActionType ActionType;
+	public Selectable targetSelectable;
 
 	public HeavyGameEventData(
 		Faction sourceFaction = null,
 		Faction targetFaction = null,
-		GridCell sourceNode = null,
-		GridCell targetNode = null,
+		GridCell sourceCell = null,
+		GridCell targetCell = null,
 		InGameResource resourceValue = null,
 		int intValue = 0,
 		bool boolValue = false,
 		float floatValue = 0.0f,
 		string stringValue = "",
+		Selectable targetSelectable = null,
 		SelectableActionType actionType = SelectableActionType.None)
 	{
 		this.SourceFaction = sourceFaction;
 		this.TargetFaction = targetFaction;
-		this.SourceNode = sourceNode;
-		this.TargetNode = targetNode;
+		this.SourceCell = sourceCell;
+		this.TargetCell = targetCell;
 		this.ResourceValue = resourceValue;
 		this.IntValue = intValue;
 		this.BoolValue = boolValue;
 		this.FloatValue = floatValue;
 		this.StringValue = stringValue;
 		this.ActionType = actionType;
+		this.targetSelectable = targetSelectable;
 	}
 }
 

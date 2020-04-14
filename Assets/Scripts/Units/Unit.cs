@@ -31,14 +31,10 @@ public class Unit : Selectable
 	[SerializeField] protected MonoBehaviourGameEvent onUnitDestroyed;
 
 	public Faction Faction;
-	private GridCell parentCell;
 
 	/// for quick debugging
 	[SerializeField] private bool debug = false;
 	public string ExtraOverride;
-
-	/// Turn State Fields
-	/// Reset in UpdatePreTurn
 
 	public int movesLeft = 0;
 
@@ -107,50 +103,50 @@ public class Unit : Selectable
 	/// Initial check to see if the fired HeavyGameEventData has to do with this unit
 	public virtual void OnFilterReceiveGameEvent(HeavyGameEventData data)
 	{
-		if(data.TargetNode == this.ParentNode)
+		if(data.TargetCell == this.ParentCell)
 		{
 			this.receiveAction(data);
 		}
 	}
 
 	/// Returns whether or not the action can be performed
-	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetNode, string param)
+	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
 		if(this.GetValidActionTypes().Contains(actionType))
 		{
 			switch(actionType)
 			{
 				case SelectableActionType.Attack:
-					/// Attacks if the targetNode has a selectable and if the Faction belonging to the selectable is
+					/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
 					/// not the current faction
-					return targetNode.Selectable is Unit && ((Unit)targetNode.Selectable).Faction != this.Faction;
+					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction;
 				case SelectableActionType.Move:
-					/// Moves if the targetNode is empty
-					return targetNode.Selectable == null;
+					/// Moves if the targetCell is empty
+					return targetCell.Selectable == null;
 			}
 		}
 		return false;
 	}
 
-	public override void PerformAction(SelectableActionType actionType, GridCell targetNode, string param)
+	public override void PerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
 		switch(actionType)
 		{
 			case SelectableActionType.Attack:
-				this.performAttack(targetNode);
+				this.performAttack(targetCell);
 			break;
 			case SelectableActionType.Move:
-				this.performMove(targetNode);
+				this.performMove(targetCell);
 			break;
 		}
 	}
 
 	/// Raises an attack action
-	protected virtual void performAttack(GridCell targetNode)
+	protected virtual void performAttack(GridCell targetCell)
 	{
 		HeavyGameEventData data = new HeavyGameEventData();
-		data.SourceNode = this.ParentNode;
-		data.TargetNode = targetNode;
+		data.SourceCell = this.ParentCell;
+		data.TargetCell = targetCell;
 		data.IntValue = this.attack;
 		data.ActionType = SelectableActionType.Attack;
 		GameStateManager.Instance.PerformAction(data);
@@ -163,12 +159,12 @@ public class Unit : Selectable
     protected virtual void performMove(GridCell targetIn)
     {
         HeavyGameEventData data = new HeavyGameEventData();
-		data.SourceNode = this.ParentNode;
-		data.TargetNode = targetIn;
+		data.SourceCell = this.ParentCell;
+		data.TargetCell = targetIn;
         this.target = targetIn;
         this.currentPathIndex = 0;
-        this.cellPath = GridManager.Instance.pathfinder.FindPath(parentCell.layer, parentCell.slice, targetIn.layer, targetIn.slice);
-        this.targetPath = GridManager.Instance.pathfinder.FindVectorPath(cellPath);
+        this.cellPath = ParentCell.parentGrid.pathfinder.FindPath(ParentCell.layer, ParentCell.slice, targetIn.layer, targetIn.slice);
+        this.targetPath = ParentCell.parentGrid.pathfinder.FindVectorPath(cellPath);
         this.moving = true;
         GameStateManager.Instance.PerformAction(data);
     }
@@ -178,15 +174,16 @@ public class Unit : Selectable
     protected virtual void performEnhance(string param)
     {}
 
-    public void SetParentCell(GridCell cellIn)
+    public override void SetParentCell(GridCell cellIn)
     {
-        this.parentCell = cellIn;
+        this.ParentCell = cellIn;
 		cellIn.Selectable = this;
+		cellIn.passable = false;
     }
 
     public GridCell GetParentCell()
     {
-        return parentCell;
+        return this.ParentCell;
     }
 
     public void SetMaxRange(int maxRangeIn)
@@ -218,7 +215,6 @@ public class Unit : Selectable
 				}
 				else
 				{
-					this.cellPath[this.currentPathIndex].Selectable = null;
 					this.currentPathIndex++;
 					if(this.currentPathIndex > 1)
 					{
@@ -229,13 +225,12 @@ public class Unit : Selectable
 					{
 						this.tapped = true;
 					}
-					if (this.currentPathIndex == this.maxRange+1 && !(this.currentPathIndex >= this.targetPath.Count+1))
-					{
-						this.endMoveInMiddle();
-					}
-					if (Vector3.Distance(this.transform.position, this.target.transform.position) <= 0.05f)
+					if (this.currentPathIndex == this.targetPath.Count)
 					{
 						this.endMove();
+					}
+					else if (movesMade == maxRange){
+						this.endMoveInMiddle();
 					}
 				}
 			}
@@ -270,18 +265,22 @@ public class Unit : Selectable
     
     private void endMove()
     {
+		HeavyGameEventData data = new HeavyGameEventData();
+        data.SourceCell = this.ParentCell;
+        data.TargetCell = this.target;
+        this.onMoveEvent.Raise(data);
         this.moving = false;
-        this.SetParentCell(this.target);
         this.currentPathIndex = 1;
-        this.transform.position = this.target.transform.position;
         this.target = null;
     }
 
     private void endMoveInMiddle()
     {
+		HeavyGameEventData data = new HeavyGameEventData();
+        data.SourceCell = this.ParentCell;
+        data.TargetCell = this.cellPath[this.currentPathIndex-1];
+        this.onMoveEvent.Raise(data);
         this.moving = false;
-        this.transform.position = this.targetPath[this.currentPathIndex-1];
-        SetParentCell(this.cellPath[this.currentPathIndex-1]);
         this.targetPath = this.targetPath.Skip(this.currentPathIndex-1).ToList();
         this.cellPath = this.cellPath.Skip(this.currentPathIndex-1).ToList();
     }

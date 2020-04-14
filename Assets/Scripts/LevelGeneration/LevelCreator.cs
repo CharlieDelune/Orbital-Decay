@@ -19,8 +19,6 @@ public class LevelCreator : MonoBehaviour
         unitPlacer.PlaceUnits();
         planetPlacer.PlacePlanets();
         //resourcePlacer.PlaceResources();
-        //Pathfinder.InitializeGrid();
-        GridManager.Instance.pathfinder.SetGrid(GridManager.Instance.grid);
         Destroy(gameObject);
     }
 

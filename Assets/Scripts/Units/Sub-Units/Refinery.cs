@@ -28,9 +28,9 @@ public class Refinery : Unit
 		this.outputInGameResource = GameData.Instance.GetResource(recipe.OutputName);
 	}
 
-	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetNode, string param)
+	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
-		return actionType == SelectableActionType.Enhance && targetNode?.Selectable == this;
+		return actionType == SelectableActionType.Enhance && targetCell?.Selectable == this;
 	}
 
 	protected override void updatePreTurn()
@@ -69,7 +69,7 @@ public class Refinery : Unit
 	{
 		this.isActive = !this.isActive;
 		HeavyGameEventData data = new HeavyGameEventData(
-			targetNode: this.ParentNode,
+			targetCell: this.ParentCell,
 			actionType: ((this.IsActive) ? SelectableActionType.Deactivate : SelectableActionType.Activate)
 		);
 		GameStateManager.Instance.PerformAction(data);

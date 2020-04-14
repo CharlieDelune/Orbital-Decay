@@ -13,6 +13,8 @@ public class CircularGrid : MonoBehaviour
     public bool isSolarSystem;
     [SerializeField]
     private int layers, slices;
+    public Pathfinder pathfinder;
+    public Planet parentPlanet;
 
 
     void Start()
@@ -35,6 +37,7 @@ public class CircularGrid : MonoBehaviour
     public void AddGridCell(GridCell cellIn)
     {
         gridCells[cellIn.layer, cellIn.slice] = cellIn;
+        cellIn.parentGrid = this;
     }
 
     public GridCell GetGridCell(int layer, int slice)
@@ -157,14 +160,14 @@ public class CircularGrid : MonoBehaviour
 	{
         GridCell bestCell = null;
 		float closestSqrDistance = Mathf.Infinity;
-		foreach(GridCell node in gridCells)
+		foreach(GridCell cell in gridCells)
 		{
-			Vector3 directionToTarget = node.transform.position - position;
+			Vector3 directionToTarget = cell.transform.position - position;
 			float dSqrToTarget = directionToTarget.sqrMagnitude;
 			if (dSqrToTarget < closestSqrDistance)
 			{
 				closestSqrDistance = dSqrToTarget;
-				bestCell = node;
+				bestCell = cell;
 			}
 		}
 		return bestCell;

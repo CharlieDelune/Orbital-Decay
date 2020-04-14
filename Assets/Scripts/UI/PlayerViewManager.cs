@@ -17,21 +17,19 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 	[SerializeField] private SelectablePopup selectablePopup;
 	[SerializeField] private MonoBehaviourGameEvent onPlayerViewStateChangeEvent;
 
-	[SerializeField] private MonoBehaviourGameEvent onNodeSelectedEvent;
+	[SerializeField] private MonoBehaviourGameEvent onCellSelectedEvent;
 	[SerializeField] private MonoBehaviourGameEvent onTargetSelectedEvent;
 	[SerializeField] private FactionGameEvent onPlayerTurnEndedEvent;
 
 	private bool isPlayerTurn;
 	private List<Faction> factions;
-	private GridCell selectedNode;
+	private GridCell selectedCell;
 	private CircularGrid gridInView;
 	private SelectableActionType selectedAction;
 
 	private void Awake()
 	{
-		//isPlayerTurn = GameStateManager.Instance.IsPlayerTurn;
-		//factions = GameStateManager.Instance.Factions;
-		//selectedNode = GameStateManager.Instance.SelectedNode;
+
 	}
 
 	/// This will be used later on
@@ -69,28 +67,28 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 			Physics.Raycast(ray, out rHit, Mathf.Infinity, LayerMask.GetMask("Grid"));
 			Vector3 hitPoint = rHit.point;
 
-			GridCell clickedNode = this.gridInView.GetGridCell(hitPoint);
+			GridCell clickedCell = this.gridInView.GetGridCell(hitPoint);
 
 			/// Mouse was clicked outside the grid
-			if(clickedNode == null)
+			if(clickedCell == null)
 			{
-				onNodeSelectedEvent.Raise(null);
+				onCellSelectedEvent.Raise(null);
 				this.selectablePopup.gameObject.SetActive(false);
 			}
 			else
 			{
-				/// If there is a selected node
-				if(this.isPlayerTurn && selectedNode != null)
+				/// If there is a selected cell
+				if(this.isPlayerTurn && selectedCell != null)
 				{
-					onTargetSelectedEvent.Raise(clickedNode);
+					onTargetSelectedEvent.Raise(clickedCell);
 				}
 				else
 				{
-					selectedNode = clickedNode;
-					onNodeSelectedEvent.Raise(clickedNode);
-					if(selectedNode.Selectable != null)
+					selectedCell = clickedCell;
+					onCellSelectedEvent.Raise(clickedCell);
+					if(selectedCell.Selectable != null)
 					{
-						ShowPopUp(clickedNode);
+						ShowPopUp(clickedCell);
 					}
 				}
 			}
@@ -102,10 +100,10 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
     	this.onPlayerViewStateChangeEvent.Raise(this);
     }
 
-	private void ShowPopUp(GridCell node)
+	private void ShowPopUp(GridCell cell)
 	{
 		this.selectablePopup.gameObject.SetActive(true);
-		this.selectablePopup.LoadPopup(node.Selectable);
+		this.selectablePopup.LoadPopup(cell.Selectable);
 	}
 
 	private void HidePopUp()
@@ -118,11 +116,11 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 		GameStateManager gs = (GameStateManager)_gameStateManager;
 		this.isPlayerTurn = gs.IsPlayerTurn;
 		this.factions = gs.Factions;
-		this.selectedNode = gs.SelectedNode;
+		this.selectedCell = gs.SelectedCell;
 		this.gridInView = gs.GridInView;
 		this.selectedAction = gs.SelectedAction;
 
-		if(gs.SelectedNode == null)
+		if(gs.SelectedCell == null)
 		{ 
 			HidePopUp();
 		}

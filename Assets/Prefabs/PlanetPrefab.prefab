@@ -106,11 +106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d846118870ca4a408ebc82e64089478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  validActionTypes: 
+  validActionTypes: 09000000
   ParentNode: {fileID: 0}
+  selectableType: 2
+  onMoveEvent: {fileID: 11400000, guid: 5b5b1f2184bf5344bb36d2bfaeb41245, type: 2}
   gravityWell: {fileID: 0}
   grid: {fileID: 0}
   isGridInView: {fileID: 11400000, guid: 90f579efc75c6fa4db9dd6baaacbecfd, type: 2}
+  onTryChangeGridEvent: {fileID: 0}
   revolveSpeed: 4
-  viewState: {fileID: 4286341801050931707, guid: c314981c20856664cb781ae5537a5a0c,
-    type: 3}

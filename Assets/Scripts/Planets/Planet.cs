@@ -8,7 +8,6 @@ public class Planet : Selectable, Revolving
     public CircularGrid grid;
     public BoolProperty isGridInView;
     RevolveDirection revolveDirection;
-    GridCell parentCell;
     GridCell targetCell;
     List<Vector3> targetPath;
 
@@ -18,10 +17,6 @@ public class Planet : Selectable, Revolving
     private bool moving;
     private int currentPathIndex;
     private bool viewing;
-    //[SerializeField]
-    //private PlayerViewState viewState;
-    new private SelectableActionType[] validActionTypes = 
-    {SelectableActionType.ChangeGrid};
 
     void Start()
     {
@@ -50,14 +45,14 @@ public class Planet : Selectable, Revolving
         // }
     }
 
-    public override bool CanPerformAction(SelectableActionType actionType, GridCell targetNode, string param)
+    public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
 		if(this.GetValidActionTypes().Contains(actionType))
 		{
 			switch(actionType)
 			{
 				case SelectableActionType.ChangeGrid:
-					/// Changes to view if same node
+					/// Changes to view if same cell
 					return true;
 			}
 		}
@@ -71,7 +66,7 @@ public class Planet : Selectable, Revolving
 		return actionTypes;
 	}
 
-    public override void PerformAction(SelectableActionType actionType, GridCell targetNode, string param)
+    public override void PerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
 		switch(actionType)
 		{
@@ -98,8 +93,8 @@ public class Planet : Selectable, Revolving
 
     public void Revolve()
     {
-        targetCell = GridManager.Instance.grid.GetGridCellForRevolve(parentCell, revolveDirection, revolveSpeed);
-        targetPath = GridManager.Instance.grid.GetGridVectorsForRevolve(parentCell.layer, parentCell.slice, targetCell.slice, revolveDirection);
+        targetCell = GridManager.Instance.grid.GetGridCellForRevolve(ParentCell, revolveDirection, revolveSpeed);
+        targetPath = GridManager.Instance.grid.GetGridVectorsForRevolve(ParentCell.layer, ParentCell.slice, targetCell.slice, revolveDirection);
         currentPathIndex = 0;
         moving = true;
     }
@@ -109,15 +104,16 @@ public class Planet : Selectable, Revolving
         revolveSpeed = speed;
     }
 
-    public void SetParentCell(GridCell cellIn)
+    public override void SetParentCell(GridCell cellIn)
     {
         cellIn.passable = false;
-        parentCell = cellIn;
+        ParentCell = cellIn;
+        cellIn.Selectable = this;
     }
 
     public GridCell GetParentCell()
     {
-        return parentCell;
+        return ParentCell;
     }
 
     public void SetRevolveDirection(RevolveDirection direction)
@@ -151,12 +147,11 @@ public class Planet : Selectable, Revolving
 
     public void EndMove()
     {
-        parentCell.passable = true;
-        parentCell.Selectable = null;
+        HeavyGameEventData data = new HeavyGameEventData();
+        data.SourceCell = ParentCell;
+        data.TargetCell = targetCell;
+        onMoveEvent.Raise(data);
         moving = false;
-        SetParentCell(targetCell);
-        transform.position = targetCell.transform.position;
-        targetCell.Selectable = this;
         targetCell = null;
     }
 }

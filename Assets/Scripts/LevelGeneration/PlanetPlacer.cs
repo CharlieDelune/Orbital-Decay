@@ -45,8 +45,10 @@ public class PlanetPlacer : MonoBehaviour
         PlanetManager.Instance.AddPlanet(planetScript);
         parentCell.passable = false;
         parentCell.Selectable = planetScript;
+        planetScript.ParentCell = parentCell;
         planetScript.gravityWell = CircleGridBuilder.Instance.BuildLevel((int)Mathf.Floor(layer * 1.5f), slice * 1, new Vector3(layer * 100,0, slice * 100));
         planetScript.grid = planetScript.gravityWell.transform.Find("Grid").GetComponent<CircularGrid>();
+        planetScript.grid.parentPlanet = planetScript;
         GameObject planet2 = Instantiate(planet);
         planet2.transform.SetParent(planetScript.gravityWell.transform);
         planet2.transform.position = planetScript.gravityWell.transform.position;

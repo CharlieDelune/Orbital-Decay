@@ -27,7 +27,7 @@ public class Miner : Unit
 
 	/// Miner's don't have any selectable actions, so this should always return false
 	/// (assuming they do not have movement)
-	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetNode, string param)
+	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
 		return false;
 	}

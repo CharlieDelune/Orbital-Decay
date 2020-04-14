@@ -51,15 +51,18 @@ public class CircleGridBuilder : MonoBehaviour
         
     }
 
+    //Currently used to build solar system
+    //TODO: Roll this into function below to fully proceduralize
     public void BuildLevel()
     {
         GameObject sun = Instantiate(theSun);
         sun.transform.SetParent(grid.gameObject.transform);
-        grid.SetGridSize(layers - 1, slices);
+        grid.SetGridSize(layers - 2, slices);
+        grid.isSolarSystem = true;
         Vector3 previousPos = new Vector3(0, 0, 0);
         Vector3 currentPos;
         Vector3 desiredPos;
-        for (int layer = 1; layer < layers; layer++)
+        for (int layer = 1; layer < layers-1; layer++)
         {
             Vector3 layerStartPos = new Vector3(0, 0, 0);
             for (int slice = 0; slice < slices; slice++)
@@ -124,14 +127,28 @@ public class CircleGridBuilder : MonoBehaviour
                     newLine.SetPosition(1, new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * (layers-1)));
                 }
 
+                //Create last layer ring (only necessary for solar system grids)
+                if (layer == layers-2)
+                {
+                    GameObject newLineObject = new GameObject("LineHolder");
+                    LineRenderer newLine = newLineObject.AddComponent<LineRenderer>();
+                    newLine.transform.SetParent(lineHolder.transform);
+                    newLine.material = lineMaterial;
+                    newLine.startWidth = 0.2f;
+                    newLine.endWidth = 0.2f;
+                    newLine.SetPosition(0,  new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * (layers-1)));
+                    float newAngle = (slice+1) * Mathf.PI * 2 / slices;
+                    newLine.SetPosition(1, new Vector3(Mathf.Cos(newAngle), 0, Mathf.Sin(newAngle)) * (gridRadius * (layers-1)));
+                }
+
                 previousPos = desiredPos;
             }
         }
         // Tell all grid cells to collect and store their neighbors to make pathfinding way better
         grid.GenerateCellNeighbors();
-        grid.isSolarSystem = true;
         GameStateManager.Instance.GridInView = grid;
         GameStateManager.Instance.solarSystemGrid = grid;
+        grid.pathfinder.SetGrid(grid);
     }
 
     public GameObject BuildLevel(int layers, int slices, Vector3 centerPosition)
@@ -145,6 +162,7 @@ public class CircleGridBuilder : MonoBehaviour
         lineHolder.transform.SetParent(gridHolder.transform);
         GameObject nodeHolder = gridHolder.transform.Find("Nodes").gameObject;
         nodeHolder.transform.SetParent(gridHolder.transform);
+
 
         grid.SetGridSize(layers - 1, slices);
         Vector3 previousPos = centerPosition;
@@ -224,6 +242,7 @@ public class CircleGridBuilder : MonoBehaviour
         // Tell all grid cells to collect and store their neighbors to make pathfinding way better
         grid.GenerateCellNeighbors();
         systemHolder.transform.position = centerPosition;
+        grid.pathfinder.SetGrid(grid);
         return systemHolder;
     }
 }
