@@ -7,7 +7,6 @@ public class SelectablePopup : MonoBehaviour
 {
 
 	private SelectableActionType? selectedAction;
-	private string selectedUnitToBuild;
 
 	private Selectable parentSelectable;
 
@@ -21,7 +20,6 @@ public class SelectablePopup : MonoBehaviour
 	public void LoadPopup(Selectable selectable)
 	{
 		this.selectedAction = null;
-		this.selectedUnitToBuild = "";
 		this.parentSelectable = selectable;
 		List<SelectableActionType> validActionTypes = selectable.GetValidActionTypes();
 		for(int i = 0; i < this.buttons.Count; i++)
@@ -39,9 +37,36 @@ public class SelectablePopup : MonoBehaviour
 		}
 	}
 
+	/// Loads the build option buttons
 	private void loadBuildOptions()
 	{
-		///	not implemented
+		Builder builder = GameStateManager.Instance.SelectedCell.Selectable as Builder;
+		if(builder != null)
+		{
+			for(int i = 0; i < this.buttons.Count; i++)
+			{
+				Destroy(this.buttons[i].gameObject);
+			}
+			this.buttons.Clear();
+
+			string[] buildOptions = builder.BuildOptionLabels;
+
+			for(int i = 0; i < buildOptions.Length; i++)
+			{
+				int g = i;
+				this.buttons.Add(Instantiate(this.buttonPrefab));
+				this.buttons[i].transform.SetParent(this.buttonsParent, false);
+				this.buttons[i].GetComponentsInChildren<Text>()[0].text = buildOptions[g];
+
+				/// when the button is clicked, it sets the selected build option
+				this.buttons[i].onClick.AddListener(()=>this.onSelectBuildOption(g, builder));
+			}
+		}
+	}
+
+	private void onSelectBuildOption(int buildOptionIndex, Builder builder)
+	{
+		builder.SetBuildOption(buildOptionIndex);
 	}
 
 	private void onButtonPress(SelectableActionType actionType)

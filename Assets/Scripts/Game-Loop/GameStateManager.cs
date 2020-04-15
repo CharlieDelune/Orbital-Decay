@@ -108,6 +108,8 @@ public class GameStateManager : MonoBehaviour {
 
 	public CircularGrid solarSystemGrid;
 
+    public GameObject UnitHolder;
+
 	private void setupPlayer()
 	{
 		int playerFactionIndex = this.Factions.FindIndex(faction => faction is PlayerFaction);

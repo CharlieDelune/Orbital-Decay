@@ -5,3 +5,5 @@ Recipe Name,Output,Output Quantity,Max Stack,Input Item,Input Quantity
 ,,,,Oil,10
 ORE_TO_METAL,Metal,1,10,Ore,1
 OIL_TO_REFINED_OIL,Refined Oil,1,10,Oil,1
+BUILD_TEST,Test,,,Oil,0
+BUILD_MINER,Miner,,,Oil,1

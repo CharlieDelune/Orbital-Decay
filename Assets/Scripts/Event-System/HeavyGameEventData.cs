@@ -20,9 +20,11 @@ public class HeavyGameEventData
 	public GridCell TargetCell;
 	public CircularGrid targetGrid;
 
-	public GameObject targetObject;
+	public GameObject TargetObject;
 
 	public InGameResource ResourceValue;
+
+	public Recipe RecipeValue;
 
 	public int IntValue;
 	public bool BoolValue;
@@ -35,9 +37,11 @@ public class HeavyGameEventData
 	public HeavyGameEventData(
 		Faction sourceFaction = null,
 		Faction targetFaction = null,
+		GameObject targetObject = null,
 		GridCell sourceCell = null,
 		GridCell targetCell = null,
 		InGameResource resourceValue = null,
+		Recipe recipeValue = null,
 		int intValue = 0,
 		bool boolValue = false,
 		float floatValue = 0.0f,
@@ -47,9 +51,11 @@ public class HeavyGameEventData
 	{
 		this.SourceFaction = sourceFaction;
 		this.TargetFaction = targetFaction;
+		this.TargetObject = targetObject;
 		this.SourceCell = sourceCell;
 		this.TargetCell = targetCell;
 		this.ResourceValue = resourceValue;
+		this.RecipeValue = recipeValue;
 		this.IntValue = intValue;
 		this.BoolValue = boolValue;
 		this.FloatValue = floatValue;

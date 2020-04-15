@@ -14,26 +14,28 @@ public class Unit : Selectable
 	protected int attack;
 	protected bool baseStatsSet;
 
-    private bool moving = false;
-    private List<Vector3> targetPath;
-    private int currentPathIndex;
-    private List<GridCell> cellPath;
-    private bool tapped;
-    private int movesMade;
+    protected bool moving = false;
+    protected List<Vector3> targetPath;
+    protected int currentPathIndex;
+    protected List<GridCell> cellPath;
+    protected bool tapped;
+    protected int movesMade;
 
     /// When not active, maybe it could display a faded out
 	/// unit in the game - active state mostly applies to certain units
 	/// ex - refineries
 	public virtual bool IsActive { get => true; }
 
-    private GridCell target;
+    protected GridCell target;
 
 	[SerializeField] protected MonoBehaviourGameEvent onUnitDestroyed;
 
-	public Faction Faction;
+	/// attribute to allow editing the faction for debugging
+	[SerializeField] protected Faction faction;
+	public Faction Faction { get => this.faction; }
 
 	/// for quick debugging
-	[SerializeField] private bool debug = false;
+	[SerializeField] protected bool debug = false;
 	public string ExtraOverride;
 
 	public int movesLeft = 0;
@@ -63,7 +65,7 @@ public class Unit : Selectable
         }
     }
 
-	public virtual void SetBaseStats(string name, int maxRange, int health, int armor, int attack, string extra) {
+	public virtual void SetBaseStats(string name, int maxRange, int health, int armor, int attack, string extra, Faction _faction) {
 		gameObject.name = name;
 		this.maxRange = maxRange;
 		this.health = health;
@@ -71,6 +73,8 @@ public class Unit : Selectable
 		this.attack = attack;
 
 		this.baseStatsSet = true;
+
+		this.faction = _faction;
 
 		this.setExtra(extra);
 	}

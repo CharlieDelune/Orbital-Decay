@@ -126,4 +126,34 @@ public class FactionResources
 			this.queuedResources[resource] += amount;
 		}
 	}
+
+	public bool CanUseRecipe(Recipe recipe)
+	{
+		List<(InGameResource, int)> inputs = recipe.Inputs;
+		foreach(var input in inputs)
+		{
+			if(this.resources[input.Item1] < input.Item2)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void TryUseRecipe(Recipe recipe)
+	{
+		if(this.CanUseRecipe(recipe))
+		{
+			this.UseRecipe(recipe);
+		}
+	}
+
+	public void UseRecipe(Recipe recipe)
+	{
+		List<(InGameResource, int)> inputs = recipe.Inputs;
+		foreach(var input in inputs)
+		{
+			this.resources[input.Item1] -= input.Item2;
+		}
+	}
 }

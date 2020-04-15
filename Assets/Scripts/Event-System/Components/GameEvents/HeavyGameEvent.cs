@@ -10,6 +10,9 @@ public class HeavyGameEvent : ScriptableObject, ISubscribable<HeavyGameEventData
 {
 
 	protected SortedSet<HeavyGameEventListener> listeners;
+    protected HeavyGameEventListener[] listenersCache;
+
+    private bool modifiedSinceLastRaise = true;
 
 	protected virtual void Awake()
 	{
@@ -31,16 +34,27 @@ public class HeavyGameEvent : ScriptableObject, ISubscribable<HeavyGameEventData
             );
         }
     	this.listeners.Add((HeavyGameEventListener)listener);
+        this.modifiedSinceLastRaise = true;
     }
 
     public virtual void Unsubscribe(IListener<HeavyGameEventData> listener)
     {
     	this.listeners.Remove((HeavyGameEventListener)listener);
+        this.modifiedSinceLastRaise = true;
     }
 
     public virtual void Raise(HeavyGameEventData data)
     {
-        foreach(HeavyGameEventListener listener in this.listeners)
+        /// Necessary in case this.listeners gets modified during the execution of the OnRaise methods
+        HeavyGameEventListener[] listenersCopy;
+        if(this.modifiedSinceLastRaise)
+        {
+            this.listenersCache = new HeavyGameEventListener[this.listeners.Count];
+            this.listeners.CopyTo(this.listenersCache);
+        }
+        listenersCopy = this.listenersCache;
+
+        foreach(HeavyGameEventListener listener in listenersCopy)
         {
             listener.OnRaise(data);
         }

@@ -51,6 +51,15 @@ public abstract class Faction : MonoBehaviour
 		this.StartCoroutine(this.useTurn());
 	}
 
+	public void CreateUnit(GridCell cell, string unitName)
+	{
+		Unit unit = GameData.Instance.GetUnitInfo(unitName).InstantiateUnit(this);
+		unit.SetParentCell(cell);
+		unit.transform.position = cell.transform.position;
+		unit.transform.SetParent(GameStateManager.Instance.UnitHolder.transform);
+		this.units.Add(unit);
+	}
+
 	public void AddUnit(Unit unitIn)
 	{
 		units.Add(unitIn);
@@ -64,6 +73,9 @@ public abstract class Faction : MonoBehaviour
 			{
 				case SelectableActionType.ResourceGain:
 					this.Resources.GainResource(data.ResourceValue, data.IntValue);
+				break;
+				case SelectableActionType.Build:
+					this.CreateUnit(data.TargetCell, data.RecipeValue.OutputName);
 				break;
 			}
 		}

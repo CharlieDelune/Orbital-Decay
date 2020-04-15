@@ -144,11 +144,15 @@ public class GameData : MonoBehaviour
 													outputQuantity: int.Parse(fields[2]),
 													maxStack: int.Parse(fields[3]));
 					}
-					else
+					else if(nameToUnitInfo.ContainsKey(fields[1]))
 					{
 						recipe = new UnitRecipe(
 												recipeName: fields[0],
 												outputName: fields[1]);
+					}
+					else
+					{
+						throw new System.Exception("The provided output does not exist as a Resource or as a Unit");
 					}
 					recipe.AddInput(nameToResource[fields[4]], int.Parse(fields[5]));
 				}
