@@ -51,5 +51,6 @@ public class PlanetPlacer : MonoBehaviour
         GameObject planet2 = Instantiate(planet);
         planet2.transform.SetParent(planetScript.gravityWell.transform);
         planet2.transform.position = planetScript.gravityWell.transform.position;
+        Destroy(planet2.GetComponent<Planet>());
     }
 }
