@@ -42,6 +42,10 @@ public class CircularGrid : MonoBehaviour
 
     public GridCell GetGridCell(int layer, int slice)
     {
+        if (slice < 0) 
+        {
+            slice = slices - 1 + slice;
+        }
         return gridCells[layer, slice];
     }
 

@@ -106,7 +106,6 @@ public class Planet : Selectable, Revolving
 
     public override void SetParentCell(GridCell cellIn)
     {
-        cellIn.passable = false;
         ParentCell = cellIn;
         cellIn.Selectable = this;
     }

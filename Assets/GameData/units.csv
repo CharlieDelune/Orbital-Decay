@@ -1,5 +1,6 @@
 ﻿Name,Range,Health,Armor,Attack,Extra
-Main Base,1,100,10,10,BUILD_MINER:Miner-BUILD_TEST:Test
+Main Base,1,100,10,10,BUILD_MINER:Miner-BUILD_TEST:Test-BUILD_SCOUT:Scout
 Miner,2,1,0,0,Ore:3
 Refinery,1,1,0,0,
 Test,1,1,0,0,Oil:10
+Scout,4,10,3,5,

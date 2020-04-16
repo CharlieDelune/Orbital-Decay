@@ -131,8 +131,8 @@ public class Pathfinder : MonoBehaviour
         startNodeHolder.CalculateFCost();
 
         openCells.Add(startNodeHolder);
-
-        while(openCells.Count() > 0)
+        int numberOfLoops = 0;
+        while(openCells.Count() > 0 && numberOfLoops < 1000)
         {
             PathNodeHolder<GridCell> currentCell = GetLowestFCostCell(openCells);
             if(currentCell.node == endNodeHolder.node)
@@ -151,7 +151,8 @@ public class Pathfinder : MonoBehaviour
                 {
                     continue;
                 }
-                if (!neighbor.node.passable)
+                if (neighbor.node.Selectable != null &&
+                    !(neighbor == endNodeHolder && neighbor.node.Selectable.selectableType == SelectableType.Planet))
                 {
                     openCells.Remove(currentCell);
                     closedCells.Add(neighbor);
@@ -171,6 +172,7 @@ public class Pathfinder : MonoBehaviour
                     }
                 }
             }
+            numberOfLoops++;
         }
 
         return null;

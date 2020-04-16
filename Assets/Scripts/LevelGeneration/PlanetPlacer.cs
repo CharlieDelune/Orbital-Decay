@@ -43,7 +43,6 @@ public class PlanetPlacer : MonoBehaviour
         planetScript.revolveSpeed = revSpeed;
         planet.transform.SetParent(planetHolder.transform);
         PlanetManager.Instance.AddPlanet(planetScript);
-        parentCell.passable = false;
         parentCell.Selectable = planetScript;
         planetScript.ParentCell = parentCell;
         planetScript.gravityWell = CircleGridBuilder.Instance.BuildLevel((int)Mathf.Floor(layer * 1.5f), slice * 1, new Vector3(layer * 100,0, slice * 100));

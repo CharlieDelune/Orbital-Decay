@@ -126,7 +126,7 @@ public class Unit : Selectable
 					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction;
 				case SelectableActionType.Move:
 					/// Moves if the targetCell is empty
-					return targetCell.Selectable == null;
+					return targetCell.Selectable == null || targetCell.Selectable.selectableType == SelectableType.Planet;
 			}
 		}
 		return false;
@@ -182,7 +182,6 @@ public class Unit : Selectable
     {
         this.ParentCell = cellIn;
 		cellIn.Selectable = this;
-		cellIn.passable = false;
     }
 
     public GridCell GetParentCell()
