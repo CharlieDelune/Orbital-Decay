@@ -61,9 +61,21 @@ public class FactionResources
 		return resourceQuantities;
 	}
 
+	public bool HasResources(List<(InGameResource, int)> _resources)
+	{
+		foreach(var pair in _resources)
+		{
+			if(!this.HasResource(pair.Item1, pair.Item2))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public bool HasResource(InGameResource resource, int quantity)
 	{
-		return this.resources.ContainsKey(resource) && this.resources[resource] > quantity;
+		return this.resources.ContainsKey(resource) && this.resources[resource] >= quantity;
 	}
 
 	public void LoseResource(InGameResource resource, int quantity)
@@ -155,5 +167,6 @@ public class FactionResources
 		{
 			this.resources[input.Item1] -= input.Item2;
 		}
+		this.onChange();
 	}
 }

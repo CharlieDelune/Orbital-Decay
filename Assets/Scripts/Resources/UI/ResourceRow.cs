@@ -10,7 +10,7 @@ public class ResourceRow : MonoBehaviour
 
 	public void UpdateResourceNameLabel(string resourceName)
 	{
-		this.resourceNameLabel.text = resourceName;
+		this.resourceNameLabel.text = resourceName[0].ToString();
 	}
 	
 	public void UpdateAmountLabel(int amount)

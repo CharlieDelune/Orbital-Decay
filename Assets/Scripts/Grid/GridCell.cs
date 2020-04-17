@@ -11,6 +11,7 @@ public class GridCell : MonoBehaviour, INodable
     [SerializeField]
     private List<GridCell> neighbors;
     public Selectable Selectable;
+    public ResourceDeposit ResourceDeposit;
 
     void Start()
     {

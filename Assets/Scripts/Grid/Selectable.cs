@@ -6,6 +6,9 @@ using UnityEngine;
 public abstract class Selectable : MonoBehaviour
 {
 
+	public String PopupLabel;
+	public String PopupDescription;
+
 	public virtual bool TryPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
 		if(this.CanPerformAction(actionType, targetCell, param))

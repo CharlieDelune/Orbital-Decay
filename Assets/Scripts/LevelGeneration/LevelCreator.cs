@@ -18,7 +18,7 @@ public class LevelCreator : MonoBehaviour
         gridBuilder.BuildLevel();
         unitPlacer.PlaceUnits();
         planetPlacer.PlacePlanets();
-        //resourcePlacer.PlaceResources();
+        resourcePlacer.PlaceResources();
         Destroy(gameObject);
     }
 

@@ -3,6 +3,7 @@ using UnityEngine;
 public class UnitInfo
 {
 	private Unit unitPrefab;
+	public Unit UnitPrefab { get => this.unitPrefab; }
 
 	private string name;
 	private int maxRange;

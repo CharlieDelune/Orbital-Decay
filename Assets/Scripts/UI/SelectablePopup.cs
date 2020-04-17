@@ -11,8 +11,9 @@ public class SelectablePopup : MonoBehaviour
 	private Selectable parentSelectable;
 
 	[SerializeField] private Button buttonPrefab;
+	[SerializeField] private BuildButton buildButtonPrefab;
 	[SerializeField] private Transform buttonsParent;
-	private List<Button> buttons = new List<Button>();
+	private List<GameObject> buttons = new List<GameObject>();
 
 	[SerializeField] private IntGameEvent onActionSelectedEvent;
 
@@ -24,16 +25,17 @@ public class SelectablePopup : MonoBehaviour
 		List<SelectableActionType> validActionTypes = selectable.GetValidActionTypes();
 		for(int i = 0; i < this.buttons.Count; i++)
 		{
-			Destroy(this.buttons[i].gameObject);
+			Destroy(this.buttons[i]);
 		}
 		this.buttons.Clear();
 		for(int i = 0; i < validActionTypes.Count; i++)
 		{
 			int g = i;
-			this.buttons.Add(Instantiate(this.buttonPrefab));
-			this.buttons[i].transform.SetParent(this.buttonsParent, false);
-			this.buttons[i].GetComponentsInChildren<Text>()[0].text = validActionTypes[i].ToString();
-			this.buttons[i].onClick.AddListener(()=>this.onButtonPress(validActionTypes[g]));
+			Button button = Instantiate(this.buttonPrefab);
+			this.buttons.Add(button.gameObject);
+			button.transform.SetParent(this.buttonsParent, false);
+			button.GetComponentsInChildren<Text>()[0].text = validActionTypes[i].ToString();
+			button.onClick.AddListener(()=>this.onButtonPress(validActionTypes[g]));
 		}
 	}
 
@@ -54,19 +56,20 @@ public class SelectablePopup : MonoBehaviour
 			for(int i = 0; i < buildOptions.Length; i++)
 			{
 				int g = i;
-				this.buttons.Add(Instantiate(this.buttonPrefab));
-				this.buttons[i].transform.SetParent(this.buttonsParent, false);
-				this.buttons[i].GetComponentsInChildren<Text>()[0].text = buildOptions[g];
+				BuildButton buildButton = Instantiate(this.buildButtonPrefab) as BuildButton;
+				UnitRecipe recipe = builder.BuildOptions[g];
 
-				/// when the button is clicked, it sets the selected build option
-				this.buttons[i].onClick.AddListener(()=>this.onSelectBuildOption(g, builder));
+				GameObject buildOptionWrapper = buildButton.SetButton(builder.Faction, () => this.onSelectBuildOption(recipe, builder), builder.BuildOptions[g]);
+				this.buttons.Add(buildOptionWrapper);
+				buildOptionWrapper.transform.SetParent(this.buttonsParent, false);
 			}
 		}
 	}
 
-	private void onSelectBuildOption(int buildOptionIndex, Builder builder)
+	private void onSelectBuildOption(UnitRecipe recipe, Builder builder)
 	{
-		builder.SetBuildOption(buildOptionIndex);
+		Debug.Log("Selected Build Option " + recipe.OutputName);
+		builder.SetBuildOption(recipe);
 	}
 
 	private void onButtonPress(SelectableActionType actionType)

@@ -37,7 +37,6 @@ public class Builder : Unit
 	/// Returns whether or not the action can be performed
 	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
-		Debug.Log(targetCell);
 		if(this.GetValidActionTypes().Contains(actionType))
 		{
 			switch(actionType)
@@ -57,6 +56,14 @@ public class Builder : Unit
 						{
 							Debug.Log("Insufficient resources!");
 						}
+
+						/// Make sure the target node has a ResourceDeposit if the buildOption is a Miner
+						if(
+							GameData.Instance.GetUnitInfo(this.selectedBuildOption.OutputName).UnitPrefab is Miner
+							&& targetCell.ResourceDeposit == null)
+						{
+							return false;
+						}
 						return canUseRecipe && targetCell.Selectable == null && this.ParentCell.GetNeighbors().Contains(targetCell);
 					}
 					break;
@@ -67,9 +74,9 @@ public class Builder : Unit
 
 	/// Sets the build options based on the selected index
 	/// Called from SelectablePopup
-	public void SetBuildOption(int buildOptionIndex)
+	public void SetBuildOption(UnitRecipe _selectedBuildOption)
 	{
-		this.selectedBuildOption = this.buildOptions[buildOptionIndex];
+		this.selectedBuildOption = _selectedBuildOption;
 	}
 
 	public override void PerformAction(SelectableActionType actionType, GridCell targetCell, string param)
