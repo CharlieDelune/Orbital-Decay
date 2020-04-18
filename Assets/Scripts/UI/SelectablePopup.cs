@@ -10,6 +10,7 @@ public class SelectablePopup : MonoBehaviour
 
 	private Selectable parentSelectable;
 
+	[SerializeField] private Text selectableName;
 	[SerializeField] private Button buttonPrefab;
 	[SerializeField] private BuildButton buildButtonPrefab;
 	[SerializeField] private Transform buttonsParent;
@@ -21,6 +22,7 @@ public class SelectablePopup : MonoBehaviour
 	public void LoadPopup(Selectable selectable)
 	{
 		this.selectedAction = null;
+		this.selectableName.text = selectable.PopupLabel;
 		this.parentSelectable = selectable;
 		List<SelectableActionType> validActionTypes = selectable.GetValidActionTypes();
 		for(int i = 0; i < this.buttons.Count; i++)

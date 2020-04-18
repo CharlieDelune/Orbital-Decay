@@ -218,7 +218,6 @@ public class GameStateManager : MonoBehaviour {
 		if(this.selectedAction == SelectableActionType.ChangeGrid)
 		{
 			this.GridInView = ((Planet)this.selectedCell.Selectable).grid;
-			Camera.main.transform.position = this.GridInView.transform.position + new Vector3(0, 60, -45);
 			this.SelectedAction = SelectableActionType.None;
 			this.SelectedCell = null;
 		}

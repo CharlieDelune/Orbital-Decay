@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 8054886451722230958}
   - component: {fileID: 6656417357481010567}
   - component: {fileID: 7601609960834130713}
-  - component: {fileID: 2608732672705344856}
+  - component: {fileID: 692466331048814046}
+  - component: {fileID: 7091417613401833411}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -26,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2327489063961702852}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0.35355338, y: -0.1464466, z: 0.35355338, w: 0.8535535}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6327938284536975580}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 45}
 --- !u!33 &6656417357481010567
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -80,20 +81,50 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &2608732672705344856
-CapsuleCollider:
+--- !u!114 &692466331048814046
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2327489063961702852}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c22924e171748458bbaf513fe706e0dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitActions:
+  - TriggerActionType: 1
+    UnitAnimation: {fileID: 3269808451784073971, guid: 981746397b5bb46cab6b2fb4759e9771,
+      type: 3}
+--- !u!114 &7091417613401833411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2327489063961702852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 136c5c7e1c4944165a1361e6919ff5d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 0ca9882b46bf5c04f90b576c46d5330e, type: 2}
+  callback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 692466331048814046}
+        m_MethodName: OnFilterReceiveAction
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  priority: 0
 --- !u!1 &5588272728083112112
 GameObject:
   m_ObjectHideFlags: 0

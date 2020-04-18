@@ -9,7 +9,7 @@ using UnityEngine;
 public class Builder : Unit
 {
 
-	[SerializeField] protected UnitRecipe[] buildOptions;
+	protected UnitRecipe[] buildOptions;
 	/// Maybe used by Enemy Faction AI to dictate decision
 	public UnitRecipe[] BuildOptions { get => this.buildOptions; }
 

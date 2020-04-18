@@ -140,13 +140,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26a229d873f3d488f933cfccc8beabb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopupLabel: 
+  PopupLabel: Enemy Base
   PopupDescription: 
   validActionTypes: 0400000002000000
   ParentCell: {fileID: 0}
   selectableType: 1
   onMoveEvent: {fileID: 11400000, guid: f5be3cc5f5ff4314f9c2d40e5017ecdd, type: 2}
   onUnitDestroyed: {fileID: 11400000, guid: 32155c1fa2e7b487080a7b2455d82a99, type: 2}
+  onUnitAttack: {fileID: 0}
   faction: {fileID: 0}
   debug: 0
   ExtraOverride: 
