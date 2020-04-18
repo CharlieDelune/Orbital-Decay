@@ -30,21 +30,6 @@ public class Planet : Selectable, Revolving
         }
     }
 
-    void OnMouseDown()
-    {
-        // if (!viewing)
-        // {
-        //     Camera.main.transform.position = gravityWell.transform.position + new Vector3(0, 60, -45);
-        //     viewing = true;
-        // }
-        // else
-        // {
-        //     //Move camera back
-        //     Camera.main.transform.position = new Vector3(0, 60, -45);
-        //     viewing = false;
-        // }
-    }
-
     public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
 		if(this.GetValidActionTypes().Contains(actionType))
@@ -82,7 +67,6 @@ public class Planet : Selectable, Revolving
 	/// the move instead of just decrementing the value
     protected virtual void ChangeGrid()
     {
-
         onTryChangeGridEvent.Raise(this.grid);
     }
 

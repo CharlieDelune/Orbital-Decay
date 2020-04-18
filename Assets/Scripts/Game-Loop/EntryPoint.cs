@@ -10,6 +10,10 @@ public class EntryPoint : MonoBehaviour
 
 	private void Start()
 	{
+	}
+
+	public void BeginGame()
+	{
 		StartCoroutine(this.delayedStart(1.0f));
 	}
 

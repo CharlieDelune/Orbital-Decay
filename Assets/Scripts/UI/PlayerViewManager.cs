@@ -73,7 +73,7 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 			if(clickedCell == null)
 			{
 				onCellSelectedEvent.Raise(null);
-				this.selectablePopup.gameObject.SetActive(false);
+				HidePopUp();
 			}
 			else
 			{
@@ -109,6 +109,13 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 	private void HidePopUp()
 	{
 		this.selectablePopup.gameObject.SetActive(false);
+	}
+
+	public void OnTryChangeGridEvent(MonoBehaviour grid)
+	{
+		this.selectedCell = null;
+		this.selectedAction = SelectableActionType.None;
+		HidePopUp();
 	}
 
 	public void OnGameStateManagerUpdated(MonoBehaviour _gameStateManager)

@@ -1,5 +1,5 @@
 ﻿Name,Is Base
-Oil,TRUE
-Refined Oil,FALSE
+Fuel,TRUE
+Refined Fuel,FALSE
 Ore,TRUE
 Metal,FALSE

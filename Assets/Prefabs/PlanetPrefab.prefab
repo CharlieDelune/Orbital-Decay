@@ -106,12 +106,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d846118870ca4a408ebc82e64089478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PopupLabel: 
+  PopupDescription: 
   validActionTypes: 09000000
-  ParentNode: {fileID: 0}
+  ParentCell: {fileID: 0}
   selectableType: 2
   onMoveEvent: {fileID: 11400000, guid: 5b5b1f2184bf5344bb36d2bfaeb41245, type: 2}
   gravityWell: {fileID: 0}
   grid: {fileID: 0}
   isGridInView: {fileID: 11400000, guid: 90f579efc75c6fa4db9dd6baaacbecfd, type: 2}
-  onTryChangeGridEvent: {fileID: 0}
+  onTryChangeGridEvent: {fileID: 11400000, guid: 474ca116f9318a544a657e5e57e3a117,
+    type: 2}
   revolveSpeed: 4

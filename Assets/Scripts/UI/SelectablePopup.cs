@@ -82,5 +82,9 @@ public class SelectablePopup : MonoBehaviour
 		{
 			this.loadBuildOptions();
 		}
+		if(actionType == SelectableActionType.ChangeGrid)
+		{
+			((Planet)this.parentSelectable).TryPerformAction(actionType, null, "");
+		}
 	}
 }

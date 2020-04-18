@@ -1,6 +1,6 @@
 ﻿Name,MoveRange,Health,CloseDefense,LongDefense,CloseAttack,LongAttack,AttackRange,Extra
-Main Base,1,100,10,10,10,10,1,BUILD_MINER:Miner-BUILD_SCOUT:Scout
-Miner,2,1,0,0,0,0,0,Ore:2-Oil:3
+Main Base,1,100,10,10,10,10,1,BUILD_ORE_MINE:Ore Mine-BUILD_SCOUT:Scout
 Refinery,1,1,0,0,0,0,0,
-Scout,99,10,1,4,3,2,2,
-Enemy Base,1,1,2,10,10,10,1,BUILD_MINER:Miner-BUILD_SCOUT:Scout
+Ore Mine,0,1,0,0,0,0,1,Ore:10
+Scout,4,10,1,4,3,2,2,
+Enemy Base,1,1,2,10,10,10,1,BUILD_ORE_MINE:Ore Mine-BUILD_SCOUT:Scout

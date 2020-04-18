@@ -215,12 +215,6 @@ public class GameStateManager : MonoBehaviour {
 	public void OnActionSelected(int _action)
 	{
 		this.selectedAction = (SelectableActionType)_action;
-		if(this.selectedAction == SelectableActionType.ChangeGrid)
-		{
-			this.GridInView = ((Planet)this.selectedCell.Selectable).grid;
-			this.SelectedAction = SelectableActionType.None;
-			this.SelectedCell = null;
-		}
 	}
 
 	public void OnTargetSelected(MonoBehaviour _cell)
