@@ -36,26 +36,31 @@ public class UnitManager : MonoBehaviour
         playerUnits.Add(unitIn);
         GameStateManager.Instance.AddPlayerUnit(unitIn);
     }
-/*
-    public void RemovePlayerUnit(Unit unitOut)
+
+    public void OnUnitAttack(HeavyGameEventData data)
     {
-        playerUnits.Remove(unitOut);
+        Unit attackingUnit = (Unit)data.SourceCell.Selectable;
+        Unit defendingUnit = (Unit)data.TargetCell.Selectable;
+        int damage = 0;
+        //Close Range
+        if (data.SourceCell.GetNeighbors().Contains(data.TargetCell))
+        {
+            //TODO: Verify formula
+            damage = attackingUnit.GetAttack().closeAttack - defendingUnit.GetDefense().closeDefense;
+        }
+        //Long Range
+        else
+        {
+            //TODO: Verify formula
+            damage = attackingUnit.GetAttack().longAttack - defendingUnit.GetDefense().longDefense;
+        }
+        defendingUnit.TakeDamage(damage);
     }
 
-    public void PrepareAllPlayerUnitsForNextTurn()
+    //TODO: Ensure this listener runs after GridManager's
+    public void OnUnitDestroyed(MonoBehaviour unitObject)
     {
-        foreach(Unit u in playerUnits)
-        {
-            u.PrepareForNextTurn();
-        }
+        Unit unit = unitObject.GetComponent<Unit>();
+        unit.Faction.RemoveUnit(unit);
     }
-
-    public void MoveAllOutstandingUnits()
-    {
-        foreach(Unit u in playerUnits)
-        {
-            u.TakeOutstandingMoves();
-        }
-    }
-    */
 }

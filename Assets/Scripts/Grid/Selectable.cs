@@ -42,5 +42,6 @@ public abstract class Selectable : MonoBehaviour
 public enum SelectableType{
 	None,
 	Unit,
-	Planet
+	Planet,
+	ResourceDeposit
 }

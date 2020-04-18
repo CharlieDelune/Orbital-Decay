@@ -269,6 +269,11 @@ public class GameStateManager : MonoBehaviour {
 		this.selectedCell = null;
 		this.selectedAction = SelectableActionType.None;
 	}
+
+	public void OnUnitDestroyed(MonoBehaviour unitObject)
+	{
+		Destroy(unitObject.gameObject);
+	}
 }
 
 public enum TurnState

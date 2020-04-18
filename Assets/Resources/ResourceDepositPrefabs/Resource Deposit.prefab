@@ -110,8 +110,9 @@ MonoBehaviour:
   PopupDescription: 
   validActionTypes: 
   ParentCell: {fileID: 0}
-  selectableType: 0
+  selectableType: 3
   onMoveEvent: {fileID: 0}
   GameResourceAmountPairs:
   - ResourceName: Oil
     Amount: 5
+  selectableType: 0

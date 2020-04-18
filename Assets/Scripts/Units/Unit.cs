@@ -8,18 +8,21 @@ public class Unit : Selectable
 {
 
 	/// Basic stats
-	protected int maxRange;
+	protected int maxMoveRange;
 	protected int health;
-	protected int armor;
-	protected int attack;
+	protected int closeDefense;
+	protected int longDefense;
+	protected int closeAttack;
+	protected int longAttack;
+	protected int attackRange;
 	protected bool baseStatsSet;
 
     protected bool moving = false;
     protected List<Vector3> targetPath;
     protected int currentPathIndex;
     protected List<GridCell> cellPath;
-    protected bool tapped;
     protected int movesMade;
+	protected bool hasAttacked;
 
     /// When not active, maybe it could display a faded out
 	/// unit in the game - active state mostly applies to certain units
@@ -30,6 +33,8 @@ public class Unit : Selectable
 
 	[SerializeField] protected MonoBehaviourGameEvent onUnitDestroyed;
 
+	[SerializeField] protected HeavyGameEvent onUnitAttack;
+
 	/// attribute to allow editing the faction for debugging
 	[SerializeField] protected Faction faction;
 	public Faction Faction { get => this.faction; }
@@ -39,6 +44,8 @@ public class Unit : Selectable
 	public string ExtraOverride;
 
 	public int movesLeft = 0;
+
+	public bool isPlayerUnit;
 
 	private void Awake()
 	{
@@ -65,12 +72,17 @@ public class Unit : Selectable
         }
     }
 
-	public virtual void SetBaseStats(string name, int maxRange, int health, int armor, int attack, string extra, Faction _faction) {
+	public virtual void SetBaseStats(string name, int maxMoveRange, int health, int closeDefense, 
+			int longDefense, int closeAttack, int longAttack, int attackRange, string extra, Faction _faction) {
+
 		gameObject.name = name;
-		this.maxRange = maxRange;
+		this.maxMoveRange = maxMoveRange;
 		this.health = health;
-		this.armor = armor;
-		this.attack = attack;
+		this.closeDefense = closeDefense;
+		this.longDefense = longDefense;
+		this.closeAttack = closeAttack;
+		this.longAttack = longAttack;
+		this.attackRange = attackRange;
 
 		this.baseStatsSet = true;
 
@@ -98,8 +110,8 @@ public class Unit : Selectable
 	/// Called at the start of the turn
 	protected virtual void updatePreTurn()
 	{
-		this.movesLeft = this.maxRange;
-		this.tapped = false;
+		this.movesLeft = this.maxMoveRange;
+		this.hasAttacked = false;
         this.movesMade = 0;
 	}
 
@@ -116,17 +128,22 @@ public class Unit : Selectable
 	/// Returns whether or not the action can be performed
 	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
-		if(this.GetValidActionTypes().Contains(actionType))
+		if (this.isPlayerUnit)
 		{
-			switch(actionType)
+			if(this.GetValidActionTypes().Contains(actionType))
 			{
-				case SelectableActionType.Attack:
-					/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
-					/// not the current faction
-					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction;
-				case SelectableActionType.Move:
-					/// Moves if the targetCell is empty
-					return targetCell.Selectable == null || targetCell.Selectable.selectableType == SelectableType.Planet;
+				switch(actionType)
+				{
+					case SelectableActionType.Attack:
+						/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
+						/// not the current faction
+						return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction 
+						&& !this.hasAttacked &&
+						ParentCell.parentGrid.GetCellsInRange(ParentCell, this.attackRange).Contains(targetCell);
+					case SelectableActionType.Move:
+						/// TODO: Pathfinder now handles movement to non-empty cells, what do we do here?
+						return true;
+				}
 			}
 		}
 		return false;
@@ -151,9 +168,9 @@ public class Unit : Selectable
 		HeavyGameEventData data = new HeavyGameEventData();
 		data.SourceCell = this.ParentCell;
 		data.TargetCell = targetCell;
-		data.IntValue = this.attack;
 		data.ActionType = SelectableActionType.Attack;
-		GameStateManager.Instance.PerformAction(data);
+		onUnitAttack.Raise(data);
+		this.hasAttacked = true;
 	}
 
 	/// Raises a move action
@@ -162,13 +179,13 @@ public class Unit : Selectable
 	/// the move instead of just decrementing the value
     protected virtual void performMove(GridCell targetIn)
     {
-        HeavyGameEventData data = new HeavyGameEventData();
-		data.SourceCell = this.ParentCell;
-		data.TargetCell = targetIn;
-        this.target = targetIn;
-        this.currentPathIndex = 0;
         this.cellPath = ParentCell.parentGrid.pathfinder.FindPath(ParentCell.layer, ParentCell.slice, targetIn.layer, targetIn.slice);
         this.targetPath = ParentCell.parentGrid.pathfinder.FindVectorPath(cellPath);
+        this.target = cellPath[cellPath.Count - 1];
+        HeavyGameEventData data = new HeavyGameEventData();
+		data.SourceCell = this.ParentCell;
+		data.TargetCell = cellPath[cellPath.Count - 1];
+        this.currentPathIndex = 0;
         this.moving = true;
         GameStateManager.Instance.PerformAction(data);
     }
@@ -191,17 +208,44 @@ public class Unit : Selectable
 
     public void SetMaxRange(int maxRangeIn)
     {
-        this.maxRange = maxRangeIn;
+        this.maxMoveRange = maxRangeIn;
     }
 
     public int GetMaxRange()
     {
-        return maxRange;
+        return maxMoveRange;
     }
+
+	public (int closeAttack, int longAttack) GetAttack()
+    {
+        return (this.closeAttack, longAttack);
+    }
+
+	public int GetAttackRange()
+	{
+		return attackRange;
+	}
+
+	public (int closeDefense, int longDefense) GetDefense()
+    {
+        return (this.closeDefense, longDefense);
+    }
+
+	public void TakeDamage(int dmg)
+	{
+		if(dmg >= 0)
+		{
+			this.health -= dmg;
+		}
+		if(this.health <= 0)
+		{
+			onUnitDestroyed.Raise(this);
+		}
+	}
     
     private void HandleMovement()
     {
-		if(!this.tapped)
+		if(this.movesMade < this.maxMoveRange)
 		{
 			if (this.targetPath != null && this.currentPathIndex < this.targetPath.Count)
 			{
@@ -224,15 +268,11 @@ public class Unit : Selectable
 						this.movesMade++;
 						this.movesLeft--;
 					}
-					if (this.movesMade == this.maxRange)
-					{
-						this.tapped = true;
-					}
 					if (this.currentPathIndex == this.targetPath.Count)
 					{
 						this.endMove();
 					}
-					else if (movesMade == maxRange){
+					else if (movesMade == maxMoveRange){
 						this.endMoveInMiddle();
 					}
 				}
@@ -243,27 +283,27 @@ public class Unit : Selectable
 	/// Returns list of valid actions based on the current turn state
 	public override List<SelectableActionType> GetValidActionTypes()
 	{
-		List<SelectableActionType> actionTypes = new List<SelectableActionType>(this.validActionTypes);
-		if(this.movesLeft <= 0)
+		List<SelectableActionType> actionTypes = new List<SelectableActionType>();
+		if (this.isPlayerUnit)
 		{
-			actionTypes.Remove(SelectableActionType.Move);
+			actionTypes = new List<SelectableActionType>(this.validActionTypes);
+			if(this.movesLeft <= 0)
+			{
+				actionTypes.Remove(SelectableActionType.Move);
+			}
+			if (this.hasAttacked)
+			{
+				actionTypes.Remove(SelectableActionType.Attack);
+			}
 		}
 		return actionTypes;
 	}
 
 	/// processes performed action
-	/// if the unit is damaged, for example,
-	/// this is where it could react to that
+	// This may be obsoleted by more specific events and as things
+	// get moved into managers (which I'm a big fan of actually) - Jeff 4/17/2020
 	public virtual void receiveAction(HeavyGameEventData data)
 	{
-		if(data.ActionType == SelectableActionType.Attack)
-		{
-			this.health -= data.IntValue;
-			if(this.health < 0)
-			{
-				this.onUnitDestroyed.Raise(this);
-			}
-		}
 	}
     
     private void endMove()
@@ -290,7 +330,7 @@ public class Unit : Selectable
 
     public void TakeOutstandingMoves()
     {
-		if (!this.tapped)
+		if (this.movesMade < this.maxMoveRange)
 		{
 			if(this.target != null)
 			{

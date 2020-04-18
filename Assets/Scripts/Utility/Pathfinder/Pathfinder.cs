@@ -151,8 +151,7 @@ public class Pathfinder : MonoBehaviour
                 {
                     continue;
                 }
-                if (neighbor.node.Selectable != null &&
-                    !(neighbor == endNodeHolder && neighbor.node.Selectable.selectableType == SelectableType.Planet))
+                if (neighbor.node.Selectable != null && !(neighbor == endNodeHolder))
                 {
                     openCells.Remove(currentCell);
                     closedCells.Add(neighbor);
@@ -195,7 +194,11 @@ public class Pathfinder : MonoBehaviour
     private List<GridCell> CalculatePath(PathNodeHolder<GridCell> endCell)
     {
         List<GridCell> instancePath = new List<GridCell>();
-        instancePath.Add(endCell.node);
+        if ((endCell.node.Selectable == null && endCell.node.ResourceDeposit == null) 
+            || (endCell.node.Selectable != null && endCell.node.Selectable.selectableType == SelectableType.Planet))
+        {
+            instancePath.Add(endCell.node);
+        }
         PathNodeHolder<GridCell> currentCell = endCell;
         while (currentCell.previousNodeHolder != null)
         {

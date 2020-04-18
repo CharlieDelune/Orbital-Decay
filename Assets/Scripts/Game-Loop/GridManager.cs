@@ -246,4 +246,11 @@ public class GridManager : MonoBehaviour
 		}
 		return landingCell;
 	}
+
+	public void OnUnitDestroyed(MonoBehaviour unitObject)
+    {
+        Unit unit = unitObject.GetComponent<Unit>();
+        GridCell parentCell = unit.ParentCell;
+		parentCell.Selectable = null;
+    }
 }

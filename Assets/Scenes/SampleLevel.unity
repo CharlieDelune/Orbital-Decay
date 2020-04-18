@@ -127,6 +127,34 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8217666990268598708}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &15947570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15947569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6fa1803fc204c9e9e052f49a7b43d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 32155c1fa2e7b487080a7b2455d82a99, type: 2}
+  callback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8217666990268598714}
+        m_MethodName: OnUnitDestroyed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  priority: 1
 --- !u!114 &15947571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,6 +182,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  priority: 0
 --- !u!114 &15947572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +237,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  priority: 0
 --- !u!114 &15947575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,6 +293,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  priority: 0
 --- !u!1 &210976703
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,6 +347,80 @@ MonoBehaviour:
   slices: 0
   pathfinder: {fileID: 1185849046}
   parentPlanet: {fileID: 0}
+--- !u!1 &241886474 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8217666989990188984, guid: 44da1b730f4fa1c40b60c6347cbab367,
+    type: 3}
+  m_PrefabInstance: {fileID: 8217666990268598708}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &241886476 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8217666989990188986, guid: 44da1b730f4fa1c40b60c6347cbab367,
+    type: 3}
+  m_PrefabInstance: {fileID: 8217666990268598708}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241886474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c62177f464fac4496d3a7d7de5d29c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &241886477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241886474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 136c5c7e1c4944165a1361e6919ff5d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 0ca9882b46bf5c04f90b576c46d5330e, type: 2}
+  callback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 241886476}
+        m_MethodName: OnUnitAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  priority: 0
+--- !u!114 &241886478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 241886474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6fa1803fc204c9e9e052f49a7b43d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 32155c1fa2e7b487080a7b2455d82a99, type: 2}
+  callback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 241886476}
+        m_MethodName: OnUnitDestroyed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  priority: 3
 --- !u!1 &275880558
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,6 +710,7 @@ Transform:
   - {fileID: 675212179}
   - {fileID: 577380783}
   - {fileID: 733354026}
+  - {fileID: 1524397361}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -898,7 +1004,7 @@ Transform:
   - {fileID: 1017942421}
   - {fileID: 2123194053}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1409101479 stripped
 GameObject:
@@ -1020,6 +1126,34 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   priority: 0
+--- !u!114 &1466404450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466404445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6fa1803fc204c9e9e052f49a7b43d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 32155c1fa2e7b487080a7b2455d82a99, type: 2}
+  callback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1466404446}
+        m_MethodName: OnUnitDestroyed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  priority: 2
 --- !u!1 &1468159440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,7 +1213,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c57e1142f641e4fafc38e79e716aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Main Base
+  unitNames:
+  - Main Base
+  - Enemy Base
   grid: {fileID: 210976706}
   unitHolder: {fileID: 1235290921}
 --- !u!4 &1524397361
@@ -1089,12 +1225,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1524397359}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 804379882}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1809621250 stripped
 GameObject:
@@ -1394,6 +1530,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  priority: 0
 --- !u!114 &2023572309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1450,7 +1587,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2123194052
 PrefabInstance:

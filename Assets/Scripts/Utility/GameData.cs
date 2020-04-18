@@ -84,7 +84,7 @@ public class GameData : MonoBehaviour
 		using (StringReader reader = new StringReader(unitsFile.text))
 		{
 			string[] headers = reader.ReadLine().Split(',');
-			string[] expectedHeaders = {"Name", "Range", "Health", "Armor", "Attack", "Extra"};
+			string[] expectedHeaders = {"Name", "MoveRange", "Health", "CloseDefense", "LongDefense", "CloseAttack", "LongAttack", "AttackRange", "Extra"};
 			CheckFileHeaders("units", expectedHeaders, headers);
 			
 			while (reader.Peek() != -1) 
@@ -99,11 +99,14 @@ public class GameData : MonoBehaviour
 				}
 
 				UnitInfo unitInfo = new UnitInfo(name: fields[0],
-												 maxRange: int.Parse(fields[1]),
+												 maxMoveRange: int.Parse(fields[1]),
 												 health: int.Parse(fields[2]),
-												 armor: int.Parse(fields[3]),
-												 attack: int.Parse(fields[4]),
-												 extra: fields[5],
+												 closeDefense: int.Parse(fields[3]),
+												 longDefense: int.Parse(fields[4]),
+												 closeAttack: int.Parse(fields[5]),
+												 longAttack: int.Parse(fields[6]),
+												 attackRange: int.Parse(fields[7]),
+												 extra: fields[8],
 												 unitPrefab: unitPrefab);
 
 				nameToUnitInfo[fields[0]] = unitInfo;

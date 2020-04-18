@@ -5,7 +5,7 @@ using UnityEngine;
 public class UnitPlacer : MonoBehaviour
 {
     [SerializeField]
-    private string unitName;
+    private string[] unitNames;
     [SerializeField]
     private CircularGrid grid;
     [SerializeField]
@@ -25,6 +25,9 @@ public class UnitPlacer : MonoBehaviour
     public void PlaceUnits() {
         //The unit script is attached to the prefab so it's going to instantiate the prefab in the world
         GridCell parentCell = grid.GetGridCell(0, 0);
-        GameStateManager.Instance.Factions[1].CreateUnit(parentCell, this.unitName);
+        GameStateManager.Instance.Factions[1].CreateUnit(parentCell, this.unitNames[0], true);
+
+        parentCell = grid.GetGridCell(6, 19);
+        GameStateManager.Instance.Factions[0].CreateUnit(parentCell, this.unitNames[1]);
     }
 }

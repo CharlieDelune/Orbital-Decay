@@ -6,19 +6,25 @@ public class UnitInfo
 	public Unit UnitPrefab { get => this.unitPrefab; }
 
 	private string name;
-	private int maxRange;
+	private int maxMoveRange;
 	private int health;
-	private int armor;
-	private int attack;
+	private int closeDefense;
+	private int longDefense;
+	private int closeAttack;
+	private int longAttack;
+	private int attackRange;
 	private string extra;
 
-	public UnitInfo(string name, int maxRange, int health, int armor, int attack, string extra, Unit unitPrefab)
+	public UnitInfo(string name, int maxMoveRange, int health, int closeDefense, int longDefense, int closeAttack, int longAttack, int attackRange, string extra, Unit unitPrefab)
 	{
 		this.name = name;
-		this.maxRange = maxRange;
+		this.maxMoveRange = maxMoveRange;
 		this.health = health;
-		this.armor = armor;
-		this.attack = attack;
+		this.closeDefense = closeDefense;
+		this.longDefense = longDefense;
+		this.closeAttack = closeAttack;
+		this.longAttack = longAttack;
+		this.attackRange = attackRange;
 		this.extra = extra;
 
 		this.unitPrefab = unitPrefab;
@@ -26,7 +32,8 @@ public class UnitInfo
 
 	public Unit InstantiateUnit(Faction faction) {
 		Unit unit = GameObject.Instantiate<Unit>(unitPrefab);
-		unit.SetBaseStats(name: name, maxRange: maxRange, health: health, armor: armor, attack: attack, extra: extra, _faction: faction);
+		unit.SetBaseStats(name: name, maxMoveRange: maxMoveRange, health: health, closeDefense: closeDefense, 
+			longDefense: longDefense, closeAttack: closeAttack, longAttack: longAttack, attackRange: attackRange, extra: extra, _faction: faction);
 		return unit;
 	}
 }

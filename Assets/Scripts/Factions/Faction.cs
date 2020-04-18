@@ -51,13 +51,19 @@ public abstract class Faction : MonoBehaviour
 		this.StartCoroutine(this.useTurn());
 	}
 
-	public void CreateUnit(GridCell cell, string unitName)
+	public void CreateUnit(GridCell cell, string unitName, bool? isPlayerFaction = false)
 	{
 		Unit unit = GameData.Instance.GetUnitInfo(unitName).InstantiateUnit(this);
 		unit.SetParentCell(cell);
 		unit.transform.position = cell.transform.position;
 		unit.transform.SetParent(GameStateManager.Instance.UnitHolder.transform);
+		unit.isPlayerUnit = isPlayerFaction.Value;
 		this.units.Add(unit);
+	}
+
+	public void RemoveUnit(Unit unit)
+	{
+		this.units.Remove(unit);
 	}
 
 	public void AddUnit(Unit unitIn)
@@ -75,7 +81,7 @@ public abstract class Faction : MonoBehaviour
 					this.Resources.GainResource(data.ResourceValue, data.IntValue);
 				break;
 				case SelectableActionType.Build:
-					this.CreateUnit(data.TargetCell, data.RecipeValue.OutputName);
+					this.CreateUnit(data.TargetCell, data.RecipeValue.OutputName, data.BoolValue);
 				break;
 			}
 		}

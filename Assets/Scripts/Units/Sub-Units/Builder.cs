@@ -107,7 +107,8 @@ public class Builder : Unit
 			targetCell: targetCell,
 			targetFaction: this.Faction,
 			actionType: SelectableActionType.Build,
-			recipeValue: this.selectedBuildOption
+			recipeValue: this.selectedBuildOption,
+			boolValue: this.isPlayerUnit
 		);
 
 		GameStateManager.Instance.PerformAction(data);
