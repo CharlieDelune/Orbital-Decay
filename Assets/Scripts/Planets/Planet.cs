@@ -77,8 +77,8 @@ public class Planet : Selectable, Revolving
 
     public void Revolve()
     {
-        targetCell = GridManager.Instance.grid.GetGridCellForRevolve(ParentCell, revolveDirection, revolveSpeed);
-        targetPath = GridManager.Instance.grid.GetGridVectorsForRevolve(ParentCell.layer, ParentCell.slice, targetCell.slice, revolveDirection);
+        targetCell = GridManager.Instance.GetGridCellForRevolve(ParentCell, revolveDirection, revolveSpeed);
+        targetPath = GridManager.Instance.GetGridVectorsForRevolve(ParentCell, targetCell, revolveDirection);
         currentPathIndex = 0;
         moving = true;
     }

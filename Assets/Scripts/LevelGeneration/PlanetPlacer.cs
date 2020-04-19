@@ -35,7 +35,7 @@ public class PlanetPlacer : MonoBehaviour
     private void PlacePlanet(int layer, int slice, int revSpeed, RevolveDirection dir, GameObject planetPrefab)
     {
         GameObject planet = Instantiate(planetPrefab);
-        GridCell parentCell = GridManager.Instance.grid.GetGridCell(layer, slice);
+        GridCell parentCell = GameStateManager.Instance.solarSystemGrid.GetGridCell(layer, slice);
         planet.transform.position = parentCell.transform.position;
         Planet planetScript = planet.GetComponent<Planet>();
         planetScript.SetParentCell(parentCell);

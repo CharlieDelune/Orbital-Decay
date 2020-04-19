@@ -7,7 +7,7 @@ public class ResourcePlacer : MonoBehaviour
     [SerializeField]
     private ResourceDeposit resourceDepositPrefab;
     [SerializeField]
-    private CircularGrid grid;
+    private GameObject resourceDepositHolder;
     private Faction playerFaction;
 
     void Start()
@@ -22,8 +22,9 @@ public class ResourcePlacer : MonoBehaviour
 
     public void PlaceResources() {
         //The unit script is attached to the prefab so it's going to instantiate the prefab in the world
-        GridCell parentCell = grid.GetGridCell(1, 0);
+        GridCell parentCell = GameStateManager.Instance.solarSystemGrid.GetGridCell(1, 0);
         ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefab);
         deposit.SetParentCell(parentCell);
+        deposit.transform.SetParent(resourceDepositHolder.transform);
     }
 }

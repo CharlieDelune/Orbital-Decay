@@ -32,15 +32,11 @@ public class CircleGridBuilder : MonoBehaviour
     [SerializeField]
     private Material lineMaterial;
     [SerializeField]
-    private GameObject lineHolder;
-    [SerializeField]
-    private GameObject nodeHolder;
-    [SerializeField]
-    private CircularGrid grid;
-    [SerializeField]
     private GameObject SystemPrefab;
     [SerializeField]
     private GameObject theSun;
+    [SerializeField]
+    private GameObject gravityWellsHolder;
 
     void Start()
     {
@@ -55,8 +51,19 @@ public class CircleGridBuilder : MonoBehaviour
     //TODO: Roll this into function below to fully proceduralize
     public void BuildLevel()
     {
+        GameObject systemHolder = Instantiate(SystemPrefab);
+        GameObject gridHolder = systemHolder.transform.Find("Grid").gameObject;
+        gridHolder.transform.SetParent(systemHolder.transform);
+        CircularGrid grid = gridHolder.GetComponent<CircularGrid>();
+
+        GameObject lineHolder = gridHolder.transform.Find("Lines").gameObject;
+        lineHolder.transform.SetParent(gridHolder.transform);
+        GameObject nodeHolder = gridHolder.transform.Find("Nodes").gameObject;
+        nodeHolder.transform.SetParent(gridHolder.transform);
+
         GameObject sun = Instantiate(theSun);
         sun.transform.SetParent(grid.gameObject.transform);
+
         grid.SetGridSize(layers - 2, slices);
         grid.isSolarSystem = true;
         Vector3 previousPos = new Vector3(0, 0, 0);
@@ -101,6 +108,10 @@ public class CircleGridBuilder : MonoBehaviour
                 if (slice == 0)
                 {
                     layerStartPos = desiredPos;
+                }
+                if(line.GetPosition(0).x == 0 && line.GetPosition(0).z == 0 && line.GetPosition(1).x == 0 && line.GetPosition(1).z == 1)
+                {
+                    Destroy(lineObject);
                 }
 
                 //Close rings if we're on the last node of a ring
@@ -149,6 +160,7 @@ public class CircleGridBuilder : MonoBehaviour
         GameStateManager.Instance.GridInView = grid;
         GameStateManager.Instance.solarSystemGrid = grid;
         grid.pathfinder.SetGrid(grid);
+        grid.gameObject.transform.SetParent(gravityWellsHolder.transform);
     }
 
     public GameObject BuildLevel(int layers, int slices, Vector3 centerPosition)
@@ -209,6 +221,10 @@ public class CircleGridBuilder : MonoBehaviour
                 {
                     layerStartPos = desiredPos;
                 }
+                if(line.GetPosition(0).x == 0 && line.GetPosition(0).z == 0 && line.GetPosition(1).x == 0 && line.GetPosition(1).z == 1)
+                {
+                    Destroy(lineObject);
+                }
 
                 //Close rings if we're on the last node of a ring
                 if (slice == slices - 1) {
@@ -243,6 +259,7 @@ public class CircleGridBuilder : MonoBehaviour
         grid.GenerateCellNeighbors();
         systemHolder.transform.position = centerPosition;
         grid.pathfinder.SetGrid(grid);
+        systemHolder.transform.SetParent(gravityWellsHolder.transform);
         return systemHolder;
     }
 }

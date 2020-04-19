@@ -20,8 +20,6 @@ public class GridManager : MonoBehaviour
 			_instance = this;
 		}
 	}
-    
-    public CircularGrid grid;
 
 	public Pathfinder pathfinder;
 
@@ -37,6 +35,16 @@ public class GridManager : MonoBehaviour
     {
         
     }
+
+	public GridCell GetGridCellForRevolve(GridCell parentCell, RevolveDirection revolveDirection, int revolveSpeed)
+	{
+		return parentCell.parentGrid.GetGridCellForRevolve(parentCell, revolveDirection, revolveSpeed);
+	}
+
+	public List<Vector3> GetGridVectorsForRevolve(GridCell parentCell, GridCell targetCell, RevolveDirection revolveDirection)
+	{
+		return parentCell.parentGrid.GetGridVectorsForRevolve(parentCell.layer, parentCell.slice, targetCell.slice, revolveDirection);
+	}
 
 	public void OnPlanetMoveEvent(HeavyGameEventData _data)
 	{

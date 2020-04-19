@@ -33,7 +33,6 @@ public class ResourceDeposit : Selectable
 		this.ParentCell = cellIn;
 		cellIn.ResourceDeposit = this;
 		this.transform.position = cellIn.transform.position;
-		this.transform.SetParent(cellIn.transform);
 	}
 
 	public List<(InGameResource, int)> GetResources()
