@@ -161,6 +161,32 @@ public class Unit : Selectable
 			break;
 		}
 	}
+	
+	/// Returns list of valid actions based on the current turn state
+	public override List<SelectableActionType> GetValidActionTypes()
+	{
+		List<SelectableActionType> actionTypes = new List<SelectableActionType>();
+		if (this.isPlayerUnit)
+		{
+			actionTypes = new List<SelectableActionType>(this.validActionTypes);
+			if(this.movesLeft <= 0)
+			{
+				actionTypes.Remove(SelectableActionType.Move);
+			}
+			if (this.hasAttacked)
+			{
+				actionTypes.Remove(SelectableActionType.Attack);
+			}
+		}
+		return actionTypes;
+	}
+
+	/// processes performed action
+	// This may be obsoleted by more specific events and as things
+	// get moved into managers (which I'm a big fan of actually) - Jeff 4/17/2020
+	public virtual void receiveAction(HeavyGameEventData data)
+	{
+	}
 
 	/// Raises an attack action
 	protected virtual void performAttack(GridCell targetCell)
@@ -174,9 +200,6 @@ public class Unit : Selectable
 	}
 
 	/// Raises a move action
-	/// Note:
-	/// Should change MovesLeft variable to properly reflect
-	/// the move instead of just decrementing the value
     protected virtual void performMove(GridCell targetIn)
     {
         this.cellPath = ParentCell.parentGrid.pathfinder.FindPath(ParentCell.layer, ParentCell.slice, targetIn.layer, targetIn.slice);
@@ -201,14 +224,17 @@ public class Unit : Selectable
 		cellIn.Selectable = this;
     }
 
+	public void SetForceMove(GridCell sourceCell, GridCell targetCell)
+	{
+		this.ParentCell = sourceCell;
+		this.movesLeft++;
+		this.movesMade--;
+		this.performMove(targetCell);
+	}
+
     public GridCell GetParentCell()
     {
         return this.ParentCell;
-    }
-
-    public void SetMaxRange(int maxRangeIn)
-    {
-        this.maxMoveRange = maxRangeIn;
     }
 
     public int GetMaxRange()
@@ -250,14 +276,10 @@ public class Unit : Selectable
 			if (this.targetPath != null && this.currentPathIndex < this.targetPath.Count)
 			{
 				Vector3 targetPosition = this.targetPath[this.currentPathIndex];
-				float step = 30 * Time.deltaTime;
-				//TODO: Change from .Distance to sqr magnitudes to save on calculation
-				if (Vector3.Distance(this.transform.position, targetPosition) > step)
+				float step = Mathf.Pow(30 * Time.deltaTime,2);
+				if ((this.transform.position - targetPosition).sqrMagnitude > step)
 				{
 					Vector3 moveDir = (targetPosition - this.transform.position).normalized;
-
-					//TODO: Change from .Distance to sqr magnitudes to save on calculation
-					float distanceBefore = Vector3.Distance(this.transform.position, targetPosition);
 					this.transform.position = this.transform.position + moveDir * 30.0f * Time.deltaTime;
 				}
 				else
@@ -279,42 +301,17 @@ public class Unit : Selectable
 			}
 		}
     }
-
-	/// Returns list of valid actions based on the current turn state
-	public override List<SelectableActionType> GetValidActionTypes()
-	{
-		List<SelectableActionType> actionTypes = new List<SelectableActionType>();
-		if (this.isPlayerUnit)
-		{
-			actionTypes = new List<SelectableActionType>(this.validActionTypes);
-			if(this.movesLeft <= 0)
-			{
-				actionTypes.Remove(SelectableActionType.Move);
-			}
-			if (this.hasAttacked)
-			{
-				actionTypes.Remove(SelectableActionType.Attack);
-			}
-		}
-		return actionTypes;
-	}
-
-	/// processes performed action
-	// This may be obsoleted by more specific events and as things
-	// get moved into managers (which I'm a big fan of actually) - Jeff 4/17/2020
-	public virtual void receiveAction(HeavyGameEventData data)
-	{
-	}
     
     private void endMove()
     {
 		HeavyGameEventData data = new HeavyGameEventData();
         data.SourceCell = this.ParentCell;
         data.TargetCell = this.target;
-        this.onMoveEvent.Raise(data);
+		data.targetSelectable = this;
         this.moving = false;
         this.currentPathIndex = 1;
         this.target = null;
+        this.onMoveEvent.Raise(data);
     }
 
     private void endMoveInMiddle()

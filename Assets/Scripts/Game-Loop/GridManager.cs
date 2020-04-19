@@ -94,8 +94,27 @@ public class GridManager : MonoBehaviour
 
 	public void OnUnitMoveEvent(HeavyGameEventData _data)
 	{
-		Unit movingUnit = (Unit)_data.SourceCell.Selectable;
-        _data.SourceCell.Selectable = null;
+		Unit movingUnit = null;
+		bool comingFromPlanet = false;
+
+		//If the source cell has a selectable and the selectable is a unit, proceed as normal
+		if (_data.SourceCell.Selectable != null && _data.SourceCell.Selectable.selectableType == SelectableType.Unit)
+		{
+			movingUnit = (Unit)_data.SourceCell.Selectable;
+			comingFromPlanet = false;
+		}
+		//As of now, the only other possibility is that it's a unit exiting the gravity well of a planet
+		else
+		{
+			movingUnit = (Unit)_data.targetSelectable;
+			comingFromPlanet = true;
+		}
+		//We only want to set the source cell's selectable to null if it's not a planet, because the planet
+		//will still be there when all is said and done. We set the planet gravity well's source cell to null elsewhere
+		if (!comingFromPlanet)
+		{
+        	_data.SourceCell.Selectable = null;
+		}
 		GridCell finalTarget = _data.TargetCell;
 
 		//If moving to edge of planetary system
@@ -134,6 +153,9 @@ public class GridManager : MonoBehaviour
 			{
 				finalTarget = _data.TargetCell.parentGrid.parentPlanet.ParentCell.GetNeighbors()[1];
 			}
+			movingUnit.transform.position = _data.TargetCell.parentGrid.parentPlanet.ParentCell.transform.position;
+			movingUnit.SetForceMove(_data.TargetCell.parentGrid.parentPlanet.ParentCell, finalTarget);
+			return;
 		}
 		//Else, if we're moving onto a planet cell
 		//(this is an else if because the previous circumstance should never be able to happen at the same time as this)
@@ -144,7 +166,7 @@ public class GridManager : MonoBehaviour
 				GetLandingGridCells(((Planet)_data.TargetCell.Selectable).grid);
 
 			//Find difference from sourceNode to targetnode
-			Vector3 diffFromSource = (_data.SourceCell.transform.position - _data.TargetCell.transform.position);
+			Vector3 diffFromSource = (movingUnit.transform.position - _data.TargetCell.transform.position);
 			if (Mathf.Abs(diffFromSource.z) >= Mathf.Abs(diffFromSource.x))
 			{
 				if (diffFromSource.z >= 0) 
@@ -169,7 +191,6 @@ public class GridManager : MonoBehaviour
 			}
 		}
 		movingUnit.transform.position = finalTarget.transform.position;
-		finalTarget.Selectable = movingUnit;
 		movingUnit.SetParentCell(finalTarget);
 	}
 

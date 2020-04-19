@@ -57,7 +57,6 @@ public class UnitManager : MonoBehaviour
         defendingUnit.TakeDamage(damage);
     }
 
-    //TODO: Ensure this listener runs after GridManager's
     public void OnUnitDestroyed(MonoBehaviour unitObject)
     {
         Unit unit = unitObject.GetComponent<Unit>();
