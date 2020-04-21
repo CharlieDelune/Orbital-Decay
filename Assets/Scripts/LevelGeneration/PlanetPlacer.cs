@@ -38,51 +38,58 @@ public class PlanetPlacer : MonoBehaviour
                 {
                     int planetSlice = Random.Range(0, systemSlices);
                     int orbit = Random.Range(1, (systemSlices/3) - i);
-                    PlacePlanet(i, planetSlice, orbit, RevolveDirection.CounterClockwise, planetPrefabs[Random.Range(0, planetPrefabs.Length)]);
-
-                    layersWithPlanets.Add(i);
-                    planetsPlaced++;
+                    bool placed = PlacePlanet(i, planetSlice, orbit, RevolveDirection.CounterClockwise, planetPrefabs[Random.Range(0, planetPrefabs.Length)]);
+                    if (placed)
+                    {
+                        layersWithPlanets.Add(i);
+                        planetsPlaced++;
+                    }
                 }
             }
         }
 
     }
 
-    private void PlacePlanet(int layer, int slice, int revSpeed, RevolveDirection dir, GameObject planetPrefab)
+    private bool PlacePlanet(int layer, int slice, int revSpeed, RevolveDirection dir, GameObject planetPrefab)
     {
         GameObject planet = Instantiate(planetPrefab);
         GridCell parentCell = GameStateManager.Instance.solarSystemGrid.GetGridCell(layer, slice);
-        planet.transform.position = parentCell.transform.position;
+        if(parentCell.Selectable == null)
+        {
+            planet.transform.position = parentCell.transform.position;
 
-        Planet planetScript = planet.GetComponent<Planet>();
-        planetScript.SetParentCell(parentCell);
-        planetScript.SetRevolveDirection(dir);
-        planetScript.revolveSpeed = revSpeed;
-        planet.transform.SetParent(planetHolder.transform);
+            Planet planetScript = planet.GetComponent<Planet>();
+            planetScript.SetParentCell(parentCell);
+            planetScript.SetRevolveDirection(dir);
+            planetScript.revolveSpeed = revSpeed;
+            planet.transform.SetParent(planetHolder.transform);
 
-        PlanetManager.Instance.AddPlanet(planetScript);
-        parentCell.Selectable = planetScript;
-        planetScript.ParentCell = parentCell;
+            PlanetManager.Instance.AddPlanet(planetScript);
+            parentCell.Selectable = planetScript;
+            planetScript.ParentCell = parentCell;
 
-        //The way level generation works, it will automatically subtract 2 from the number of layers
-        //because we discard the inner ring (it's the sun) and the outer ring (because you can't move off of the solar system)
-        //So a range from 3-7 is actually the same as a range from 2-5
-        int systemLayers = Random.Range(4, 8);
-        //Must have at least 4 slices. Max is inconsequential.
-        int systemSlices =  Random.Range(4, 15);
+            //The way level generation works, it will automatically subtract 2 from the number of layers
+            //because we discard the inner ring (it's the sun) and the outer ring (because you can't move off of the solar system)
+            //So a range from 4-8 is actually the same as a range from 2-6
+            int systemLayers = Random.Range(4, 8);
+            //Must have at least 4 slices. Max is inconsequential.
+            int systemSlices =  Random.Range(8, 15);
 
-        //TODO:
-        //We will either need to find a new way of generating grid placement or cull out grids that aren't the
-        //grid in view, because grids are now generating sufficiently close to one another to be seen
-        planetScript.gravityWell = CircleGridBuilder.Instance.BuildGrid(systemLayers, systemSlices, new Vector3(systemLayers * 100,0, systemSlices * 100));
+            //TODO:
+            //We will either need to find a new way of generating grid placement or cull out grids that aren't the
+            //grid in view, because grids are now generating sufficiently close to one another to be seen
+            planetScript.gravityWell = CircleGridBuilder.Instance.BuildGrid(systemLayers, systemSlices, new Vector3(systemLayers * 100,0, systemSlices * 100));
 
-        planetScript.grid = planetScript.gravityWell.transform.Find("Grid").GetComponent<CircularGrid>();
-        planetScript.grid.parentPlanet = planetScript;
+            planetScript.grid = planetScript.gravityWell.transform.Find("Grid").GetComponent<CircularGrid>();
+            planetScript.grid.parentPlanet = planetScript;
 
-        GameObject planet2 = Instantiate(planet);
-        planet2.transform.SetParent(planetScript.gravityWell.transform);
-        planet2.transform.position = planetScript.gravityWell.transform.position;
+            GameObject planet2 = Instantiate(planet);
+            planet2.transform.SetParent(planetScript.gravityWell.transform);
+            planet2.transform.position = planetScript.gravityWell.transform.position;
 
-        Destroy(planet2.GetComponent<Planet>());
+            Destroy(planet2.GetComponent<Planet>());
+            return true;
+        }
+        return false;
     }
 }

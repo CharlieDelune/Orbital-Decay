@@ -57,6 +57,9 @@ public class CircleGridBuilder : MonoBehaviour
         GameObject nodeHolder = gridHolder.transform.Find("Nodes").gameObject;
         nodeHolder.transform.SetParent(gridHolder.transform);
 
+        GameObject plane = gridHolder.transform.Find("Plane").gameObject;
+        plane.transform.localScale = new Vector3(layers, 1, layers);
+
         GameObject sun = Instantiate(theSun);
         sun.transform.SetParent(grid.gameObject.transform);
 
@@ -171,6 +174,8 @@ public class CircleGridBuilder : MonoBehaviour
         GameObject nodeHolder = gridHolder.transform.Find("Nodes").gameObject;
         nodeHolder.transform.SetParent(gridHolder.transform);
 
+        GameObject plane = gridHolder.transform.Find("Plane").gameObject;
+        plane.transform.localScale = new Vector3(layers, 1, layers);
 
         grid.SetGridSize(layers - 1, slices);
         Vector3 previousPos = centerPosition;

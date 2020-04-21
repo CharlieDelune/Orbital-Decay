@@ -30,7 +30,7 @@ public class LevelCreator : MonoBehaviour
         }
         UnityEngine.Random.InitState(seed);
 
-        int solarSystemLayers = UnityEngine.Random.Range(7, 12);
+        int solarSystemLayers = UnityEngine.Random.Range(9, 14);
         int solarSystemSlices = UnityEngine.Random.Range(20, 40);
 
         gridBuilder.BuildLevel(solarSystemLayers, solarSystemSlices);
