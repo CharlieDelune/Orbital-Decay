@@ -59,6 +59,11 @@ public abstract class Faction : MonoBehaviour
 		unit.transform.SetParent(GameStateManager.Instance.UnitHolder.transform);
 		unit.isPlayerUnit = isPlayerFaction.Value;
 		this.units.Add(unit);
+		UnitManager.Instance.AddUnit(unit);
+		if(isPlayerFaction.Value)
+		{
+			UnitManager.Instance.AddPlayerUnit(unit);
+		}
 	}
 
 	public void RemoveUnit(Unit unit)

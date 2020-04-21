@@ -18,9 +18,11 @@ public class PlanetManager : MonoBehaviour
 		} else {
 			_instance = this;
 		}
+        planets = new List<Planet>();
 	}
 
-    List<Planet> planets;
+    public List<Planet> planets;
+
     // Start is called before the first frame update
     void Start()
     {

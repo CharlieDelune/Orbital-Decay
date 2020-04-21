@@ -19,11 +19,14 @@ public class GridManager : MonoBehaviour
 		} else {
 			_instance = this;
 		}
+		resourceDeposits = new List<ResourceDeposit>();
 	}
 
 	public Pathfinder pathfinder;
 
 	[SerializeField] private HeavyGameEvent onForceSelectableMoveEvent;
+
+	public List<ResourceDeposit> resourceDeposits;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,11 @@ public class GridManager : MonoBehaviour
     {
         
     }
+
+	public void AddResourceDeposit(ResourceDeposit deposit)
+	{
+		resourceDeposits.Add(deposit);
+	}
 
 	public GridCell GetGridCellForRevolve(GridCell parentCell, RevolveDirection revolveDirection, int revolveSpeed)
 	{

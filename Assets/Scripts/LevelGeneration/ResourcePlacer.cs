@@ -21,10 +21,41 @@ public class ResourcePlacer : MonoBehaviour
     }
 
     public void PlaceResources() {
-        //The unit script is attached to the prefab so it's going to instantiate the prefab in the world
-        GridCell parentCell = GameStateManager.Instance.solarSystemGrid.GetGridCell(1, 0);
-        ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefab);
-        deposit.SetParentCell(parentCell);
-        deposit.transform.SetParent(resourceDepositHolder.transform);
+        foreach(Planet planet in PlanetManager.Instance.planets)
+        {
+            int resourcesPlaced = 0;
+            do
+            {
+                for (int i = 0; i < planet.grid.GetGridSize().layers - 1; i++)
+                {
+                    int notQuiteFiftyFifty = Random.Range(0, 10);
+                    if(notQuiteFiftyFifty > 4)
+                    {
+                        int randomSlice = Random.Range(0, planet.grid.GetGridSize().slices);
+                        bool placed = PlaceResource(planet.grid, i, randomSlice);
+
+                        if(placed)
+                        {
+                            resourcesPlaced++;
+                        }
+                    }
+                }
+            }
+            while (resourcesPlaced < planet.grid.GetGridSize().layers / 2);
+        }
+    }
+
+    private bool PlaceResource(CircularGrid grid, int layer, int slice)
+    {
+        GridCell parentCell = grid.GetGridCell(layer, slice);
+        if (parentCell.Selectable == null && parentCell.ResourceDeposit == null)
+        {
+            ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefab);
+            deposit.SetParentCell(parentCell);
+            deposit.transform.SetParent(resourceDepositHolder.transform);
+            GridManager.Instance.AddResourceDeposit(deposit);
+            return true;
+        }
+        return false;
     }
 }

@@ -110,6 +110,8 @@ public class GameStateManager : MonoBehaviour {
 
     public GameObject UnitHolder;
 
+	public int seed { get; set; }
+
 	private void setupPlayer()
 	{
 		int playerFactionIndex = this.Factions.FindIndex(faction => faction is PlayerFaction);

@@ -16,9 +16,12 @@ public class UnitManager : MonoBehaviour
 			_instance = this;
 		}
         playerUnits = new List<Unit>();
+        allUnits = new List<Unit>();
 	}
 
     public List<Unit> playerUnits;
+
+    public List<Unit> allUnits;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,11 @@ public class UnitManager : MonoBehaviour
     {
         playerUnits.Add(unitIn);
         GameStateManager.Instance.AddPlayerUnit(unitIn);
+    }
+
+    public void AddUnit(Unit unitIn)
+    {
+        allUnits.Add(unitIn);
     }
 
     public void OnUnitAttack(HeavyGameEventData data)

@@ -22,10 +22,6 @@ public class CircleGridBuilder : MonoBehaviour
 	}
 
     [SerializeField]
-    private int layers;
-    [SerializeField]
-    private int slices;
-    [SerializeField]
     private int gridRadius;
     [SerializeField]
     private GameObject node;
@@ -49,7 +45,7 @@ public class CircleGridBuilder : MonoBehaviour
 
     //Currently used to build solar system
     //TODO: Roll this into function below to fully proceduralize
-    public void BuildLevel()
+    public void BuildLevel(int layers, int slices)
     {
         GameObject systemHolder = Instantiate(SystemPrefab);
         GameObject gridHolder = systemHolder.transform.Find("Grid").gameObject;
@@ -163,7 +159,7 @@ public class CircleGridBuilder : MonoBehaviour
         grid.gameObject.transform.SetParent(gravityWellsHolder.transform);
     }
 
-    public GameObject BuildLevel(int layers, int slices, Vector3 centerPosition)
+    public GameObject BuildGrid(int layers, int slices, Vector3 centerPosition)
     {
         GameObject systemHolder = Instantiate(SystemPrefab);
         GameObject gridHolder = systemHolder.transform.Find("Grid").gameObject;
