@@ -155,7 +155,7 @@ public class GameData : MonoBehaviour
 					}
 					else
 					{
-						throw new System.Exception("The provided output does not exist as a Resource or as a Unit");
+						throw new System.Exception($"The provided output {fields[1]} does not exist as a Resource or as a Unit");
 					}
 					recipe.AddInput(nameToResource[fields[4]], int.Parse(fields[5]));
 				}

@@ -24,6 +24,10 @@ public abstract class Faction : MonoBehaviour
 
 	[SerializeField] protected FactionGameEvent onStartFactionTurn;
 
+	[SerializeField] protected FactionGameEvent onFactionDefeated;
+
+	public bool isDefeated;
+
 	/// Initializes this.Resources
 	protected virtual void Start()
 	{
@@ -69,6 +73,10 @@ public abstract class Faction : MonoBehaviour
 	public void RemoveUnit(Unit unit)
 	{
 		this.units.Remove(unit);
+		if (units.Count == 0)
+		{
+			this.onFactionDefeated.Raise(this);
+		}
 	}
 
 	public void AddUnit(Unit unitIn)

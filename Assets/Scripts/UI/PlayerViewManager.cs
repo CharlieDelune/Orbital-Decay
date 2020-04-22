@@ -21,6 +21,9 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 	[SerializeField] private MonoBehaviourGameEvent onTargetSelectedEvent;
 	[SerializeField] private FactionGameEvent onPlayerTurnEndedEvent;
 
+	[SerializeField] private GameObject gameOverPanel;
+	[SerializeField] private Text gameOverText;
+
 	private bool isPlayerTurn;
 	private List<Faction> factions;
 	private GridCell selectedCell;
@@ -116,6 +119,19 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 		this.selectedCell = null;
 		this.selectedAction = SelectableActionType.None;
 		HidePopUp();
+	}
+
+	public void OnGameEnded(bool playerWon)
+	{
+		gameOverPanel.SetActive(true);
+		if(playerWon)
+		{
+			gameOverText.text = "YOU WIN!";
+		}
+		else
+		{
+			gameOverText.text = "YOU LOSE!";
+		}
 	}
 
 	public void OnGameStateManagerUpdated(MonoBehaviour _gameStateManager)

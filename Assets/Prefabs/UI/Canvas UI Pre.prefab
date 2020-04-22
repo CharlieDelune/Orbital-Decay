@@ -2413,8 +2413,8 @@ MonoBehaviour:
 
     When the game begins, you''ll
     be looking at your unit (the blue tictac) in a planet''s gravity well. First,
-    try building a mine on the nearest Resource Deposit (yellow orb). On your next
-    turn, you''ll be able to use the ore you collect to build a Scout.
+    try building a mine on the nearest Resource Deposit (yellow/brown orbs). On your
+    next turn, you''ll be able to use the ore you collect to build a Scout.
 
 
     Then,
@@ -3059,7 +3059,7 @@ PrefabInstance:
     - target: {fileID: 954131785780805183, guid: c314981c20856664cb781ae5537a5a0c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 954131786082157083, guid: c314981c20856664cb781ae5537a5a0c,
         type: 3}
@@ -3106,17 +3106,17 @@ PrefabInstance:
     - target: {fileID: 954131786107522703, guid: c314981c20856664cb781ae5537a5a0c,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.4
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 954131786107522703, guid: c314981c20856664cb781ae5537a5a0c,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.25
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 954131786107522703, guid: c314981c20856664cb781ae5537a5a0c,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.75
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 954131786325571498, guid: c314981c20856664cb781ae5537a5a0c,
         type: 3}

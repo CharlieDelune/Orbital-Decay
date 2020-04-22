@@ -37,7 +37,7 @@ public class PlanetPlacer : MonoBehaviour
                 if (notQuitefiftyFifty > 4 && !layersWithPlanets.Contains(i))
                 {
                     int planetSlice = Random.Range(0, systemSlices);
-                    int orbit = Random.Range(1, (systemSlices/3) - i);
+                    int orbit = Random.Range(1, Mathf.Abs((systemSlices/3) - i) + 1);
                     bool placed = PlacePlanet(i, planetSlice, orbit, RevolveDirection.CounterClockwise, planetPrefabs[Random.Range(0, planetPrefabs.Length)]);
                     if (placed)
                     {

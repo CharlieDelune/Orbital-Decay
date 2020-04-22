@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -110,6 +111,8 @@ public class GameStateManager : MonoBehaviour {
 
     public GameObject UnitHolder;
 
+	[SerializeField] private BoolGameEvent onGameEnded;
+
 	public int seed { get; set; }
 
 	private void setupPlayer()
@@ -160,7 +163,14 @@ public class GameStateManager : MonoBehaviour {
 				this.IsPlayerTurn = false;
 			}
 			this.nextTurn.Value++;
-			this.Factions[currentTurn].StartTurn(this.next);
+			if (!this.Factions[currentTurn].isDefeated)
+			{
+				this.Factions[currentTurn].StartTurn(this.next);
+			}
+			else
+			{
+				this.next();
+			}
 		}
 	}
 
@@ -175,32 +185,19 @@ public class GameStateManager : MonoBehaviour {
 	/// called whenever a faction is defeated
 	public void OnFactionDefeated(Faction faction)
 	{
-		bool decrementNextTurn = false;
-		if(this.Factions.IndexOf(faction) < this.nextTurn.Value)
-		{
-			decrementNextTurn = true;
-		}
-		/// Faction removal must be done before nextTurn.Value decrement
-		this.Factions.Remove(faction);
+		faction.isDefeated = true;
 
-		/// Decrements nextTurn field to preserve
-		/// proper turn order
-		if(decrementNextTurn)
+		//If the player faction was the one destroyed, you lose mate
+		if (faction == playerFaction)
 		{
-			this.nextTurn.Value--;
+			this.onGameEnded.Raise(false);
 		}
 
-		/// Ends the game when only one faction is remaining
-		if(this.Factions.Count == 1)
+		//If you got to here and didn't lose, you've obviously won, congrats
+		if(this.Factions.Where((f) => !f.isDefeated).ToList().Count == 1)
 		{
-			this.endGame();
+			this.onGameEnded.Raise(true);
 		}
-	}
-
-	/// Called when the game is over
-	private void endGame()
-	{
-		throw new Exception("End Game!");
 	}
 
 	public void LoadPlayer(PlayerFaction _playerFaction)

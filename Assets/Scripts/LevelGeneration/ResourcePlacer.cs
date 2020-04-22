@@ -5,7 +5,7 @@ using UnityEngine;
 public class ResourcePlacer : MonoBehaviour
 {
     [SerializeField]
-    private ResourceDeposit resourceDepositPrefab;
+    private ResourceDeposit[] resourceDepositPrefabs;
     [SerializeField]
     private GameObject resourceDepositHolder;
     private Faction playerFaction;
@@ -50,7 +50,7 @@ public class ResourcePlacer : MonoBehaviour
         GridCell parentCell = grid.GetGridCell(layer, slice);
         if (parentCell.Selectable == null && parentCell.ResourceDeposit == null)
         {
-            ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefab);
+            ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefabs[Random.Range(0,this.resourceDepositPrefabs.Length)]);
             deposit.SetParentCell(parentCell);
             deposit.transform.SetParent(resourceDepositHolder.transform);
             GridManager.Instance.AddResourceDeposit(deposit);
