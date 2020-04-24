@@ -14,20 +14,44 @@ public class LevelCreator : MonoBehaviour
     [SerializeField]
     private ResourcePlacer resourcePlacer;
 
-    private int seed;
+    private int seed = -1;
+    public int Seed { get => this.seed; }
+
+    [SerializeField] private PlayerFaction playerFactionPrefab;
+    [SerializeField] private AIFaction aiFactionPrefab;
 
     public void SetSeed(string seedIn)
     {
-        this.seed =  Int32.Parse(seedIn);
+        this.seed = Int32.Parse(seedIn);
     }
 
-    public void StartLevelCreation()
+    public void StartLevelCreation(int _seed)
     {
-        //Eventually we'll replace this with a player specified seed
-        if(this.seed == 0)
+        this.seed = _seed;
+
+        /// Initializes factions
+        List<Faction> factions = new List<Faction>();
+        foreach(var identity in GameSession.Instance.Identities)
         {
-            this.seed = new System.Random().Next(999999999);
+            Faction faction;
+            if(identity.IsPlayer)
+            {
+                faction = Instantiate(this.playerFactionPrefab) as PlayerFaction;
+            }
+            else
+            {
+                faction = Instantiate(this.aiFactionPrefab) as AIFaction;
+            }
+            identity.SetFaction(faction);
+            factions.Add(identity.Faction);
         }
+
+        GameStateManager.Instance.SetupFactions(factions);
+
+        //Eventually we'll replace this with a player specified seed
+
+        /// This will have to be set prior - in the lobby phase
+
         UnityEngine.Random.InitState(seed);
 
         int solarSystemLayers = UnityEngine.Random.Range(9, 14);
@@ -41,10 +65,5 @@ public class LevelCreator : MonoBehaviour
         GameStateManager.Instance.seed = this.seed;
 
         Destroy(gameObject);
-    }
-
-    void Update()
-    {
-        
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ public class Planet : Selectable, Revolving
     private bool moving;
     private int currentPathIndex;
     private bool viewing;
+
+    private Action onFinishRevolve;
 
     void Start()
     {
@@ -73,6 +76,12 @@ public class Planet : Selectable, Revolving
     public bool IsMoving()
     {
         return moving;
+    }
+
+    public void Revolve(Action callback)
+    {
+        this.onFinishRevolve = callback;
+        this.Revolve();
     }
 
     public void Revolve()
@@ -136,5 +145,6 @@ public class Planet : Selectable, Revolving
         onMoveEvent.Raise(data);
         moving = false;
         targetCell = null;
+        this.onFinishRevolve();
     }
 }

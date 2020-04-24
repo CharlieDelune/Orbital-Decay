@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// Faction would hold reference to all of its
 /// units
@@ -14,23 +15,28 @@ public abstract class Faction : MonoBehaviour
 	protected List<Unit> units = new List<Unit>();
 
 	[SerializeField] protected FactionGameEvent onFactionResourcesChange;
-	
-	/// Points that help to measure the faction's
-	/// capabilities and progression - not sure if needed
-	public int Points;
-
-	/// holds the reference to the GameLoopManager's next method
-	protected Action next;
 
 	[SerializeField] protected FactionGameEvent onStartFactionTurn;
+	[SerializeField] protected FactionGameEvent onEndFactionTurn;
+
+	private FactionIdentity identity;
+	public FactionIdentity Identity { get => this.identity; }
+
+	private int index;
+	public int Index { get => this.index; }
 
 	[SerializeField] protected FactionGameEvent onFactionDefeated;
 
 	public bool isDefeated;
 
-	/// Initializes this.Resources
-	protected virtual void Start()
+	public void SetIdentity(FactionIdentity _identity)
 	{
+		this.identity = _identity;
+	}
+
+	public void Setup(int _index)
+	{
+		this.index = _index;
 		if(this.onFactionResourcesChange != null)
 		{
 			this.Resources.Set(() => {this.onFactionResourcesChange.Raise(this);}, this);
@@ -42,32 +48,25 @@ public abstract class Faction : MonoBehaviour
 	}
 
 	/// Setup before the Faction starts their turn
-	/// Ideally where all the units belonging to
-	/// the faction update their states
-	public void StartTurn(Action _next)
+	/// Ideally after all units preload their states
+	public virtual void StartTurn(Faction faction)
 	{
-		this.next = _next;
-
-		/// Allows all listening Units to update before the turn starts
-		this.onStartFactionTurn.Raise(this);
-		this.Resources.OnPreLoadRound();
-
-		this.StartCoroutine(this.useTurn());
+		if(faction != null && faction == this)
+		{
+			this.Resources.OnPreLoadRound();
+			this.StartCoroutine(this.useTurn());
+		}
 	}
 
-	public void CreateUnit(GridCell cell, string unitName, bool? isPlayerFaction = false)
+	public void CreateUnit(GridCell cell, string unitName)
 	{
 		Unit unit = GameData.Instance.GetUnitInfo(unitName).InstantiateUnit(this);
 		unit.SetParentCell(cell);
 		unit.transform.position = cell.transform.position;
 		unit.transform.SetParent(GameStateManager.Instance.UnitHolder.transform);
-		unit.isPlayerUnit = isPlayerFaction.Value;
+		unit.isPlayerUnit = this.Identity.isLocalPlayer;
 		this.units.Add(unit);
-		UnitManager.Instance.AddUnit(unit);
-		if(isPlayerFaction.Value)
-		{
-			UnitManager.Instance.AddPlayerUnit(unit);
-		}
+		UnitManager.Instance.AddUnit(unit, this.Identity.isLocalPlayer);
 	}
 
 	public void RemoveUnit(Unit unit)
@@ -94,11 +93,22 @@ public abstract class Faction : MonoBehaviour
 					this.Resources.GainResource(data.ResourceValue, data.IntValue);
 				break;
 				case SelectableActionType.Build:
-					this.CreateUnit(data.TargetCell, data.RecipeValue.OutputName, data.BoolValue);
+					this.CreateUnit(data.TargetCell, data.RecipeValue.OutputName);
 				break;
 			}
 		}
 	}
 
 	protected abstract IEnumerator useTurn();
+
+	/// Causes the end of the turn
+	public virtual void EndTurn()
+	{
+		this.onEndFactionTurn.Raise(this);
+	}
+
+	/// Called when the unit's move is ended
+	public virtual void OnEndMove()
+	{
+	}
 }

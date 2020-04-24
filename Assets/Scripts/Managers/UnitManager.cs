@@ -23,26 +23,13 @@ public class UnitManager : MonoBehaviour
 
     public List<Unit> allUnits;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void AddPlayerUnit(Unit unitIn)
-    {
-        playerUnits.Add(unitIn);
-        GameStateManager.Instance.AddPlayerUnit(unitIn);
-    }
-
-    public void AddUnit(Unit unitIn)
+    public void AddUnit(Unit unitIn, bool isLocalPlayer)
     {
         allUnits.Add(unitIn);
+        if(isLocalPlayer)
+        {
+            playerUnits.Add(unitIn);
+        }
     }
 
     public void OnUnitAttack(HeavyGameEventData data)

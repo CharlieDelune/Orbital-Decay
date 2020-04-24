@@ -10,16 +10,6 @@ public class ResourcePlacer : MonoBehaviour
     private GameObject resourceDepositHolder;
     private Faction playerFaction;
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public void PlaceResources() {
         foreach(Planet planet in PlanetManager.Instance.planets)
         {

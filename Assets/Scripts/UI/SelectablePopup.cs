@@ -24,7 +24,15 @@ public class SelectablePopup : MonoBehaviour
 		this.selectedAction = null;
 		this.selectableName.text = selectable.PopupLabel;
 		this.parentSelectable = selectable;
-		List<SelectableActionType> validActionTypes = selectable.GetValidActionTypes();
+		List<SelectableActionType> validActionTypes;
+		if(selectable is Unit && !((Unit) selectable).Faction.Identity.isLocalPlayer)
+		{
+			validActionTypes = new List<SelectableActionType>();
+		}
+		else
+		{
+			validActionTypes = selectable.GetValidActionTypes();
+		}
 		for(int i = 0; i < this.buttons.Count; i++)
 		{
 			Destroy(this.buttons[i]);
@@ -45,6 +53,7 @@ public class SelectablePopup : MonoBehaviour
 	private void loadBuildOptions()
 	{
 		Builder builder = GameStateManager.Instance.SelectedCell.Selectable as Builder;
+		GameStateManager.Instance.SelectedBuildOption = "";
 		if(builder != null)
 		{
 			for(int i = 0; i < this.buttons.Count; i++)
@@ -61,17 +70,16 @@ public class SelectablePopup : MonoBehaviour
 				BuildButton buildButton = Instantiate(this.buildButtonPrefab) as BuildButton;
 				UnitRecipe recipe = builder.BuildOptions[g];
 
-				GameObject buildOptionWrapper = buildButton.SetButton(builder.Faction, () => this.onSelectBuildOption(recipe, builder), builder.BuildOptions[g]);
+				GameObject buildOptionWrapper = buildButton.SetButton(builder.Faction, () => this.onSelectBuildOption(g.ToString(), builder), builder.BuildOptions[g]);
 				this.buttons.Add(buildOptionWrapper);
 				buildOptionWrapper.transform.SetParent(this.buttonsParent, false);
 			}
 		}
 	}
 
-	private void onSelectBuildOption(UnitRecipe recipe, Builder builder)
+	private void onSelectBuildOption(string recipeIndex, Builder builder)
 	{
-		Debug.Log("Selected Build Option " + recipe.OutputName);
-		builder.SetBuildOption(recipe);
+		GameStateManager.Instance.SelectedBuildOption = recipeIndex;
 	}
 
 	private void onButtonPress(SelectableActionType actionType)

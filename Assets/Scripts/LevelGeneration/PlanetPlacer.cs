@@ -9,16 +9,6 @@ public class PlanetPlacer : MonoBehaviour
     [SerializeField]
     private GameObject planetHolder;
 
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void PlacePlanets(int systemLayers, int systemSlices) {
         int planetsPlaced = 0;
         List<int> layersWithPlanets = new List<int>();

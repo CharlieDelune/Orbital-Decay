@@ -8,6 +8,7 @@ public class AIFaction : Faction
 
 	protected override IEnumerator useTurn()
 	{
+		yield return null;
 		while(true)
 		{
 			if(!GameStateManager.Instance.AnimationPresent)
@@ -20,6 +21,6 @@ public class AIFaction : Faction
 			}
 			yield return null;
 		}
-		this.next();
+		this.EndTurn();
 	}
 }

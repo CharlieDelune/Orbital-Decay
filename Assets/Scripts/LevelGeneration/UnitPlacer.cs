@@ -10,22 +10,17 @@ public class UnitPlacer : MonoBehaviour
     private GameObject unitHolder;
     private Faction playerFaction;
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public void PlaceUnits() {
+
+        // parentCell = GameStateManager.Instance.solarSystemGrid.GetGridCell(6, 19);
+        // GameStateManager.Instance.Factions[0].CreateUnit(parentCell, this.unitNames[1]);
+
         List<Planet> planetsContainingAFaction = new List<Planet>();
 
         //We'll place each faction on its own planet
         foreach(Faction faction in GameStateManager.Instance.Factions)
         {
+
             //Initialize a planet
             Planet placementPlanet = null;
             //Select a random planet, and continue selecting random planets until we find one that doesn't house a faction
@@ -41,12 +36,12 @@ public class UnitPlacer : MonoBehaviour
             int randomSlice = Random.Range(0, planetGrid.GetGridSize().slices);
             GridCell parentCell = placementPlanet.grid.GetGridCell(randomLayer, randomSlice);
 
-            bool isPlayerFaction = faction.name == "Player Faction" ? true : false;
+            bool isLocalPlayerFaction = faction.Identity.isLocalPlayer;
 
-            faction.CreateUnit(parentCell, isPlayerFaction ? "Main Base" : "Enemy Base", isPlayerFaction);
+            faction.CreateUnit(parentCell, faction.Identity.IsPlayer ? "Main Base" : "Enemy Base");
 
             //If this is the player faction, put their planet in view just to be nice
-            if (isPlayerFaction) {
+            if (isLocalPlayerFaction) {
                  GameStateManager.Instance.GridInView = planetGrid;
             }
             planetsContainingAFaction.Add(placementPlanet);

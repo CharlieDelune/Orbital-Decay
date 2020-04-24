@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,9 @@ public class Tutorial : MonoBehaviour
     [SerializeField] GameObject turnDisplay;
     [SerializeField] GameObject playerUi;
     [SerializeField] GameObject resources;
-    [SerializeField] EntryPoint entryPoint;
+
+    [HideInInspector] public bool Used = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +30,8 @@ public class Tutorial : MonoBehaviour
         turnDisplay.SetActive(true);
         playerUi.SetActive(true);
         resources.SetActive(true);
-        entryPoint.BeginGame();
+        this.Used = true;
+        GameSession.Instance.Ready(GameSession.Instance.Identities.Count);
         Destroy(this.gameObject);
     }
 }

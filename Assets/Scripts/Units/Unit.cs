@@ -41,7 +41,6 @@ public class Unit : Selectable
 
 	/// for quick debugging
 	[SerializeField] protected bool debug = false;
-	public string ExtraOverride;
 
 	public int movesLeft = 0;
 
@@ -54,11 +53,7 @@ public class Unit : Selectable
 
 	private void Start()
 	{
-		if(this.debug)
-		{
-			this.setExtra(this.ExtraOverride);
-		}
-		if(!this.baseStatsSet && !this.debug)
+		if(!this.baseStatsSet)
 		{
 			throw new System.Exception("Unit was instantiated, but no base stats were set. Make sure you are instantiating through UnitInfo");
 		}
@@ -128,22 +123,19 @@ public class Unit : Selectable
 	/// Returns whether or not the action can be performed
 	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
-		if (this.isPlayerUnit)
+		if(this.GetValidActionTypes().Contains(actionType))
 		{
-			if(this.GetValidActionTypes().Contains(actionType))
+			switch(actionType)
 			{
-				switch(actionType)
-				{
-					case SelectableActionType.Attack:
-						/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
-						/// not the current faction
-						return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction 
-						&& !this.hasAttacked &&
-						ParentCell.parentGrid.GetCellsInRange(ParentCell, this.attackRange).Contains(targetCell);
-					case SelectableActionType.Move:
-						/// TODO: Pathfinder now handles movement to non-empty cells, what do we do here?
-						return true;
-				}
+				case SelectableActionType.Attack:
+					/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
+					/// not the current faction
+					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction 
+					&& !this.hasAttacked &&
+					ParentCell.parentGrid.GetCellsInRange(ParentCell, this.attackRange).Contains(targetCell);
+				case SelectableActionType.Move:
+					/// TODO: Pathfinder now handles movement to non-empty cells, what do we do here?
+					return true;
 			}
 		}
 		return false;
@@ -163,20 +155,17 @@ public class Unit : Selectable
 	}
 	
 	/// Returns list of valid actions based on the current turn state
+	/// This is based on the local client
 	public override List<SelectableActionType> GetValidActionTypes()
 	{
-		List<SelectableActionType> actionTypes = new List<SelectableActionType>();
-		if (this.isPlayerUnit)
+		List<SelectableActionType> actionTypes = new List<SelectableActionType>(this.validActionTypes);
+		if(this.movesLeft <= 0)
 		{
-			actionTypes = new List<SelectableActionType>(this.validActionTypes);
-			if(this.movesLeft <= 0)
-			{
-				actionTypes.Remove(SelectableActionType.Move);
-			}
-			if (this.hasAttacked)
-			{
-				actionTypes.Remove(SelectableActionType.Attack);
-			}
+			actionTypes.Remove(SelectableActionType.Move);
+		}
+		if (this.hasAttacked)
+		{
+			actionTypes.Remove(SelectableActionType.Attack);
 		}
 		return actionTypes;
 	}
@@ -210,6 +199,7 @@ public class Unit : Selectable
 		data.TargetCell = cellPath[cellPath.Count - 1];
         this.currentPathIndex = 0;
         this.moving = true;
+        GameStateManager.Instance.AnimationPresent = true;
         GameStateManager.Instance.PerformAction(data);
     }
 
@@ -293,9 +283,11 @@ public class Unit : Selectable
 					if (this.currentPathIndex == this.targetPath.Count)
 					{
 						this.endMove();
+						this.Faction.OnEndMove();
 					}
 					else if (movesMade == maxMoveRange){
 						this.endMoveInMiddle();
+						this.Faction.OnEndMove();
 					}
 				}
 			}
@@ -311,6 +303,8 @@ public class Unit : Selectable
         this.moving = false;
         this.currentPathIndex = 1;
         this.target = null;
+
+        GameStateManager.Instance.AnimationPresent = false;
         this.onMoveEvent.Raise(data);
     }
 
@@ -323,16 +317,21 @@ public class Unit : Selectable
         this.moving = false;
         this.targetPath = this.targetPath.Skip(this.currentPathIndex-1).ToList();
         this.cellPath = this.cellPath.Skip(this.currentPathIndex-1).ToList();
+
+        GameStateManager.Instance.AnimationPresent = false;
     }
 
-    public void TakeOutstandingMoves()
+    public bool TakeOutstandingMoves()
     {
 		if (this.movesMade < this.maxMoveRange)
 		{
 			if(this.target != null)
 			{
+				GameStateManager.Instance.AnimationPresent = false;
 				this.performMove(this.target);
+				return true;
 			}
 		}
+		return false;
     }
 }

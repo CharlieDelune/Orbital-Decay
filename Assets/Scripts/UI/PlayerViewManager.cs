@@ -30,11 +30,6 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 	private CircularGrid gridInView;
 	private SelectableActionType selectedAction;
 
-	private void Awake()
-	{
-
-	}
-
 	/// This will be used later on
 	/// for the resource tab set up
 	public void LoadPlayer(PlayerFaction _playerFaction)
@@ -48,20 +43,13 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 	public void OnStartTurn(int nextTurn)
     {
         Faction faction = (nextTurn == 0) ? null : factions?[nextTurn - 1];
-		if(GameStateManager.Instance.IsPlayerTurn)
-		{
-			this.toggleableOnTurnPlayerUI.SetActive(true);
-		}
-		else
-		{
-			this.toggleableOnTurnPlayerUI.SetActive(false);
-		}
+        this.toggleableOnTurnPlayerUI.SetActive(GameStateManager.Instance.IsPlayerTurn);
     }
 
     /// Handles click on the screen
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-    	if(!(this.isPlayerTurn && GameStateManager.Instance.AnimationPresent))
+    	if(this.gridInView != null && !(this.isPlayerTurn && GameStateManager.Instance.AnimationPresent))
 	    {
 			Vector3 mousePosition = pointerEventData.position;
 
@@ -89,7 +77,7 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 				{
 					selectedCell = clickedCell;
 					onCellSelectedEvent.Raise(clickedCell);
-					if(selectedCell.Selectable != null)
+					if(selectedCell.Selectable != null || selectedCell.ResourceDeposit != null)
 					{
 						ShowPopUp(clickedCell);
 					}
@@ -106,7 +94,7 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 	private void ShowPopUp(GridCell cell)
 	{
 		this.selectablePopup.gameObject.SetActive(true);
-		this.selectablePopup.LoadPopup(cell.Selectable);
+		this.selectablePopup.LoadPopup((cell.Selectable != null) ? cell.Selectable : cell.ResourceDeposit);
 	}
 
 	private void HidePopUp()
@@ -147,5 +135,10 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 		{ 
 			HidePopUp();
 		}
+	}
+
+	public void OnChangeAnimationPresent(bool animationPresent)
+	{
+		this.endTurnButton.interactable = !animationPresent;
 	}
 }

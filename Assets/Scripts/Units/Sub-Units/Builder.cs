@@ -47,10 +47,11 @@ public class Builder : Unit
 					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction;
 				case SelectableActionType.Move:
 					/// Moves if the targetNode is empty
-					return targetCell.Selectable == null;
+					return true;
 				case SelectableActionType.Build:
-					if(this.selectedBuildOption != null)
+					if(param != null)
 					{
+						this.selectedBuildOption = this.BuildOptions[int.Parse(param)];
 						bool canUseRecipe = this.faction.Resources.CanUseRecipe(this.selectedBuildOption);
 						if(!canUseRecipe)
 						{
@@ -70,13 +71,6 @@ public class Builder : Unit
 			}
 		}
 		return false;
-	}
-
-	/// Sets the build options based on the selected index
-	/// Called from SelectablePopup
-	public void SetBuildOption(UnitRecipe _selectedBuildOption)
-	{
-		this.selectedBuildOption = _selectedBuildOption;
 	}
 
 	public override void PerformAction(SelectableActionType actionType, GridCell targetCell, string param)
@@ -107,8 +101,7 @@ public class Builder : Unit
 			targetCell: targetCell,
 			targetFaction: this.Faction,
 			actionType: SelectableActionType.Build,
-			recipeValue: this.selectedBuildOption,
-			boolValue: this.isPlayerUnit
+			recipeValue: this.selectedBuildOption
 		);
 
 		GameStateManager.Instance.PerformAction(data);

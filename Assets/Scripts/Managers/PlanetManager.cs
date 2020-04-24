@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class PlanetManager : MonoBehaviour
 	private static PlanetManager _instance;
 
 	public static PlanetManager Instance { get { return _instance; } }
+
+    [SerializeField] private FactionGameEvent OnEndTurn;
 
 	/// Raises Exception if multiple singleton instances are present at once
 	private void Awake()
@@ -29,22 +32,34 @@ public class PlanetManager : MonoBehaviour
         planets = new List<Planet>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void AddPlanet(Planet planetIn)
     {
         planets.Add(planetIn);
     }
 
-    public void RevolveAllPlanets()
+    private int revolved = 0;
+
+    /// Connected to a Faction GameEvent Listener
+    /// Listens to the onEndTurn
+    public void RevolveAllPlanets(Faction faction)
     {
-        foreach(Planet p in planets)
+        if(faction == null)
         {
-            p.Revolve();
+            this.revolved = -1;
+            foreach(Planet p in planets)
+            {
+                p.Revolve(this.onRevolve);
+            }
+            this.onRevolve();
+        }
+    }
+
+    private void onRevolve()
+    {
+        this.revolved++;
+        if(this.revolved >= this.planets.Count)
+        {
+            this.OnEndTurn.Raise(null);
         }
     }
 }

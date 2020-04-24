@@ -28,22 +28,11 @@ public class GridManager : MonoBehaviour
 
 	public List<ResourceDeposit> resourceDeposits;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 	public void AddResourceDeposit(ResourceDeposit deposit)
 	{
 		resourceDeposits.Add(deposit);
 	}
-
+	
 	public GridCell GetGridCellForRevolve(GridCell parentCell, RevolveDirection revolveDirection, int revolveSpeed)
 	{
 		return parentCell.parentGrid.GetGridCellForRevolve(parentCell, revolveDirection, revolveSpeed);
@@ -72,8 +61,7 @@ public class GridManager : MonoBehaviour
 				int numberOfTries = 0;
 				while (newParentCell == null && numberOfTries < movingPlanet.grid.GetGridSize().slices - 1)
 				{
-					System.Random r = new System.Random();
-					int randSlice = r.Next(0, movingPlanet.grid.GetGridSize().slices-1);
+					int randSlice = UnityEngine.Random.Range(0, movingPlanet.grid.GetGridSize().slices-1);
 					GridCell potentialCell = movingPlanet.grid.GetGridCell(movingPlanet.grid.GetGridSize().layers-2, randSlice);
 					if (potentialCell.Selectable == null)
 					{

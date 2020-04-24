@@ -47,7 +47,8 @@ public class HeavyGameEventData
 		float floatValue = 0.0f,
 		string stringValue = "",
 		Selectable targetSelectable = null,
-		SelectableActionType actionType = SelectableActionType.None)
+		SelectableActionType actionType = SelectableActionType.None
+		)
 	{
 		this.SourceFaction = sourceFaction;
 		this.TargetFaction = targetFaction;

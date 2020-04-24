@@ -6,12 +6,13 @@ using UnityEngine;
 public class PlayerFaction : Faction
 {
 
-	[SerializeField] private PlayerViewManager playerViewManager;
+	private int finishedMoves;
+	private int totalMoves;
+	private bool canEndTurn = false;
 
 	public void LoadPlayer()
 	{
 		GameStateManager.Instance.LoadPlayer(this);
-		this.playerViewManager.LoadPlayer(this);
 	}
 
 	protected override IEnumerator useTurn()
@@ -19,14 +20,38 @@ public class PlayerFaction : Faction
 		yield return null;
 	}
 
+	/// Connected to Faction listener
 	/// Called when the player ends their turn
 	/// Should be connected to the UI
-	public void EndTurn()
+	public override void EndTurn()
 	{
-		foreach(Unit unit in this.units)
+		if(GameStateManager.Instance.NextTurn - 1 == this.Index)
 		{
-			unit.TakeOutstandingMoves();
+			this.finishedMoves = -1;
+			this.totalMoves = 0;
+			this.canEndTurn = true;
+			foreach(Unit unit in this.units)
+			{
+				if(unit.TakeOutstandingMoves())
+				{
+					this.totalMoves++;
+				}
+			}
+			this.OnEndMove();
 		}
-		this.next();
+	}
+
+	public override void OnEndMove()
+	{
+		this.finishedMoves++;
+		if(this.finishedMoves >= this.totalMoves && this.canEndTurn)
+		{
+			this.canEndTurn = false;
+			base.EndTurn();
+		}
+		else if(!this.canEndTurn)
+		{
+			GameStateManager.Instance.AnimationPresent = false;
+		}
 	}
 }

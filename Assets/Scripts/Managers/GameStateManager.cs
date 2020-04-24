@@ -23,11 +23,10 @@ public class GameStateManager : MonoBehaviour {
 		} else {
 			_instance = this;
 		}
-
-		this.setupPlayer();
 	}
 
 	[SerializeField] private GeneralTurnDisplay generalTurnDisplay;
+	[SerializeField] private PlayerViewManager playerViewManager;
 
 	public List<Faction> Factions;
 
@@ -111,34 +110,59 @@ public class GameStateManager : MonoBehaviour {
 
     public GameObject UnitHolder;
 
+    [SerializeField] private FactionGameEvent onStartFactionTurnEvent;
+
+    public int seed { get; set; }
+
 	[SerializeField] private BoolGameEvent onGameEnded;
 
-	public int seed { get; set; }
+	[HideInInspector] public string SelectedBuildOption;
 
-	private void setupPlayer()
+	/// Setups up GameStateManager's Factions list
+	public void SetupFactions(List<Faction> factions)
 	{
-		int playerFactionIndex = this.Factions.FindIndex(faction => faction is PlayerFaction);
-		if(playerFactionIndex >= 0)
+
+		this.Factions = factions;
+		for(int i = 0; i < this.Factions.Count; i++)
 		{
-			((PlayerFaction)this.Factions[playerFactionIndex]).LoadPlayer();
+			Faction faction = this.Factions[i];
+			if(faction.Identity.isLocalPlayer)
+			{
+				((PlayerFaction)faction).LoadPlayer();
+			}
+			faction.Setup(i);
+			faction.FactionName = "Faction " + i;
 		}
 	}
 
 	public void StartGame()
 	{
-		if(this.Factions.Count <= 1)
+		if(this.Factions.Count <= 0)
 		{
-			throw new System.Exception("Number of Factions must be at least 2");
+			throw new System.Exception("Number of Factions must be at least 1");
 		}
 
 		this.totalRounds.Value = 0;
 		this.animationPresent.Value = false;
-		this.nextTurn.Value = 0;
+		this.nextTurn.Value = this.Factions.Count;
 		this.isPlayerTurn.Value = false;
 
 		this.onChange();
 
-		this.Factions[0].StartTurn(this.next);
+		this.OnEndTurn(null);
+	}
+
+	/// Connected to Faction Listener
+	/// Should return the faction that just ended their turn
+	public void OnEndTurn(Faction faction)
+	{
+		if(faction != null && faction.Identity.isLocalPlayer)
+		{
+			SelectedAction = SelectableActionType.None;
+			SelectedCell = null;
+		}
+		this.IsPlayerTurn = false;
+		this.next();
 	}
 
 	private void next()
@@ -148,13 +172,14 @@ public class GameStateManager : MonoBehaviour {
 		{
 			this.nextTurn.Value = 0;
 			this.totalRounds.Value++;
-			PlanetManager.Instance.RevolveAllPlanets();
-			this.next();
+			// PlanetManager.Instance.RevolveAllPlanets();
+			this.onStartFactionTurnEvent.Raise(null);
+			// this.next();
 		}
 		else
 		{
 			int currentTurn = this.nextTurn.Value;
-			if(this.Factions[currentTurn] == playerFaction)
+			if(this.Factions[currentTurn].Identity.isLocalPlayer)
 			{
 				this.IsPlayerTurn = true;
 			}
@@ -162,10 +187,12 @@ public class GameStateManager : MonoBehaviour {
 			{
 				this.IsPlayerTurn = false;
 			}
+			
 			this.nextTurn.Value++;
+
 			if (!this.Factions[currentTurn].isDefeated)
 			{
-				this.Factions[currentTurn].StartTurn(this.next);
+				this.onStartFactionTurnEvent.Raise(this.Factions[currentTurn]);
 			}
 			else
 			{
@@ -204,10 +231,12 @@ public class GameStateManager : MonoBehaviour {
 	{
 		this.playerFaction = _playerFaction;
 		this.IsPlayerTurn = false;
+		this.playerViewManager.LoadPlayer(_playerFaction);
 	}
 
 	public void OnCellSelected(MonoBehaviour _newCell)
 	{
+		this.SelectedBuildOption = "";
 		this.selectedCell = (GridCell)_newCell;
 	}
 
@@ -223,7 +252,8 @@ public class GameStateManager : MonoBehaviour {
 		if(this.SelectedCell?.Selectable != null && SelectedAction != SelectableActionType.None && targetCell != null)
 		{
 			//Build is an empty string for now because we haven't implemented it yet
-			validAction = this.SelectedCell.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetCell, "");
+			NetworkEventManager.Instance.TryPerformAction(this.SelectedCell.Selectable, (SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
+			validAction = this.SelectedCell.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
 			Debug.Log("Valid action: " + validAction);
 		}
 		this.SelectedCell = null;
@@ -234,18 +264,6 @@ public class GameStateManager : MonoBehaviour {
     {
     	this.onGameStateUpdatedEvent.Raise(this);
     }
-
-	public void OnPlayerTurnEnded()
-	{
-		SelectedAction = SelectableActionType.None;
-		SelectedCell = null;
-		playerFaction.EndTurn();
-	}
-
-	public void AddPlayerUnit(Unit unitIn)
-	{
-		playerFaction.AddUnit(unitIn);
-	}
 
 	public void OnTryChangeGrid(MonoBehaviour _grid)
 	{
