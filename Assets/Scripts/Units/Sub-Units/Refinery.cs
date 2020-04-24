@@ -21,7 +21,6 @@ public class Refinery : Unit
 
 	protected override void setExtra(string extra)
 	{
-		Debug.Log(GameData.Instance);
 		ResourceRecipe recipe = (ResourceRecipe)GameData.Instance.GetRecipe(extra);
 		this.inputRequirements = recipe.Inputs;
 		this.outputQuantity = recipe.OutputQuantity;

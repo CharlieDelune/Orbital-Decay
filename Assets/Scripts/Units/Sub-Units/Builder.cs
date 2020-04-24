@@ -55,6 +55,7 @@ public class Builder : Unit
 						bool canUseRecipe = this.faction.Resources.CanUseRecipe(this.selectedBuildOption);
 						if(!canUseRecipe)
 						{
+							//TODO: Show this outside of the debugger
 							Debug.Log("Insufficient resources!");
 						}
 

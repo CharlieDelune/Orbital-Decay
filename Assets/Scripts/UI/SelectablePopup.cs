@@ -84,7 +84,6 @@ public class SelectablePopup : MonoBehaviour
 
 	private void onButtonPress(SelectableActionType actionType)
 	{
-		Debug.Log("Selected action: " + actionType.ToString());
 		onActionSelectedEvent.Raise((int)actionType);
 		if(actionType == SelectableActionType.Build)
 		{

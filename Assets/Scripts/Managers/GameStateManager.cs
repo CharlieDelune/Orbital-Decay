@@ -254,7 +254,6 @@ public class GameStateManager : MonoBehaviour {
 			//Build is an empty string for now because we haven't implemented it yet
 			NetworkEventManager.Instance.TryPerformAction(this.SelectedCell.Selectable, (SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
 			validAction = this.SelectedCell.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
-			Debug.Log("Valid action: " + validAction);
 		}
 		this.SelectedCell = null;
 		this.SelectedAction = SelectableActionType.None;

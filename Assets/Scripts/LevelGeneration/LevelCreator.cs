@@ -57,7 +57,7 @@ public class LevelCreator : MonoBehaviour
         int solarSystemLayers = UnityEngine.Random.Range(9, 14);
         int solarSystemSlices = UnityEngine.Random.Range(20, 40);
 
-        gridBuilder.BuildLevel(solarSystemLayers, solarSystemSlices);
+        gridBuilder.BuildGrid(solarSystemLayers, solarSystemSlices, new Vector3(0,0,0), true);
         planetPlacer.PlacePlanets(solarSystemLayers, solarSystemSlices);
         unitPlacer.PlaceUnits();
         resourcePlacer.PlaceResources();

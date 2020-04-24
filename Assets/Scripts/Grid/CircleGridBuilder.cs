@@ -33,6 +33,10 @@ public class CircleGridBuilder : MonoBehaviour
     private GameObject theSun;
     [SerializeField]
     private GameObject gravityWellsHolder;
+    [SerializeField]
+    private TileMeshGenerator tileMeshGenerator;
+    [SerializeField]
+    private GameObject tilePrefab;
 
     void Start()
     {
@@ -43,9 +47,7 @@ public class CircleGridBuilder : MonoBehaviour
         
     }
 
-    //Currently used to build solar system
-    //TODO: Roll this into function below to fully proceduralize
-    public void BuildLevel(int layers, int slices)
+    public GameObject BuildGrid(int layers, int slices, Vector3 centerPosition, bool isSolarSystemGrid = false)
     {
         GameObject systemHolder = Instantiate(SystemPrefab);
         GameObject gridHolder = systemHolder.transform.Find("Grid").gameObject;
@@ -60,133 +62,32 @@ public class CircleGridBuilder : MonoBehaviour
         GameObject plane = gridHolder.transform.Find("Plane").gameObject;
         plane.transform.localScale = new Vector3(layers, 1, layers);
 
-        GameObject sun = Instantiate(theSun);
-        sun.transform.SetParent(grid.gameObject.transform);
-
-        grid.SetGridSize(layers - 2, slices);
-        grid.isSolarSystem = true;
-        Vector3 previousPos = new Vector3(0, 0, 0);
-        Vector3 currentPos;
-        Vector3 desiredPos;
-        for (int layer = 1; layer < layers-1; layer++)
+        if(isSolarSystemGrid)
         {
-            Vector3 layerStartPos = new Vector3(0, 0, 0);
-            for (int slice = 0; slice < slices; slice++)
-            {
-                float angle = slice * Mathf.PI * 2 / slices;
-                Vector3 pos = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * layer);
+            GameObject sun = Instantiate(theSun);
+            sun.transform.SetParent(grid.gameObject.transform);
 
-                currentPos = transform.position;
-                desiredPos = new Vector3(currentPos.x + pos.x, currentPos.y + pos.y, currentPos.z + pos.z);
-
-                //Create grid node for movement and tiling
-                GameObject newNode = Instantiate(node);
-                //Find center of grid tile
-                float diagonalAngle = (slice + 1) * Mathf.PI * 2 / slices;
-                Vector3 diagonalPos = new Vector3(Mathf.Cos(diagonalAngle), 0, Mathf.Sin(diagonalAngle)) * (gridRadius * (layer + 1));
-                Vector3 finaldesiredPos = new Vector3(desiredPos.x + diagonalPos.x, desiredPos.y + diagonalPos.y, desiredPos.z + diagonalPos.z);
-                Vector3 nodePosition = desiredPos + (diagonalPos - desiredPos) / 2;
-                newNode.transform.position = nodePosition;
-                newNode.transform.SetParent(nodeHolder.transform);
-                //Initialize GridCell script
-                GridCell nodeCell = newNode.GetComponent<GridCell>();
-                nodeCell.SetCoords((layer - 1, slice));
-                grid.AddGridCell(nodeCell);
-
-                //Draw line between nodes to create rings
-                GameObject lineObject = new GameObject("LineHolder");
-                LineRenderer line = lineObject.AddComponent<LineRenderer>();
-                line.transform.SetParent(lineHolder.transform);
-                line.material = lineMaterial;
-                line.startWidth = 0.2f;
-                line.endWidth = 0.2f;
-                if(slice != 0) {
-                    line.SetPosition(0, previousPos);
-                    line.SetPosition(1, desiredPos);
-                }
-                if (slice == 0)
-                {
-                    layerStartPos = desiredPos;
-                }
-                if(line.GetPosition(0).x == 0 && line.GetPosition(0).z == 0 && line.GetPosition(1).x == 0 && line.GetPosition(1).z == 1)
-                {
-                    Destroy(lineObject);
-                }
-
-                //Close rings if we're on the last node of a ring
-                if (slice == slices - 1) {
-                    GameObject newLineObject = new GameObject("LineHolder");
-                    LineRenderer newLine = newLineObject.AddComponent<LineRenderer>();
-                    newLine.transform.SetParent(lineHolder.transform);
-                    newLine.material = lineMaterial;
-                    newLine.startWidth = 0.2f;
-                    newLine.endWidth = 0.2f;
-                    newLine.SetPosition(0, desiredPos);
-                    newLine.SetPosition(1, layerStartPos);
-                }
-
-                //Draw lines from inner circle to outer circle
-                if (layer == 1){
-                    GameObject newLineObject = new GameObject("LineHolder");
-                    LineRenderer newLine = newLineObject.AddComponent<LineRenderer>();
-                    newLine.transform.SetParent(lineHolder.transform);
-                    newLine.material = lineMaterial;
-                    newLine.startWidth = 0.2f;
-                    newLine.endWidth = 0.2f;
-                    newLine.SetPosition(0, desiredPos);
-                    newLine.SetPosition(1, new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * (layers-1)));
-                }
-
-                //Create last layer ring (only necessary for solar system grids)
-                if (layer == layers-2)
-                {
-                    GameObject newLineObject = new GameObject("LineHolder");
-                    LineRenderer newLine = newLineObject.AddComponent<LineRenderer>();
-                    newLine.transform.SetParent(lineHolder.transform);
-                    newLine.material = lineMaterial;
-                    newLine.startWidth = 0.2f;
-                    newLine.endWidth = 0.2f;
-                    newLine.SetPosition(0,  new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * (layers-1)));
-                    float newAngle = (slice+1) * Mathf.PI * 2 / slices;
-                    newLine.SetPosition(1, new Vector3(Mathf.Cos(newAngle), 0, Mathf.Sin(newAngle)) * (gridRadius * (layers-1)));
-                }
-
-                previousPos = desiredPos;
-            }
+            grid.SetGridSize(layers - 2, slices);
+            grid.isSolarSystem = true;
+            GameStateManager.Instance.solarSystemGrid = grid;
         }
-        // Tell all grid cells to collect and store their neighbors to make pathfinding way better
-        grid.GenerateCellNeighbors();
-        GameStateManager.Instance.GridInView = grid;
-        GameStateManager.Instance.solarSystemGrid = grid;
-        grid.pathfinder.SetGrid(grid);
-        grid.gameObject.transform.SetParent(gravityWellsHolder.transform);
-    }
+        else
+        {
+            grid.SetGridSize(layers - 1, slices);
+            grid.isSolarSystem = false;
+        }
 
-    public GameObject BuildGrid(int layers, int slices, Vector3 centerPosition)
-    {
-        GameObject systemHolder = Instantiate(SystemPrefab);
-        GameObject gridHolder = systemHolder.transform.Find("Grid").gameObject;
-        gridHolder.transform.SetParent(systemHolder.transform);
-        CircularGrid grid = gridHolder.GetComponent<CircularGrid>();
-
-        GameObject lineHolder = gridHolder.transform.Find("Lines").gameObject;
-        lineHolder.transform.SetParent(gridHolder.transform);
-        GameObject nodeHolder = gridHolder.transform.Find("Nodes").gameObject;
-        nodeHolder.transform.SetParent(gridHolder.transform);
-
-        GameObject plane = gridHolder.transform.Find("Plane").gameObject;
-        plane.transform.localScale = new Vector3(layers, 1, layers);
-
-        grid.SetGridSize(layers - 1, slices);
         Vector3 previousPos = centerPosition;
         Vector3 currentPos;
         Vector3 desiredPos;
-        for (int layer = 1; layer < layers; layer++)
+
+        int maxLayer = isSolarSystemGrid ? layers-1 : layers;
+        for (int layer = 1; layer < maxLayer; layer++)
         {
             Vector3 layerStartPos = centerPosition;
             for (int slice = 0; slice < slices; slice++)
             {
-                float angle = slice * Mathf.PI * 2 / slices;
+                float angle = (slice * Mathf.PI * 2) / slices;
                 Vector3 pos = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * layer);
 
                 currentPos = transform.position;
@@ -195,9 +96,9 @@ public class CircleGridBuilder : MonoBehaviour
                 //Create grid node for movement and tiling
                 GameObject newNode = Instantiate(node);
                 //Find center of grid tile
-                float diagonalAngle = (slice + 1) * Mathf.PI * 2 / slices;
+                float diagonalAngle = ((slice + 1) * Mathf.PI * 2) / slices;
                 Vector3 diagonalPos = new Vector3(Mathf.Cos(diagonalAngle), 0, Mathf.Sin(diagonalAngle)) * (gridRadius * (layer + 1));
-                Vector3 finaldesiredPos = new Vector3(desiredPos.x + diagonalPos.x, desiredPos.y + diagonalPos.y, desiredPos.z + diagonalPos.z);
+                Vector3 finaldesiredPos = new Vector3(desiredPos.x + diagonalPos.x, 0, desiredPos.z + diagonalPos.z);
                 Vector3 nodePosition = desiredPos + (diagonalPos - desiredPos) / 2;
                 newNode.transform.position = nodePosition;
                 newNode.transform.SetParent(nodeHolder.transform);
@@ -251,6 +152,34 @@ public class CircleGridBuilder : MonoBehaviour
                     newLine.useWorldSpace = false;
                     newLine.SetPosition(0, desiredPos);
                     newLine.SetPosition(1, new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * (layers-1)));
+                }
+
+                //Create last layer ring (only necessary for solar system grids)
+                if (layer == layers-2 && isSolarSystemGrid)
+                {
+                    GameObject newLineObject = new GameObject("LineHolder");
+                    LineRenderer newLine = newLineObject.AddComponent<LineRenderer>();
+                    newLine.transform.SetParent(lineHolder.transform);
+                    newLine.material = lineMaterial;
+                    newLine.startWidth = 0.2f;
+                    newLine.endWidth = 0.2f;
+                    newLine.SetPosition(0,  new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * (layers-1)));
+                    float newAngle = (slice+1) * Mathf.PI * 2 / slices;
+                    newLine.SetPosition(1, new Vector3(Mathf.Cos(newAngle), 0, Mathf.Sin(newAngle)) * (gridRadius * (layers-1)));
+                }
+
+                Vector3[] verts = new Vector3[] {
+                    newNode.transform.position - new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * layer),
+                    newNode.transform.position - new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (gridRadius * (layer + 1)),
+                    newNode.transform.position - new Vector3(Mathf.Cos(diagonalAngle), 0, Mathf.Sin(diagonalAngle)) * (gridRadius * (layer + 1)),
+                    newNode.transform.position - new Vector3(Mathf.Cos(diagonalAngle), 0, Mathf.Sin(diagonalAngle)) * (gridRadius * (layer)),
+                };
+                TileMeshGenerator gen = newNode.GetComponent<TileMeshGenerator>();
+                GameObject tile = newNode.transform.Find("GridTile").gameObject;
+                gen.CreateMesh(tile, verts);
+                if (layer == maxLayer - 1 && !isSolarSystemGrid)
+                {
+                    tile.GetComponent<TileShadingHandler>().SetDefaultCol(new Color(1, 1, 0, 0.1f));
                 }
 
                 previousPos = desiredPos;
