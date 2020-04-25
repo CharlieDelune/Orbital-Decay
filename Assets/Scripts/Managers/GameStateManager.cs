@@ -11,7 +11,6 @@ public class GameStateManager : MonoBehaviour {
 	/// Sets up class as Singleton
 
 	private static GameStateManager _instance;
-
 	public static GameStateManager Instance { get { return _instance; } }
 
 	/// Raises Exception if multiple singleton instances are present at once
@@ -25,28 +24,12 @@ public class GameStateManager : MonoBehaviour {
 		}
 	}
 
+	/*
+		View state related
+	*/
+
 	[SerializeField] private GeneralTurnDisplay generalTurnDisplay;
 	[SerializeField] private PlayerViewManager playerViewManager;
-
-	public List<Faction> Factions;
-
-	/// Subscribable property, useful for UI changes
-	[SerializeField] private IntProperty nextTurn;
-
-	/// could be used by AI to plan moves
-	public int NextTurn { get => this.nextTurn.Value; }
-
-	[SerializeField] private IntProperty totalRounds;
-	public int TotalRounds { get => this.totalRounds.Value; }
-
-	[SerializeField] private BoolProperty isPlayerTurn;
-	public bool IsPlayerTurn { 
-		get => this.isPlayerTurn.Value; 
-		set {
-			this.isPlayerTurn.Value = value;
-			this.onChange();
-		}
-	}
 
 	[SerializeField] private BoolProperty animationPresent;
 	public bool AnimationPresent
@@ -58,7 +41,15 @@ public class GameStateManager : MonoBehaviour {
 		}
 	}
 
-	[SerializeField] private HeavyGameEvent onPerformAction;
+	[SerializeField] private BoolProperty innerZoomed;
+	public bool InnerZoomed
+	{
+		get => this.innerZoomed.Value;
+		set
+		{
+			this.innerZoomed.Value = value;
+		}
+	}
 
 	/// The grid the player's view is focused on
 	[SerializeField] private CircularGrid gridInView;
@@ -74,6 +65,10 @@ public class GameStateManager : MonoBehaviour {
 			}
 		}
 	}
+
+	/*
+		Player action state
+	*/
 
 	/// The selected Cell
 	private GridCell selectedCell;
@@ -103,20 +98,47 @@ public class GameStateManager : MonoBehaviour {
 		}
 	}
 
-	[SerializeField] private MonoBehaviourGameEvent onGameStateUpdatedEvent;
+	[HideInInspector] public string SelectedBuildOption;
+
+	/*
+		Game loop related
+	*/
+
+	public List<Faction> Factions;
 	private PlayerFaction playerFaction;
+
+	/// Subscribable property, useful for UI changes
+	[SerializeField] private IntProperty nextTurn;
+
+	/// could be used by AI to plan moves
+	public int NextTurn { get => this.nextTurn.Value; }
+
+	[SerializeField] private IntProperty totalRounds;
+	public int TotalRounds { get => this.totalRounds.Value; }
+
+	[SerializeField] private BoolProperty isPlayerTurn;
+	public bool IsPlayerTurn { 
+		get => this.isPlayerTurn.Value; 
+		set {
+			this.isPlayerTurn.Value = value;
+			this.onChange();
+		}
+	}
+
+	[SerializeField] private HeavyGameEvent onPerformAction;
+	[SerializeField] private MonoBehaviourGameEvent onGameStateUpdatedEvent;
+	[SerializeField] private FactionGameEvent onStartFactionTurnEvent;
+	[SerializeField] private BoolGameEvent onGameEnded;
+
+	/*
+		Misc
+	*/
 
 	public CircularGrid solarSystemGrid;
 
     public GameObject UnitHolder;
 
-    [SerializeField] private FactionGameEvent onStartFactionTurnEvent;
-
     public int seed { get; set; }
-
-	[SerializeField] private BoolGameEvent onGameEnded;
-
-	[HideInInspector] public string SelectedBuildOption;
 
 	/// Setups up GameStateManager's Factions list
 	public void SetupFactions(List<Faction> factions)
@@ -146,8 +168,11 @@ public class GameStateManager : MonoBehaviour {
 		this.animationPresent.Value = false;
 		this.nextTurn.Value = this.Factions.Count;
 		this.isPlayerTurn.Value = false;
+		this.innerZoomed.Value = false;
 
 		this.onChange();
+
+		FindObjectsOfType<CameraMovement>()[0].enabled = true;
 
 		this.OnEndTurn(null);
 	}

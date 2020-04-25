@@ -4,7 +4,8 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
 
-	[SerializeField] private Transform camera;
+	[SerializeField] private Transform cameraSubWrapper;
+	[SerializeField] private Camera camera;
 	[SerializeField] private float rotateSpeed;
 	[SerializeField] private float backAndForthFactor;
 
@@ -17,10 +18,16 @@ public class CameraMovement : MonoBehaviour
 	[SerializeField] private float minRotation;
 	[SerializeField] private float maxRotation;
 
+	[SerializeField] private float maxZoom;
+	[SerializeField] private float zoomSensitivityScroll;
+	[SerializeField] private float zoomSensitivityKeypress;
+	[SerializeField] private float innerZoomThreshold;
+	[SerializeField] private float maxZoomPosition;
 
 	private Rigidbody rb;
 
 	private float distanceFactor = 0.0f;
+	private float zoomPosition = 0.0f;
 
 	/// Rotation and distance
 
@@ -37,15 +44,47 @@ public class CameraMovement : MonoBehaviour
 		float v = Input.GetAxis("Vertical");
 
 		this.distanceFactor = Mathf.Clamp(this.distanceFactor - v * this.backAndForthFactor, 0.0f, 1.0f);
-		this.camera.localPosition = new Vector3(
-			this.camera.localPosition.x,
+		Vector3 basePosition = new Vector3(
+			this.cameraSubWrapper.localPosition.x,
 			Mathf.Lerp(this.minY, this.maxY, this.distanceFactor),
 			Mathf.Lerp(this.minZ, this.maxZ, this.distanceFactor)
 		);
-		this.camera.transform.localEulerAngles = new Vector3(
-			Mathf.Lerp(this.minRotation, this.maxRotation, this.distanceFactor),
-			this.camera.localEulerAngles.y,
-			this.camera.localEulerAngles.z
+
+		Vector3 baseNonLocalPosition = basePosition + this.transform.position;
+
+		float declineAngle = Mathf.Lerp(this.minRotation, this.maxRotation, this.distanceFactor);
+
+		this.cameraSubWrapper.transform.localEulerAngles = new Vector3(
+			declineAngle,
+			this.cameraSubWrapper.localEulerAngles.y,
+			this.cameraSubWrapper.localEulerAngles.z
 		);
+
+		float z = 0.0f;
+		float scrollInput = -Input.GetAxis("Mouse ScrollWheel");
+		float keyInput = Input.GetAxis("Zoom");
+		bool usingScroll;
+		if(Mathf.Abs(scrollInput) > Mathf.Abs(keyInput))
+		{
+			usingScroll = true;
+			z = scrollInput;
+		}
+		else
+		{
+			usingScroll = false;
+			z = keyInput;
+		}
+		this.zoomPosition = Mathf.Clamp(this.zoomPosition - z * ((usingScroll) ? this.zoomSensitivityScroll : this.zoomSensitivityKeypress), 0.0f, this.maxZoomPosition);
+
+		if(this.zoomPosition > this.innerZoomThreshold)
+		{
+			GameStateManager.Instance.InnerZoomed = true;
+		}
+		else if(GameStateManager.Instance.InnerZoomed)
+		{
+			GameStateManager.Instance.InnerZoomed = false;
+		}
+
+		this.cameraSubWrapper.localPosition = basePosition - ((baseNonLocalPosition - GameStateManager.Instance.GridInView.transform.position) * this.zoomPosition);
 	}
 }

@@ -52,21 +52,22 @@ MonoBehaviour:
   generalTurnDisplay: {fileID: 499200714357323256, guid: 91c3801dc071046f188676fb5094f38d,
     type: 3}
   playerViewManager: {fileID: 2300091865701216603}
+  animationPresent: {fileID: 11400000, guid: 29e8bd946489a4c5c8cbf84d48883c57, type: 2}
+  innerZoomed: {fileID: 11400000, guid: 3d6596132b6d246dabf53343ee44de22, type: 2}
+  gridInView: {fileID: 0}
+  SelectedBuildOption: 
   Factions: []
   nextTurn: {fileID: 11400000, guid: 5ad1c4f949e744b0e8a3816120d57ac1, type: 2}
   totalRounds: {fileID: 11400000, guid: 36f793186d5ec40279c430931f91d8b6, type: 2}
   isPlayerTurn: {fileID: 11400000, guid: a4ea45c61c166ec49b65b478ffdc3c9b, type: 2}
-  animationPresent: {fileID: 11400000, guid: 29e8bd946489a4c5c8cbf84d48883c57, type: 2}
   onPerformAction: {fileID: 11400000, guid: 6bd1b3e876c6db94e99337026ca7ec6c, type: 2}
-  gridInView: {fileID: 0}
   onGameStateUpdatedEvent: {fileID: 11400000, guid: 16cbe194203bafd4f8ed02e7ca66c38e,
     type: 2}
-  solarSystemGrid: {fileID: 0}
-  UnitHolder: {fileID: 3920481183840600366}
   onStartFactionTurnEvent: {fileID: 11400000, guid: 59fb171ea1321481d8e9292d0aa31dba,
     type: 2}
   onGameEnded: {fileID: 11400000, guid: b67e6513006b77843a926e285bed15b9, type: 2}
-  SelectedBuildOption: 
+  solarSystemGrid: {fileID: 0}
+  UnitHolder: {fileID: 3920481183840600366}
 --- !u!114 &6047431145800918947
 MonoBehaviour:
   m_ObjectHideFlags: 0
