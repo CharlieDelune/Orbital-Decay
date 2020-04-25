@@ -10,7 +10,7 @@ public class TileShadingHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rend.material.color = defaultCol;
+        SetCurrentCol(defaultCol);
     }
 
     // Update is called once per frame
@@ -23,16 +23,21 @@ public class TileShadingHandler : MonoBehaviour
     {
         Color brighter = defaultCol;
         brighter.a = brighter.a + 0.3f;
-        rend.material.color = brighter;
+        SetCurrentCol(brighter);
     }
 
     void OnMouseExit()
     {
-        rend.material.color = defaultCol;
+        SetCurrentCol(defaultCol);
     }
 
     public void SetDefaultCol(Color colorIn)
     {
         defaultCol = colorIn;
+    }
+
+    public void SetCurrentCol(Color colorIn)
+    {
+        rend.material.SetColor("_BaseColor", colorIn);
     }
 }
