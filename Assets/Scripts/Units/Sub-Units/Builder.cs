@@ -47,7 +47,7 @@ public class Builder : Unit
 					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction;
 				case SelectableActionType.Move:
 					/// Moves if the targetNode is empty
-					return true;
+					return base.CanPerformAction(actionType, targetCell, param);
 				case SelectableActionType.Build:
 					if(param != null)
 					{

@@ -41,9 +41,9 @@ public class ResourcePlacer : MonoBehaviour
         if (parentCell.Selectable == null && parentCell.ResourceDeposit == null)
         {
             ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefabs[Random.Range(0,this.resourceDepositPrefabs.Length)]);
-            deposit.SetParentCell(parentCell);
             deposit.transform.SetParent(resourceDepositHolder.transform);
             GridManager.Instance.AddResourceDeposit(deposit);
+            deposit.SetParentCell(parentCell);
             return true;
         }
         return false;

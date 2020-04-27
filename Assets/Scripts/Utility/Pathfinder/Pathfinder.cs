@@ -151,7 +151,7 @@ public class Pathfinder : MonoBehaviour
                 {
                     continue;
                 }
-                if (neighbor.node.Selectable != null && !(neighbor == endNodeHolder))
+                if ((neighbor.node.Selectable != null || neighbor.node.ResourceDeposit != null) && !(neighbor == endNodeHolder))
                 {
                     openCells.Remove(currentCell);
                     closedCells.Add(neighbor);
