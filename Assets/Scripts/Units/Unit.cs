@@ -46,6 +46,8 @@ public class Unit : Selectable
 
 	public bool isPlayerUnit;
 
+	[SerializeField] AnimationCurve movementInterpolationCurve;
+
 	private void Awake()
 	{
 		this.baseStatsSet = false;
@@ -67,7 +69,7 @@ public class Unit : Selectable
         }
     }
 
-	public virtual void SetBaseStats(string name, int maxMoveRange, int health, int closeDefense, 
+	public virtual void SetBaseStats(string name, int maxMoveRange, int health, int closeDefense,
 			int longDefense, int closeAttack, int longAttack, int attackRange, string extra, Faction _faction) {
 
 		gameObject.name = name;
@@ -130,7 +132,7 @@ public class Unit : Selectable
 				case SelectableActionType.Attack:
 					/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
 					/// not the current faction
-					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction 
+					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction
 					&& !this.hasAttacked &&
 					ParentCell.parentGrid.GetCellsInRange(ParentCell, this.attackRange).Contains(targetCell);
 				case SelectableActionType.Move:
@@ -153,7 +155,7 @@ public class Unit : Selectable
 			break;
 		}
 	}
-	
+
 	/// Returns list of valid actions based on the current turn state
 	/// This is based on the local client
 	public override List<SelectableActionType> GetValidActionTypes()
@@ -258,7 +260,15 @@ public class Unit : Selectable
 			onUnitDestroyed.Raise(this);
 		}
 	}
-    
+
+	//InverseLerp with Vector3 for the movement interpolation.
+	public static float InverseLerp(Vector3 a, Vector3 b, Vector3 value)
+	{
+		Vector3 AB = b - a;
+		Vector3 AV = value - a;
+		return Vector3.Dot(AV, AB) / Vector3.Dot(AB, AB);
+	}
+
     private void HandleMovement()
     {
 		if(this.movesMade < this.maxMoveRange)
@@ -269,8 +279,10 @@ public class Unit : Selectable
 				float step = Mathf.Pow(30 * Time.deltaTime,2);
 				if ((this.transform.position - targetPosition).sqrMagnitude > step)
 				{
+					Vector3 endMovement = this.targetPath[currentPathIndex];
+
 					Vector3 moveDir = (targetPosition - this.transform.position).normalized;
-					this.transform.position = this.transform.position + moveDir * 30.0f * Time.deltaTime;
+					this.transform.position = this.transform.position + moveDir * 50.0f * Time.deltaTime * movementInterpolationCurve.Evaluate(InverseLerp(endMovement, this.targetPath[0], this.transform.position));
 				}
 				else
 				{
@@ -293,7 +305,7 @@ public class Unit : Selectable
 			}
 		}
     }
-    
+
     private void endMove()
     {
 		HeavyGameEventData data = new HeavyGameEventData();

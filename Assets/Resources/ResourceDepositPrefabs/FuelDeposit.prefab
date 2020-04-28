@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2156161258049508733}
   - component: {fileID: 2156161258049508730}
   - component: {fileID: 2156161258049508734}
+  - component: {fileID: 7206764872012726288}
   m_Layer: 0
   m_Name: FuelDeposit
   m_TagString: Untagged
@@ -49,7 +50,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2156161258049508731}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -115,3 +116,20 @@ MonoBehaviour:
   GameResourceAmountPairs:
   - ResourceName: Fuel
     Amount: 5
+--- !u!114 &7206764872012726288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2156161258049508731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c50e86917fe7f649afb2c8cf252127b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  asteroids:
+  - {fileID: 1401276666730232657, guid: 31362b8adbdd71947b2e54a84c492f35, type: 3}
+  - {fileID: 3167416203467005877, guid: a1b62a1609c2f50488236afc03916578, type: 3}
+  - {fileID: 4138761640633069211, guid: 859107f778f7cbc42b00292bd94794fa, type: 3}
+  - {fileID: 2653838573736270298, guid: e23d02f8cfd69a44793ec4c249de144b, type: 3}

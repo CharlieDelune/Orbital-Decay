@@ -404,7 +404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &121435037727977342
 Transform:
   m_ObjectHideFlags: 0
@@ -1067,7 +1067,7 @@ MonoBehaviour:
   lineMaterial: {fileID: 2100000, guid: cc0fce8cfb3c246429e0934b5155285f, type: 2}
   SystemPrefab: {fileID: 5293994881317429760, guid: 73953c2cdddf99b459d5ab766756ef3d,
     type: 3}
-  theSun: {fileID: 3529865301020454942, guid: 0f3256219b923fe459872aa3ecb05ff6, type: 3}
+  theSun: {fileID: 8335505651001814738, guid: 52ed5ae43b3c96f46a300e75325c4bc3, type: 3}
   gravityWellsHolder: {fileID: 4075739550746267602}
   tileMeshGenerator: {fileID: 0}
   tilePrefab: {fileID: 0}
