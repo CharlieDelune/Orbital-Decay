@@ -267,18 +267,20 @@ public class GameStateManager : MonoBehaviour {
 
 	public void OnActionSelected(int _action)
 	{
-		this.selectedAction = (SelectableActionType)_action;
+		this.SelectedAction = (SelectableActionType)_action;
 	}
 
 	public void OnTargetSelected(MonoBehaviour _cell)
 	{
 		bool validAction = false;
-		GridCell targetCell = (GridCell)_cell;
-		if(this.SelectedCell?.Selectable != null && SelectedAction != SelectableActionType.None && targetCell != null)
+		if(_cell != null)
 		{
-			//Build is an empty string for now because we haven't implemented it yet
-			NetworkEventManager.Instance.TryPerformAction(this.SelectedCell.Selectable, (SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
-			validAction = this.SelectedCell.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
+			GridCell targetCell = (GridCell)_cell;
+			if(this.SelectedCell?.Selectable != null && SelectedAction != SelectableActionType.None && targetCell != null)
+			{
+				NetworkEventManager.Instance.TryPerformAction(this.SelectedCell.Selectable, (SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
+				validAction = this.SelectedCell.Selectable.TryPerformAction((SelectableActionType)this.selectedAction, targetCell, this.SelectedBuildOption);
+			}
 		}
 		this.SelectedCell = null;
 		this.SelectedAction = SelectableActionType.None;

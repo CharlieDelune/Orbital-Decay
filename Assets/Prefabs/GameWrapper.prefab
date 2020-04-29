@@ -66,6 +66,7 @@ MonoBehaviour:
   onStartFactionTurnEvent: {fileID: 11400000, guid: 59fb171ea1321481d8e9292d0aa31dba,
     type: 2}
   onGameEnded: {fileID: 11400000, guid: b67e6513006b77843a926e285bed15b9, type: 2}
+  selectedActionChangedEvent: {fileID: 0}
   solarSystemGrid: {fileID: 0}
   UnitHolder: {fileID: 3920481183840600366}
 --- !u!114 &6047431145800918947
@@ -386,6 +387,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd522070bbd8f1448de11a620aa4ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7279811702997718260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2300091865701216602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231ff0fba18534ec3895e3fce5575f2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 7a52b5dffb136a849b957e740d2e333e, type: 2}
+  callback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2300091865701216603}
+        m_MethodName: OnActionSelected
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2547379258531123822
 GameObject:
   m_ObjectHideFlags: 0
@@ -1563,13 +1591,19 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1475999570203358134}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2300091865701216602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 833267723860132588, guid: 506fa0922a33547ba903978fba36fd7e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1475999570203358134}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2300091865701216603 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 833267723860132589, guid: 506fa0922a33547ba903978fba36fd7e,
     type: 3}
   m_PrefabInstance: {fileID: 1475999570203358134}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2300091865701216602}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d8e5f2298b7c18428757b41b6a90ef9, type: 3}

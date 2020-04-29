@@ -12,6 +12,8 @@ public class GridCell : MonoBehaviour, INodable
     private List<GridCell> neighbors;
     public Selectable Selectable;
     public ResourceDeposit ResourceDeposit;
+    public TileShadingHandler tileShadingHandler;
+    public bool isEdgeCell;
 
     void Start()
     {

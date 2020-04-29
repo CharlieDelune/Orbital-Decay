@@ -15,6 +15,7 @@ public class CircularGrid : MonoBehaviour
     private int layers, slices;
     public Pathfinder pathfinder;
     public Planet parentPlanet;
+    private List<GridCell> gridCellList;
 
 
     void Start()
@@ -89,6 +90,19 @@ public class CircularGrid : MonoBehaviour
         }
     }
 
+    public List<GridCell> GetGridCells()
+    {
+        if(this.gridCellList == null)
+        {
+            this.gridCellList = new List<GridCell>();
+            foreach(GridCell cell in this.gridCells)
+            {
+                this.gridCellList.Add(cell);
+            }
+        }
+
+        return this.gridCellList;
+    }
 
     public void ColorCells(IEnumerable<GridCell> cells)
     {
@@ -99,7 +113,7 @@ public class CircularGrid : MonoBehaviour
         }
     }
 
-    public HashSet<GridCell> GetCellsInRange(GridCell startCell, int range)
+    public List<GridCell> GetCellsInRange(GridCell startCell, int range)
     {
         HashSet<GridCell> cellsInRange = new HashSet<GridCell>();
 
@@ -117,7 +131,7 @@ public class CircularGrid : MonoBehaviour
             remainingRange--;
         }
 
-        return cellsInRange;
+        return new List<GridCell>(cellsInRange);
     }
 
     public GridCell GetGridCellForRevolve(GridCell originCell, RevolveDirection direction, int revolveSpeed)

@@ -196,7 +196,7 @@ MonoBehaviour:
   neighbors: []
   Selectable: {fileID: 0}
   ResourceDeposit: {fileID: 0}
-  shadingHandler: {fileID: 189396446309155621}
+  tileShadingHandler: {fileID: 189396446309155621}
 --- !u!114 &8911603376072453053
 MonoBehaviour:
   m_ObjectHideFlags: 0

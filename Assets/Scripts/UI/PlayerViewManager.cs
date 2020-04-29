@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 /// A container for the Player's turn state
 public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
@@ -135,10 +136,66 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 		{ 
 			HidePopUp();
 		}
+		if(gs.SelectedAction == SelectableActionType.None)
+		{
+			this.ResetGridInViewTiles();
+		}
+	}
+
+	public void OnActionSelected(int actionInt)
+	{
+		this.ResetGridInViewTiles();
+		
+		SelectableActionType selectedAction = (SelectableActionType)actionInt;
+
+		if(selectedAction == SelectableActionType.Move)
+		{
+			this.ColorGridTiles(this.gridInView.GetGridCells().Where(c => c.ResourceDeposit == null && c.Selectable == null).ToList(), Constants.tileMove);
+			this.ColorGridTiles(this.gridInView.GetCellsInRange(this.selectedCell, ((Unit)this.selectedCell.Selectable).GetMaxRange())
+				.Where(c => c.ResourceDeposit == null && c.Selectable == null).ToList(), Constants.tileMoveSingleTurn);
+		}
+		if(selectedAction == SelectableActionType.Build)
+		{
+			this.ColorGridTiles(this.gridInView.GetGridCells().Where(c => c.ResourceDeposit != null).ToList(), Constants.tileBuild);
+			this.ColorGridTiles(this.gridInView.GetCellsInRange(this.selectedCell, 1), Constants.tileBuild);
+		}
+		if(selectedAction == SelectableActionType.Attack)
+		{
+			this.ColorGridTiles(this.gridInView.GetGridCells().Where(c => c.Selectable != null 
+				&& c.Selectable is Unit 
+				&& ((Unit)c.Selectable).Faction != ((Unit)this.selectedCell.Selectable).Faction).ToList(), Constants.tileAttack);
+			this.ColorGridTiles(this.gridInView.GetCellsInRange(this.selectedCell, ((Unit)this.selectedCell.Selectable).GetAttackRange()), Constants.tileAttack);
+		}
+		this.selectedCell.tileShadingHandler.ResetColor();
 	}
 
 	public void OnChangeAnimationPresent(bool animationPresent)
 	{
 		this.endTurnButton.interactable = !animationPresent;
+	}
+
+	public void ColorGridTiles(List<GridCell> cells, Color color)
+	{
+		foreach (GridCell cell in cells)
+		{
+			if (!cell.isEdgeCell)
+			{
+				cell.tileShadingHandler.SetCurrentColor(color);
+			}
+		}
+	}
+
+	public void ResetGridInViewTiles()
+	{
+		if (this.gridInView != null)
+		{
+			foreach (GridCell cell in this.gridInView.gridCells)
+			{
+				if (!cell.isEdgeCell)
+				{
+					cell.tileShadingHandler.ResetColor();
+				}
+			}
+		}
 	}
 }

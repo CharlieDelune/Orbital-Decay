@@ -6,11 +6,13 @@ public class TileShadingHandler : MonoBehaviour
 {
 
     [SerializeField] private MeshRenderer rend;
-    private Color defaultCol = Constants.tileDark;
+    private Color defaultCol = Constants.tileDefault;
+    private Color currentCol;
     // Start is called before the first frame update
     void Start()
     {
-        SetCurrentCol(defaultCol);
+        currentCol = defaultCol;
+        SetColor(defaultCol);
     }
 
     // Update is called once per frame
@@ -21,22 +23,36 @@ public class TileShadingHandler : MonoBehaviour
 
     void OnMouseEnter()
     {
-        Color brighter = defaultCol;
-        brighter.a = brighter.a + 0.3f;
-        SetCurrentCol(brighter);
+        Color selected = currentCol;
+        selected.a = Constants.tileSelectAlpha;
+        SetColor(selected);
     }
 
     void OnMouseExit()
     {
-        SetCurrentCol(defaultCol);
+        SetColor(currentCol);
     }
 
-    public void SetDefaultCol(Color colorIn)
+    public void SetDefaultColor(Color colorIn)
     {
         defaultCol = colorIn;
+        currentCol = colorIn;
+        SetColor(colorIn);
     }
 
-    public void SetCurrentCol(Color colorIn)
+    public void SetCurrentColor(Color colorIn)
+    {
+        currentCol = colorIn;
+        SetColor(colorIn);
+    }
+
+    public void ResetColor()
+    {
+        currentCol = defaultCol;
+        SetColor(defaultCol);
+    }
+
+    public void SetColor(Color colorIn)
     {
         rend.material.SetColor("_BaseColor", colorIn);
     }

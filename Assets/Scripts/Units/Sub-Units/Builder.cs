@@ -49,7 +49,7 @@ public class Builder : Unit
 					/// Moves if the targetNode is empty
 					return base.CanPerformAction(actionType, targetCell, param);
 				case SelectableActionType.Build:
-					if(param != null)
+					if(param != null && param != "")
 					{
 						this.selectedBuildOption = this.BuildOptions[int.Parse(param)];
 						bool canUseRecipe = this.faction.Resources.CanUseRecipe(this.selectedBuildOption);

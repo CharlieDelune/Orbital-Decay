@@ -86,7 +86,7 @@ public class GameSession : NetworkManager
 	{
 		/// Where AI Factions are added
 		this.GetComponent<NetworkManagerHUD>().enabled = false;
-        for(int i = 0; i < 0; i++)
+        for(int i = 0; i < 2; i++)
         {
            	this.identities.Add(Instantiate(this.AIFactionPrefab).GetComponent<FactionIdentity>());
         }

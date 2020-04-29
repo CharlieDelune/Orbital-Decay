@@ -179,9 +179,9 @@ public class CircleGridBuilder : MonoBehaviour
                 gen.CreateMesh(tile, verts);
                 if (layer == maxLayer - 1 && !isSolarSystemGrid)
                 {
-                    tile.GetComponent<TileShadingHandler>().SetDefaultCol(new Color(1, 1, 0, 0.1f));
+                    tile.GetComponent<TileShadingHandler>().SetDefaultColor(Constants.tileEdge);
+                    nodeCell.isEdgeCell = true;
                 }
-
                 previousPos = desiredPos;
             }
         }
