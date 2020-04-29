@@ -34,6 +34,7 @@ public class UnitInfo
 		Unit unit = GameObject.Instantiate<Unit>(unitPrefab);
 		unit.SetBaseStats(name: name, maxMoveRange: maxMoveRange, health: health, closeDefense: closeDefense, 
 			longDefense: longDefense, closeAttack: closeAttack, longAttack: longAttack, attackRange: attackRange, extra: extra, _faction: faction);
+		GameObject.Instantiate<UnitHealth>(GameData.Instance.UnitHealthPrefab).Setup(unit);
 		return unit;
 	}
 }

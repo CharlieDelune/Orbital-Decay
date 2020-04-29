@@ -9,7 +9,19 @@ public class Unit : Selectable
 
 	/// Basic stats
 	protected int maxMoveRange;
+
 	protected int health;
+	public int Health
+	{
+		get => this.health;
+	}
+
+	protected int maxHealth;
+	public int MaxHealth
+	{
+		get => this.maxHealth;
+	}
+
 	protected int closeDefense;
 	protected int longDefense;
 	protected int closeAttack;

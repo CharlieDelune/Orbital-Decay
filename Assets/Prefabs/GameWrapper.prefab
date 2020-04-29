@@ -573,6 +573,8 @@ MonoBehaviour:
   resourceFile: {fileID: 4900000, guid: 8f462168f11f441d584e6aa386559a94, type: 3}
   unitsFile: {fileID: 4900000, guid: 61c34ed25945f4d66872de91739b6746, type: 3}
   recipesFile: {fileID: 4900000, guid: cb79ee44ee0994522a984ca3742949d4, type: 3}
+  UnitHealthPrefab: {fileID: 8557321584046631476, guid: 92f4fc0d4800c48b2b987bbe4c429a61,
+    type: 3}
 --- !u!1 &3807160091141397300
 GameObject:
   m_ObjectHideFlags: 0

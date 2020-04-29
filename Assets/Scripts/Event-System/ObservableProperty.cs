@@ -47,6 +47,14 @@ public class ObservableProperty<T> : SubscribableAsset<T>, IEquatable<Observable
         this.value = _value;
     }
 
+    /// CHanges the value of the property and notifies regardless if the value is different
+    public void SetValueNotify(T _value)
+    {
+        this.previousValue = this.value;
+        this.value = _value;
+        this.Raise(this.value);
+    }
+
     public bool Equals(ObservableProperty<T> other)
     {
         return this.value.Equals(other.value);

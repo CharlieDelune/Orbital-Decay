@@ -23,6 +23,8 @@ public class GameData : MonoBehaviour
 	public List<InGameResource> BaseResources { get { return baseResources; }}
 	public UnitInfo MainBaseUnitInfo { get { return mainBaseUnitInfo; }}
 
+	public UnitHealth UnitHealthPrefab;
+
 	public Recipe GetRecipe(string recipeName) {
 		return nameToRecipes[recipeName];
 	}

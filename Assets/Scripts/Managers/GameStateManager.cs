@@ -164,11 +164,11 @@ public class GameStateManager : MonoBehaviour {
 			throw new System.Exception("Number of Factions must be at least 1");
 		}
 
-		this.totalRounds.Value = 0;
-		this.animationPresent.Value = false;
-		this.nextTurn.Value = this.Factions.Count;
-		this.isPlayerTurn.Value = false;
-		this.innerZoomed.Value = false;
+		this.totalRounds.SetValueNotify(0);
+		this.animationPresent.SetValueNotify(false);
+		this.nextTurn.SetValueNotify(this.Factions.Count);
+		this.isPlayerTurn.SetValueNotify(false);
+		this.innerZoomed.SetValueNotify(false);
 
 		this.onChange();
 
