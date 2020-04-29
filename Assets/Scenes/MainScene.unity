@@ -237,12 +237,22 @@ PrefabInstance:
     - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
         type: 3}
       propertyPath: zoomSensitivityScroll
-      value: 0.2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
         type: 3}
       propertyPath: zoomSensitivityKeypress
-      value: 0.02
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
+        type: 3}
+      propertyPath: backAndForthFactor
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
+        type: 3}
+      propertyPath: rotateSpeed
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
         type: 3}

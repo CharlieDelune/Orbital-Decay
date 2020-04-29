@@ -38,12 +38,9 @@ public class CameraMovement : MonoBehaviour
 
 	private void Update()
 	{
-		float h = Input.GetAxis("Horizontal");
-		this.rb.AddTorque(0.0f, -h * this.rotateSpeed, 0.0f);
-
 		float v = Input.GetAxis("Vertical");
 
-		this.distanceFactor = Mathf.Clamp(this.distanceFactor - v * this.backAndForthFactor, 0.0f, 1.0f);
+		this.distanceFactor = Mathf.Clamp(this.distanceFactor - (v * this.backAndForthFactor * Time.deltaTime), 0.0f, 1.0f);
 		Vector3 basePosition = new Vector3(
 			this.cameraSubWrapper.localPosition.x,
 			Mathf.Lerp(this.minY, this.maxY, this.distanceFactor),
@@ -74,7 +71,7 @@ public class CameraMovement : MonoBehaviour
 			usingScroll = false;
 			z = keyInput;
 		}
-		this.zoomPosition = Mathf.Clamp(this.zoomPosition - z * ((usingScroll) ? this.zoomSensitivityScroll : this.zoomSensitivityKeypress), 0.0f, this.maxZoomPosition);
+		this.zoomPosition = Mathf.Clamp(this.zoomPosition - z * Time.deltaTime * ((usingScroll) ? this.zoomSensitivityScroll : this.zoomSensitivityKeypress), 0.0f, this.maxZoomPosition);
 
 		if(this.zoomPosition > this.innerZoomThreshold)
 		{
@@ -86,5 +83,11 @@ public class CameraMovement : MonoBehaviour
 		}
 
 		this.cameraSubWrapper.localPosition = basePosition - ((baseNonLocalPosition - GameStateManager.Instance.GridInView.transform.position) * this.zoomPosition);
+	}
+
+	private void FixedUpdate()
+	{
+		float h = Input.GetAxis("Horizontal");
+		this.rb.AddTorque(0.0f, -h * this.rotateSpeed, 0.0f);
 	}
 }
