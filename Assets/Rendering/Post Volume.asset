@@ -41,10 +41,10 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   dirtTexture:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
   dirtIntensity:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
     min: 0
 --- !u!114 &-3350105528583494967
@@ -195,10 +195,10 @@ MonoBehaviour:
   m_AdvancedMode: 0
   postExposure:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2.92
   contrast:
     m_OverrideState: 1
-    m_Value: 21.6
+    m_Value: 41
     min: -100
     max: 100
   colorFilter:
@@ -214,7 +214,7 @@ MonoBehaviour:
     max: 180
   saturation:
     m_OverrideState: 1
-    m_Value: -6
+    m_Value: -11
     min: -100
     max: 100
 --- !u!114 &6320780205857224521
@@ -294,4 +294,4 @@ MonoBehaviour:
   m_AdvancedMode: 0
   mode:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2

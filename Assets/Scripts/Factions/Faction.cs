@@ -10,6 +10,8 @@ public abstract class Faction : MonoBehaviour
 {
 	public string FactionName;
 
+	public Color factionColor = Color.red;
+
 	public FactionResources Resources;
 
 	protected List<Unit> units = new List<Unit>();
@@ -110,5 +112,9 @@ public abstract class Faction : MonoBehaviour
 	/// Called when the unit's move is ended
 	public virtual void OnEndMove()
 	{
+	}
+
+	void Awake() {
+		factionColor = UnityEngine.Random.ColorHSV(0f,1f, 0.7f,0.7f, 0.9f,0.9f);
 	}
 }

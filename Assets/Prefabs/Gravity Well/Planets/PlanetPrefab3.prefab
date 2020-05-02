@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 8910930394938020135}
+  - {fileID: 9144795762367586443}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -132,6 +133,91 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2.5
+--- !u!1001 &2835490759507835530
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1355990765837729089}
+    m_Modifications:
+    - target: {fileID: 6463079542692448041, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176450, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_Name
+      value: Faked Vacuum Light
+      objectReference: {fileID: 0}
+    - target: {fileID: 6463079542859176450, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d4b797cb7c95d3046b0fa3d9fea229c7, type: 3}
+--- !u!4 &9144795762367586443 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6463079542859176449, guid: d4b797cb7c95d3046b0fa3d9fea229c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2835490759507835530}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4527049143400184381
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -218,6 +304,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: low poly planet 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: c48f16142a556444e895a4b87c1eca90,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c48f16142a556444e895a4b87c1eca90, type: 3}
