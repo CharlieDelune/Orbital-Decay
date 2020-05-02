@@ -22,6 +22,8 @@ public class GameSession : NetworkManager
 	// [SerializeField] private GameObject gameWrapPrefab;
 	private LevelCreator levelCreator;
 
+	public bool IsSinglePlayer = false;
+
 	[SerializeField] private FactionIdentity AIFactionPrefab;
 
 	/// Raises Exception if multiple singleton instances are present at once
@@ -58,11 +60,16 @@ public class GameSession : NetworkManager
         }
 
         player.RpcLoadGame();
+
+        if(this.IsSinglePlayer)
+        {
+        	this.GetComponent<CustomNetworkManagerHUD>().enabled = false;
+        }
 	}
 
 	public bool CanStart = false;
 
-	public void Ready(int numberOfPlayers)
+	public void Ready()
 	{
 		/// Only the initial player may start the game
 		if(this.CanStart)
@@ -85,8 +92,8 @@ public class GameSession : NetworkManager
 	public void BeginGame(int seed)
 	{
 		/// Where AI Factions are added
-		this.GetComponent<NetworkManagerHUD>().enabled = false;
-        for(int i = 0; i < 2; i++)
+		this.GetComponent<CustomNetworkManagerHUD>().enabled = false;
+        for(int i = 0; i < 0; i++)
         {
            	this.identities.Add(Instantiate(this.AIFactionPrefab).GetComponent<FactionIdentity>());
         }

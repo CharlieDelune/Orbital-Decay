@@ -31,7 +31,7 @@ public class Tutorial : MonoBehaviour
         playerUi.SetActive(true);
         resources.SetActive(true);
         this.Used = true;
-        GameSession.Instance.Ready(GameSession.Instance.Identities.Count);
+        GameSession.Instance.Ready();
         Destroy(this.gameObject);
     }
 }
