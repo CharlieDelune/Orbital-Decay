@@ -61,6 +61,7 @@ public class Unit : Selectable
 	public bool isPlayerUnit;
 
 	[SerializeField] AnimationCurve movementInterpolationCurve;
+	[SerializeField] GameObject explosionPrefab;
 
 	private void Awake()
 	{
@@ -281,6 +282,7 @@ public class Unit : Selectable
 		}
 		if(this.health <= 0)
 		{
+			Instantiate(explosionPrefab,transform.position,transform.rotation);
 			onUnitDestroyed.Raise(this);
 		}
 	}

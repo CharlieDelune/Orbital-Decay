@@ -1,13 +1,16 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 guid: 9d0905a40c19c4388babd2843f8f9615
-=======
-guid: 3c43264b01e1871459a1e898df9554b4
->>>>>>> 3869dbd... Unit Movement Works Sort Of
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ParentCell: {instanceID: 0}
+  - onMoveEvent: {instanceID: 0}
+  - onUnitDestroyed: {instanceID: 0}
+  - onUnitAttack: {instanceID: 0}
+  - faction: {instanceID: 0}
+  - explosionPrefab: {fileID: 6720962033303969658, guid: 2e5622355e0d28c48809f24be2358cc1,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
