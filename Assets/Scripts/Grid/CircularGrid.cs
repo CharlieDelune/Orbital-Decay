@@ -151,6 +151,40 @@ public class CircularGrid : MonoBehaviour
         return gridCells[originCell.layer, targetSlice];
     }
 
+    public GridCell GetGridCellForRevolve(Planet planet)
+    {
+        int currentSlice = planet.ParentCell.slice;
+        int targetSlice = -1;
+
+        if (planet.revolveDirection == RevolveDirection.CounterClockwise)
+        {
+            targetSlice = (currentSlice + planet.revolveSpeed) % slices;
+        }
+        else
+        {
+            targetSlice = (currentSlice - planet.revolveSpeed + slices) % slices;
+        }
+
+        return gridCells[planet.ParentCell.layer, targetSlice];
+    }
+
+    public GridCell GetGridCellForRevolve(Planet planet, int numOfTurns)
+    {
+        int currentSlice = planet.ParentCell.slice;
+        int targetSlice = -1;
+
+        if (planet.revolveDirection == RevolveDirection.CounterClockwise)
+        {
+            targetSlice = (currentSlice + (planet.revolveSpeed * numOfTurns)) % slices;
+        }
+        else
+        {
+            targetSlice = (currentSlice - (planet.revolveSpeed * numOfTurns) + slices) % slices;
+        }
+
+        return gridCells[planet.ParentCell.layer, targetSlice];
+    }
+
     public List<Vector3> GetGridVectorsForRevolve(int layer, int startSlice, int endSlice, RevolveDirection direction)
     {
         List<Vector3> vectors = new List<Vector3>();

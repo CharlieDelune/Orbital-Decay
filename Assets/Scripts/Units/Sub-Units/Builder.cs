@@ -11,7 +11,7 @@ public class Builder : Unit
 
 	protected UnitRecipe[] buildOptions;
 	/// Maybe used by Enemy Faction AI to dictate decision
-	public UnitRecipe[] BuildOptions { get => this.buildOptions; }
+	[SerializeField] public UnitRecipe[] BuildOptions { get => this.buildOptions; }
 
 	[SerializeField] protected string[] buildOptionLabels;
 	public string[] BuildOptionLabels { get => this.buildOptionLabels; }
@@ -37,38 +37,41 @@ public class Builder : Unit
 	/// Returns whether or not the action can be performed
 	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
-		if(this.GetValidActionTypes().Contains(actionType))
+		if (targetCell != null && actionType != SelectableActionType.None)
 		{
-			switch(actionType)
+			if(this.GetValidActionTypes().Contains(actionType))
 			{
-				case SelectableActionType.Attack:
-					/// Attacks if the targetNode has a selectable and if the Faction belonging to the selectable is
-					/// not the current faction
-					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction;
-				case SelectableActionType.Move:
-					/// Moves if the targetNode is empty
-					return base.CanPerformAction(actionType, targetCell, param);
-				case SelectableActionType.Build:
-					if(param != null && param != "")
-					{
-						this.selectedBuildOption = this.BuildOptions[int.Parse(param)];
-						bool canUseRecipe = this.faction.Resources.CanUseRecipe(this.selectedBuildOption);
-						if(!canUseRecipe)
+				switch(actionType)
+				{
+					case SelectableActionType.Attack:
+						/// Attacks if the targetNode has a selectable and if the Faction belonging to the selectable is
+						/// not the current faction
+						return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction;
+					case SelectableActionType.Move:
+						/// Moves if the targetNode is empty
+						return base.CanPerformAction(actionType, targetCell, param);
+					case SelectableActionType.Build:
+						if(param != null && param != "")
 						{
-							//TODO: Show this outside of the debugger
-							Debug.Log("Insufficient resources!");
-						}
+							this.selectedBuildOption = this.BuildOptions[int.Parse(param)];
+							bool canUseRecipe = this.faction.Resources.CanUseRecipe(this.selectedBuildOption);
+							if(!canUseRecipe)
+							{
+								//TODO: Show this outside of the debugger
+								Debug.Log("Insufficient resources!");
+							}
 
-						/// Make sure the target node has a ResourceDeposit if the buildOption is a Miner
-						if(
-							GameData.Instance.GetUnitInfo(this.selectedBuildOption.OutputName).UnitPrefab is Miner
-							&& targetCell.ResourceDeposit == null)
-						{
-							return false;
+							/// Make sure the target node has a ResourceDeposit if the buildOption is a Miner
+							if(
+								GameData.Instance.GetUnitInfo(this.selectedBuildOption.OutputName).UnitPrefab is Miner
+								&& targetCell.ResourceDeposit == null)
+							{
+								return false;
+							}
+							return canUseRecipe && targetCell.Selectable == null && this.ParentCell.GetNeighbors().Contains(targetCell) && !targetCell.isEdgeCell;
 						}
-						return canUseRecipe && targetCell.Selectable == null && this.ParentCell.GetNeighbors().Contains(targetCell);
-					}
-					break;
+						break;
+				}
 			}
 		}
 		return false;

@@ -32,7 +32,7 @@ public class PlayerFaction : Faction
 			this.canEndTurn = true;
 			foreach(Unit unit in this.units)
 			{
-				if(unit.TakeOutstandingMoves())
+				if(unit.TakeRemainingMoves())
 				{
 					this.totalMoves++;
 				}

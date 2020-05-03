@@ -29,11 +29,11 @@ public class Unit : Selectable
 	protected int attackRange;
 	protected bool baseStatsSet;
 
-    protected bool moving = false;
-    protected List<Vector3> targetPath;
-    protected int currentPathIndex;
-    protected List<GridCell> cellPath;
-    protected int movesMade;
+    [SerializeField] protected bool moving = false;
+    [SerializeField] protected List<Vector3> targetPath;
+    [SerializeField] protected int currentPathIndex;
+    [SerializeField] protected List<GridCell> cellPath;
+    [SerializeField] protected int movesMade;
 	protected bool hasAttacked;
 
     /// When not active, maybe it could display a faded out
@@ -41,7 +41,9 @@ public class Unit : Selectable
 	/// ex - refineries
 	public virtual bool IsActive { get => true; }
 
-    protected GridCell target;
+	public UnitType unitType;
+
+    public GridCell target;
 
 	[SerializeField] protected MonoBehaviourGameEvent onUnitDestroyed;
 
@@ -54,7 +56,7 @@ public class Unit : Selectable
 	/// for quick debugging
 	[SerializeField] protected bool debug = false;
 
-	public int movesLeft = 0;
+	[SerializeField] public int movesLeft = 0;
 
 	public bool isPlayerUnit;
 
@@ -137,19 +139,22 @@ public class Unit : Selectable
 	/// Returns whether or not the action can be performed
 	public override bool CanPerformAction(SelectableActionType actionType, GridCell targetCell, string param)
 	{
-		if(this.GetValidActionTypes().Contains(actionType))
+		if (targetCell != null && actionType != SelectableActionType.None)
 		{
-			switch(actionType)
+			if(this.GetValidActionTypes().Contains(actionType))
 			{
-				case SelectableActionType.Attack:
-					/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
-					/// not the current faction
-					return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction
-					&& !this.hasAttacked &&
-					ParentCell.parentGrid.GetCellsInRange(ParentCell, this.attackRange).Contains(targetCell);
-				case SelectableActionType.Move:
-					/// TODO: Pathfinder now handles movement to non-empty cells, what do we do here?
-					return true;
+				switch(actionType)
+				{
+					case SelectableActionType.Attack:
+						/// Attacks if the targetCell has a selectable and if the Faction belonging to the selectable is
+						/// not the current faction
+						return targetCell.Selectable is Unit && ((Unit)targetCell.Selectable).Faction != this.Faction
+						&& !this.hasAttacked &&
+						ParentCell.parentGrid.GetCellsInRange(ParentCell, this.attackRange).Contains(targetCell);
+					case SelectableActionType.Move:
+						/// TODO: Pathfinder now handles movement to non-empty cells, what do we do here?
+						return ParentCell.parentGrid.pathfinder.FindPath(ParentCell.layer, ParentCell.slice, targetCell.layer, targetCell.slice) != null;
+				}
 			}
 		}
 		return false;
@@ -203,7 +208,7 @@ public class Unit : Selectable
 	}
 
 	/// Raises a move action
-    protected virtual void performMove(GridCell targetIn)
+    public virtual void performMove(GridCell targetIn)
     {
         this.cellPath = ParentCell.parentGrid.pathfinder.FindPath(ParentCell.layer, ParentCell.slice, targetIn.layer, targetIn.slice);
         this.targetPath = ParentCell.parentGrid.pathfinder.FindVectorPath(cellPath);
@@ -294,7 +299,7 @@ public class Unit : Selectable
 					Vector3 endMovement = this.targetPath[currentPathIndex];
 
 					Vector3 moveDir = (targetPosition - this.transform.position).normalized;
-					this.transform.position = this.transform.position + moveDir * 50.0f * Time.deltaTime * movementInterpolationCurve.Evaluate(InverseLerp(endMovement, this.targetPath[0], this.transform.position));
+					this.transform.position = this.transform.position + moveDir * 50.0f * Time.deltaTime;
 				}
 				else
 				{
@@ -345,17 +350,36 @@ public class Unit : Selectable
         GameStateManager.Instance.AnimationPresent = false;
     }
 
-    public bool TakeOutstandingMoves()
+    public bool TakeRemainingMoves()
     {
 		if (this.movesMade < this.maxMoveRange)
 		{
 			if(this.target != null)
 			{
 				GameStateManager.Instance.AnimationPresent = false;
-				this.performMove(this.target);
+				if (this.CanPerformAction(SelectableActionType.Move, this.target, null))
+				{
+					this.performMove(this.target);
+				}
+				else {
+					this.target = null;
+					this.cellPath = null;
+					this.targetPath = null;
+					this.currentPathIndex = 0;
+				}
 				return true;
 			}
 		}
 		return false;
     }
+}
+public enum UnitType
+{
+	Base,
+	Builder,
+	Mine,
+	Refinery,
+	Wall,
+	Attacker,
+	Defender
 }

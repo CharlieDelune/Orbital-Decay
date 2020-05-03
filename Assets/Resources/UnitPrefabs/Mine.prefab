@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 5285331366828230460}
   - component: {fileID: 3485341552113154106}
   m_Layer: 0
-  m_Name: Test
+  m_Name: Mine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,8 +202,16 @@ MonoBehaviour:
   ParentCell: {fileID: 0}
   selectableType: 1
   onMoveEvent: {fileID: 11400000, guid: f5be3cc5f5ff4314f9c2d40e5017ecdd, type: 2}
+  moving: 0
+  targetPath: []
+  currentPathIndex: 0
+  cellPath: []
+  movesMade: 0
+  unitType: 2
+  target: {fileID: 0}
   onUnitDestroyed: {fileID: 11400000, guid: 32155c1fa2e7b487080a7b2455d82a99, type: 2}
+  onUnitAttack: {fileID: 0}
   faction: {fileID: 0}
   debug: 0
-  ExtraOverride: 
   movesLeft: 0
+  isPlayerUnit: 0

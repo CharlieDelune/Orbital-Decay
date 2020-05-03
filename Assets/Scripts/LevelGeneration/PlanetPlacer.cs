@@ -70,7 +70,7 @@ public class PlanetPlacer : MonoBehaviour
             //TODO:
             //We will either need to find a new way of generating grid placement or cull out grids that aren't the
             //grid in view, because grids are now generating sufficiently close to one another to be seen
-            planetScript.gravityWell = CircleGridBuilder.Instance.BuildGrid(systemLayers, systemSlices, new Vector3(systemLayers * 200,0, systemSlices * 200));
+            planetScript.gravityWell = CircleGridBuilder.Instance.BuildGrid(systemLayers, systemSlices, new Vector3(layer * 200,0, slice * 200));
 
             planetScript.grid = planetScript.gravityWell.transform.Find("Grid").GetComponent<CircularGrid>();
             planetScript.grid.parentPlanet = planetScript;

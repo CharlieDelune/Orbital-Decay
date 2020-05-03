@@ -79,6 +79,7 @@ public class SelectablePopup : MonoBehaviour
 
 	private void onSelectBuildOption(string recipeIndex, Builder builder)
 	{
+		//TODO: Fix this with an event
 		GameStateManager.Instance.SelectedBuildOption = recipeIndex;
 	}
 

@@ -14,7 +14,7 @@ public abstract class Faction : MonoBehaviour
 
 	public FactionResources Resources;
 
-	protected List<Unit> units = new List<Unit>();
+	public List<Unit> units = new List<Unit>();
 
 	[SerializeField] protected FactionGameEvent onFactionResourcesChange;
 
@@ -67,7 +67,10 @@ public abstract class Faction : MonoBehaviour
 		unit.transform.position = cell.transform.position;
 		unit.transform.SetParent(GameStateManager.Instance.UnitHolder.transform);
 		unit.isPlayerUnit = this.Identity.isLocalPlayer;
-		this.units.Add(unit);
+		if (unit.unitType != UnitType.Mine && unit.unitType != UnitType.Wall)
+		{
+			this.units.Add(unit);
+		}
 		UnitManager.Instance.AddUnit(unit, this.Identity.isLocalPlayer);
 	}
 

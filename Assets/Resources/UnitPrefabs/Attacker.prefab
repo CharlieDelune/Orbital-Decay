@@ -191,6 +191,13 @@ MonoBehaviour:
   ParentCell: {fileID: 0}
   selectableType: 1
   onMoveEvent: {fileID: 11400000, guid: f5be3cc5f5ff4314f9c2d40e5017ecdd, type: 2}
+  moving: 0
+  targetPath: []
+  currentPathIndex: 0
+  cellPath: []
+  movesMade: 0
+  unitType: 5
+  target: {fileID: 0}
   onUnitDestroyed: {fileID: 11400000, guid: 32155c1fa2e7b487080a7b2455d82a99, type: 2}
   onUnitAttack: {fileID: 11400000, guid: 0ca9882b46bf5c04f90b576c46d5330e, type: 2}
   faction: {fileID: 0}

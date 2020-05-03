@@ -13,7 +13,11 @@ public class ResourcePlacer : MonoBehaviour
     public void PlaceResources() {
         foreach(Planet planet in PlanetManager.Instance.planets)
         {
-            int resourcesPlaced = 0;
+            List<bool> resourcesPlaced = new List<bool>();
+            for(int i = 0; i < this.resourceDepositPrefabs.Length; i++)
+            {
+                resourcesPlaced.Add(false);
+            }
             do
             {
                 for (int i = 0; i < planet.grid.GetGridSize().layers - 1; i++)
@@ -22,25 +26,26 @@ public class ResourcePlacer : MonoBehaviour
                     if(notQuiteFiftyFifty > 4)
                     {
                         int randomSlice = Random.Range(0, planet.grid.GetGridSize().slices);
-                        bool placed = PlaceResource(planet.grid, i, randomSlice);
+                        int resourceType = Random.Range(0,this.resourceDepositPrefabs.Length);
+                        bool placed = PlaceResource(planet.grid, i, randomSlice, resourceType);
 
                         if(placed)
                         {
-                            resourcesPlaced++;
+                            resourcesPlaced[resourceType] = true;
                         }
                     }
                 }
             }
-            while (resourcesPlaced < planet.grid.GetGridSize().layers / 2);
+            while (resourcesPlaced.Contains(false));
         }
     }
 
-    private bool PlaceResource(CircularGrid grid, int layer, int slice)
+    private bool PlaceResource(CircularGrid grid, int layer, int slice, int prefabNumber)
     {
         GridCell parentCell = grid.GetGridCell(layer, slice);
         if (parentCell.Selectable == null && parentCell.ResourceDeposit == null)
         {
-            ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefabs[Random.Range(0,this.resourceDepositPrefabs.Length)]);
+            ResourceDeposit deposit = Instantiate<ResourceDeposit>(this.resourceDepositPrefabs[prefabNumber]);
             deposit.transform.SetParent(resourceDepositHolder.transform);
             GridManager.Instance.AddResourceDeposit(deposit);
             deposit.SetParentCell(parentCell);

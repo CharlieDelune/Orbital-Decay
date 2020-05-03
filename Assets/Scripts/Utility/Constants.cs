@@ -9,6 +9,6 @@ public static class Constants
     public static Color tileMoveSingleTurn = new Color (0.18f, 0.18f, 1, 0.08f);
     public static Color tileBuild = new Color (1, 1, 0, 0.03f);
     public static Color tileAttack = new Color (1, 0, 0, 0.03f);
-    public static Color tileEdge = new Color (1, 1, 0, 0.02f);
+    public static Color tileEdge = new Color (1, 0.8f, 0, 0.03f);
     public static float tileSelectAlpha = 0.1f;
 }

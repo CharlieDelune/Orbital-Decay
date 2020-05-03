@@ -1,10 +1,8 @@
 ﻿Name,MoveRange,Health,CloseDefense,LongDefense,CloseAttack,LongAttack,AttackRange,Extra
 Main Base,2,100,10,10,10,10,1,BUILD_MINE:Mine-BUILD_BUILDER:Builder
-Builder,3,10,2,2,2,2,1,BUILD_MINE:Mine-BUILD_SCOUT:Scout-BUILD_ATTACKER:Attacker-BUILD_DEFENDER:Defender-BUILD_WALL:Wall
+Builder,3,10,2,2,2,2,1,BUILD_MINE:Mine-BUILD_ATTACKER:Attacker-BUILD_DEFENDER:Defender-BUILD_WALL:Wall
 Refinery,1,1,0,0,0,0,0,
 Mine,0,1,0,0,0,0,1,
-Scout,5,10,1,4,3,2,2,
 Attacker,3,20,3,5,5,8,2,
 Defender,2,30,5,8,2,3,1,
 Wall,0,75,10,10,0,0,1,
-Enemy Base,2,1,2,10,10,10,1,BUILD_MINE:Mine-BUILD_BUILDER:Builder

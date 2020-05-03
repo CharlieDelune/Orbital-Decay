@@ -1,1 +1,3 @@
-273022008 - Solar system is sizeable, but only 3 planets and player base spawns right next to two resource nodes
+602275823 - Solar system is sizeable, but only 5 planets and not that many resources
+127325525 - Solar system is sizeable, but only 5 planets and not that many resources
+106295587 - Tiny ass solar system, only 3 planets, few resources on one AI planet, many on the other

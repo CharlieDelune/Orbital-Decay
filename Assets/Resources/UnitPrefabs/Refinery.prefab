@@ -196,14 +196,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be44f461d39c845dd9525b30ee3203d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PopupLabel: 
+  PopupDescription: 
   validActionTypes: 
   ParentCell: {fileID: 0}
   selectableType: 1
   onMoveEvent: {fileID: 11400000, guid: f5be3cc5f5ff4314f9c2d40e5017ecdd, type: 2}
+  moving: 0
+  targetPath: []
+  currentPathIndex: 0
+  cellPath: []
+  movesMade: 0
+  unitType: 3
+  target: {fileID: 0}
   onUnitDestroyed: {fileID: 11400000, guid: 32155c1fa2e7b487080a7b2455d82a99, type: 2}
+  onUnitAttack: {fileID: 0}
   faction: {fileID: 0}
   debug: 0
-  ExtraOverride: 
   movesLeft: 0
+  isPlayerUnit: 0
   onProduceRefineryOutput: {fileID: 11400000, guid: 6bd1b3e876c6db94e99337026ca7ec6c,
     type: 2}

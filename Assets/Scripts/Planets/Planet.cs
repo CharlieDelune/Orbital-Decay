@@ -8,7 +8,7 @@ public class Planet : Selectable, Revolving
     public GameObject gravityWell;
     public CircularGrid grid;
     public BoolProperty isGridInView;
-    RevolveDirection revolveDirection;
+    public RevolveDirection revolveDirection;
     GridCell targetCell;
     List<Vector3> targetPath;
 

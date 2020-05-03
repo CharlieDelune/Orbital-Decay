@@ -38,7 +38,7 @@ public class UnitPlacer : MonoBehaviour
 
             bool isLocalPlayerFaction = faction.Identity.isLocalPlayer;
 
-            faction.CreateUnit(parentCell, faction.Identity.IsPlayer ? "Main Base" : "Enemy Base");
+            faction.CreateUnit(parentCell, "Main Base");
 
             //If this is the player faction, put their planet in view just to be nice
             if (isLocalPlayerFaction) {

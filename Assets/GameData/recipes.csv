@@ -6,7 +6,6 @@ Recipe Name,Output,Output Quantity,Max Stack,Input Item,Input Quantity
 ORE_TO_METAL,Metal,1,10,Ore,1
 FUEL_TO_REFINED_FUEL,Refined Fuel,1,10,Fuel,1
 BUILD_MINE,Mine,,,Ore,0
-BUILD_SCOUT,Scout,,,Ore,3
 BUILD_BUILDER,Builder,,,Fuel,2
 BUILD_ATTACKER,Attacker,,,Ore,6
 BUILD_DEFENDER,Defender,,,Fuel,6
