@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6658028598018302107}
   - component: {fileID: 7599857432918320645}
   - component: {fileID: 2608249807452319812}
+  - component: {fileID: 4385773926070151035}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -94,6 +95,25 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &4385773926070151035
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326864653229536472}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 38d0726b9436e354984f23009a6bcb1a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5587772629940839852
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,9 +170,14 @@ MonoBehaviour:
   onUnitAttack: {fileID: 0}
   faction: {fileID: 0}
   debug: 0
-  ExtraOverride: 
   movesLeft: 0
   isPlayerUnit: 0
+  movementInterpolationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   buildOptionLabels: []
 --- !u!114 &-5279312335901837158
 MonoBehaviour:

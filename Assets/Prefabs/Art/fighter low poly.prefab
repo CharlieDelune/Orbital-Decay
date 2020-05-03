@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6220174330400867694}
   - component: {fileID: 3101143030762258264}
   - component: {fileID: 8662093670319178657}
+  - component: {fileID: 629227643293162938}
   m_Layer: 0
   m_Name: fighter low poly
   m_TagString: Untagged
@@ -86,6 +87,25 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!95 &629227643293162938
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6920104359071774589}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa8347e517b37b64da61c8f54f398f7a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8347698499752406746
 GameObject:
   m_ObjectHideFlags: 0

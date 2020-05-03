@@ -271,6 +271,13 @@ public class Unit : Selectable
 		if(dmg >= 0)
 		{
 			this.health -= dmg;
+
+			foreach(Transform child in this.transform) {
+				if(child.GetComponent<Animator>()) {
+					child.GetComponent<Animator>().Play("ship damage",  -1, 0f);
+				}
+			}
+
 		}
 		if(this.health <= 0)
 		{

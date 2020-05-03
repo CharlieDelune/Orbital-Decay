@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6656417357481010567}
   - component: {fileID: 7601609960834130713}
   - component: {fileID: 2608732672705344856}
+  - component: {fileID: 5217860655824056727}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -59,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dc92933b19352cf489e3e2b138f90952, type: 2}
+  - {fileID: 2100000, guid: 8f9a66da14a4e2249ae81fe5d17c77fe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -94,6 +95,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5217860655824056727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2327489063961702852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0372abd2748e8b749abb87286eb0f943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitParent: {fileID: 3485341552113154106}
 --- !u!1 &5588272728083112112
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,3 +229,9 @@ MonoBehaviour:
   debug: 0
   movesLeft: 0
   isPlayerUnit: 0
+  movementInterpolationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
