@@ -29,6 +29,7 @@ public class LevelCreator : MonoBehaviour
     {
         this.seed = _seed;
 
+        List<Color> usedColors = new List<Color>();
         /// Initializes factions
         List<Faction> factions = new List<Faction>();
         foreach(var identity in GameSession.Instance.Identities)
@@ -44,6 +45,16 @@ public class LevelCreator : MonoBehaviour
             }
             identity.SetFaction(faction);
             factions.Add(identity.Faction);
+            
+            Color newColor = new Color();
+            int colorTries = 0;
+            do
+            {
+                newColor = UnityEngine.Random.ColorHSV(0f,1f, 0.7f,0.7f, 0.9f,0.9f);
+                colorTries++;
+            }
+            while (usedColors.Contains(newColor) && colorTries < 20);
+            faction.factionColor = newColor;
         }
 
         GameStateManager.Instance.SetupFactions(factions);

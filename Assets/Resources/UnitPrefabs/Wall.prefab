@@ -130,6 +130,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  explosionPrefab: {fileID: 0}
 --- !u!114 &2463618348968183589
 MonoBehaviour:
   m_ObjectHideFlags: 0

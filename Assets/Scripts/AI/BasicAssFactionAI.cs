@@ -87,7 +87,7 @@ public class BasicAssFactionAI : IFactionAI
                 GridCell openCell = GetOpenNeighbor(unit.ParentCell);
                 if (unit.CanPerformAction(SelectableActionType.Build, openCell, "2"))
                 {
-                    //unit.PerformAction(SelectableActionType.Build, openCell, "2");
+                    unit.PerformAction(SelectableActionType.Build, openCell, "2");
                 }
             }
             else

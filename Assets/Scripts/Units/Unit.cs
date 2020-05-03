@@ -306,6 +306,7 @@ public class Unit : Selectable
 				if ((this.transform.position - targetPosition).sqrMagnitude > step)
 				{
 					Vector3 endMovement = this.targetPath[currentPathIndex];
+					transform.LookAt(endMovement);
 
 					Vector3 moveDir = (targetPosition - this.transform.position).normalized;
 					this.transform.position = this.transform.position + moveDir * 50.0f * Time.deltaTime;

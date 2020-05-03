@@ -9,6 +9,7 @@ public class Planet : Selectable, Revolving
     public CircularGrid grid;
     public BoolProperty isGridInView;
     public RevolveDirection revolveDirection;
+    public string planetName;
     GridCell targetCell;
     List<Vector3> targetPath;
 
@@ -18,7 +19,6 @@ public class Planet : Selectable, Revolving
     private bool moving;
     private int currentPathIndex;
     private bool viewing;
-
     private Action onFinishRevolve;
 
     void Start()

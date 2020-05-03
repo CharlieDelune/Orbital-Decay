@@ -116,8 +116,4 @@ public abstract class Faction : MonoBehaviour
 	public virtual void OnEndMove()
 	{
 	}
-
-	void Awake() {
-		factionColor = UnityEngine.Random.ColorHSV(0f,1f, 0.7f,0.7f, 0.9f,0.9f);
-	}
 }

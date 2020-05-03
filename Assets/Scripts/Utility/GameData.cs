@@ -25,6 +25,8 @@ public class GameData : MonoBehaviour
 
 	public UnitHealth UnitHealthPrefab;
 
+	public PlanetName PlanetNamePrefab;
+
 	public Recipe GetRecipe(string recipeName) {
 		return nameToRecipes[recipeName];
 	}

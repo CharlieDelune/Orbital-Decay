@@ -111,6 +111,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  explosionPrefab: {fileID: 0}
 --- !u!114 &2463618348968183589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,22 +203,22 @@ PrefabInstance:
     - target: {fileID: 6220174330400867694, guid: 7e7205b372ff6c84598947eacc92fdb6,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.18301266
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6220174330400867694, guid: 7e7205b372ff6c84598947eacc92fdb6,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6830127
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6220174330400867694, guid: 7e7205b372ff6c84598947eacc92fdb6,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.18301266
+      value: -0.258819
       objectReference: {fileID: 0}
     - target: {fileID: 6220174330400867694, guid: 7e7205b372ff6c84598947eacc92fdb6,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6830127
+      value: 0.9659259
       objectReference: {fileID: 0}
     - target: {fileID: 6220174330400867694, guid: 7e7205b372ff6c84598947eacc92fdb6,
         type: 3}
@@ -232,7 +233,7 @@ PrefabInstance:
     - target: {fileID: 6220174330400867694, guid: 7e7205b372ff6c84598947eacc92fdb6,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6220174330400867694, guid: 7e7205b372ff6c84598947eacc92fdb6,
         type: 3}

@@ -9,9 +9,12 @@ public class PlanetPlacer : MonoBehaviour
     [SerializeField]
     private GameObject planetHolder;
 
+    private List<string> planetNames;
+
     public void PlacePlanets(int systemLayers, int systemSlices) {
         int planetsPlaced = 0;
         List<int> layersWithPlanets = new List<int>();
+        planetNames = new List<string>();
 
         //TODO: If we let the player choose how many factions there will be in the game,
             //This shouldn't be 3, it should be however many factions there are
@@ -54,6 +57,18 @@ public class PlanetPlacer : MonoBehaviour
             planetScript.SetParentCell(parentCell);
             planetScript.SetRevolveDirection(dir);
             planetScript.revolveSpeed = revSpeed;
+            int numTries = 0;
+            do
+            {
+                planetScript.planetName =   ((char)('A' + Random.Range(0,26))).ToString() + ((char)('A' + Random.Range(0,26))).ToString() + 
+                                            "-" + 
+                                            Random.Range(0,10) + Random.Range(0,10) + Random.Range(0,10) + Random.Range(0,10);
+                numTries++;
+            }
+            while (planetNames.Contains(planetScript.planetName) && numTries < 50);
+            planetNames.Add(planetScript.planetName);
+            planetScript.PopupLabel = planetScript.planetName;
+            Instantiate(GameData.Instance.PlanetNamePrefab).GetComponent<PlanetName>().Setup(planetScript);
             planet.transform.SetParent(planetHolder.transform);
 
             PlanetManager.Instance.AddPlanet(planetScript);
@@ -78,6 +93,7 @@ public class PlanetPlacer : MonoBehaviour
             GameObject planet2 = Instantiate(planet);
             planet2.transform.SetParent(planetScript.gravityWell.transform);
             planet2.transform.position = planetScript.gravityWell.transform.position;
+            planet2.transform.localScale = new Vector3(4, 4, 4);
 
             Destroy(planet2.GetComponent<Planet>());
             return true;
