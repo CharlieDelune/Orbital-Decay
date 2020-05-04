@@ -27,8 +27,6 @@ public class GameStateManager : MonoBehaviour {
 	/*
 		View state related
 	*/
-
-	[SerializeField] private GeneralTurnDisplay generalTurnDisplay;
 	[SerializeField] private PlayerViewManager playerViewManager;
 
 	[SerializeField] private BoolProperty animationPresent;
@@ -174,6 +172,8 @@ public class GameStateManager : MonoBehaviour {
 
 		FindObjectsOfType<CameraMovement>()[0].enabled = true;
 
+		SetLoading(false);
+
 		this.OnEndTurn(null);
 	}
 
@@ -309,6 +309,11 @@ public class GameStateManager : MonoBehaviour {
 	public void OnUnitDestroyed(MonoBehaviour unitObject)
 	{
 		Destroy(unitObject.gameObject);
+	}
+
+	public void SetLoading(bool isLoading)
+	{
+		playerViewManager.ToggleLoadScreen(isLoading);
 	}
 }
 

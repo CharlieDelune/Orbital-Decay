@@ -24,6 +24,8 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 
 	[SerializeField] private GameObject gameOverPanel;
 	[SerializeField] private Text gameOverText;
+	[SerializeField] private GameObject solarSystemButton;
+	[SerializeField] private GameObject loadingPanel;
 
 	private bool isPlayerTurn;
 	private List<Faction> factions;
@@ -140,6 +142,18 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 		{
 			this.ResetGridInViewTiles();
 		}
+
+		if(gs.GridInView != null)
+		{
+			if (gs.GridInView.isSolarSystem)
+			{
+				solarSystemButton.SetActive(false);
+			}
+			else
+			{
+				solarSystemButton.SetActive(true);
+			}
+		}
 	}
 
 	public void OnActionSelected(int actionInt)
@@ -197,5 +211,10 @@ public class PlayerViewManager : MonoBehaviour, IPointerClickHandler
 				}
 			}
 		}
+	}
+
+	public void ToggleLoadScreen(bool toggle)
+	{
+		loadingPanel.SetActive(toggle);
 	}
 }

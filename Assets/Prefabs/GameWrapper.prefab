@@ -49,8 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 015521226d2aa47f181daa790b8ea829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generalTurnDisplay: {fileID: 499200714357323256, guid: 91c3801dc071046f188676fb5094f38d,
-    type: 3}
   playerViewManager: {fileID: 2300091865701216603}
   animationPresent: {fileID: 11400000, guid: 29e8bd946489a4c5c8cbf84d48883c57, type: 2}
   innerZoomed: {fileID: 11400000, guid: 3d6596132b6d246dabf53343ee44de22, type: 2}
@@ -315,6 +313,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnEndTurn: {fileID: 11400000, guid: f116f5c5be4074f73aaeccf9f40a600a, type: 2}
   planets: []
+  resourceIcons:
+  - {fileID: -5650137688854127968, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
+  - {fileID: -2038607626553853471, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
+  - {fileID: 3463778228977924227, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
+  - {fileID: -8675179632421524668, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
 --- !u!114 &6527233629504976147
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -27,6 +27,8 @@ public class LevelCreator : MonoBehaviour
 
     public void StartLevelCreation(int _seed)
     {
+        GameStateManager.Instance.SetLoading(true);
+
         this.seed = _seed;
 
         List<Color> usedColors = new List<Color>();
@@ -74,7 +76,7 @@ public class LevelCreator : MonoBehaviour
         resourcePlacer.PlaceResources();
 
         GameStateManager.Instance.seed = this.seed;
-
+        
         Destroy(gameObject);
     }
 }

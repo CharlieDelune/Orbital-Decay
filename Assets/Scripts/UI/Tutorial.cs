@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Tutorial : MonoBehaviour
 {
-    [SerializeField] GameObject turnDisplay;
     [SerializeField] GameObject playerUi;
     [SerializeField] GameObject resources;
 
@@ -14,7 +13,6 @@ public class Tutorial : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        turnDisplay.SetActive(false);
         playerUi.SetActive(false);
         resources.SetActive(false);
     }
@@ -27,7 +25,6 @@ public class Tutorial : MonoBehaviour
 
     public void BeginGame()
     {
-        turnDisplay.SetActive(true);
         playerUi.SetActive(true);
         resources.SetActive(true);
         this.Used = true;
