@@ -259,6 +259,21 @@ PrefabInstance:
       propertyPath: innerZoomThreshold
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
+        type: 3}
+      propertyPath: minZ
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
+        type: 3}
+      propertyPath: minY
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 643049001382417382, guid: f167c534e6d8544188b89dc3ad86108c,
+        type: 3}
+      propertyPath: maxRotation
+      value: 35
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f167c534e6d8544188b89dc3ad86108c, type: 3}
 --- !u!1 &320139903
