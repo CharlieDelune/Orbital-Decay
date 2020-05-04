@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 1185674697595285989}
   - component: {fileID: 1185674697595285978}
   m_Layer: 5
-  m_Name: Toggleable On Turn 1
+  m_Name: Toggleable On Turn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1185674697595285981
 RectTransform:
   m_ObjectHideFlags: 0
