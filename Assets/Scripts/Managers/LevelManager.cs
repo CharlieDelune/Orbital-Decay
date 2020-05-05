@@ -10,4 +10,9 @@ public class LevelManager : MonoBehaviour
     	GameSession.Instance.StopHost();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void ExitTitleScene()
+    {
+        SceneManager.LoadScene("MainScene");
+    }
 }

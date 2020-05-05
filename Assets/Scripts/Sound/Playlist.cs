@@ -10,7 +10,7 @@
 
     void Start ()
     {
-        currentTrack = 0;
+        currentTrack = 1;
         if (!audioSource.playOnAwake)
         {
             audioSource.clip = soundtrack[currentTrack];
