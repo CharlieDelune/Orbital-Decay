@@ -7,6 +7,7 @@ public class LevelManager : MonoBehaviour
 {
     public void ReloadScene()
     {
+    	GameSession.Instance.StopHost();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
