@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5630655684061117694}
   - component: {fileID: 8794678319529127435}
   - component: {fileID: 3710006614119728749}
+  - component: {fileID: 3763056200750776229}
   m_Layer: 0
   m_Name: Game State Manager
   m_TagString: Untagged
@@ -233,6 +234,34 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3763056200750776229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60640399692502467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9b68268b9cf41ef90144e2f7061276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 4ff9a6349a582431d8372a894ed18096, type: 2}
+  priority: 0
+  callback:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2783564693549922253}
+        m_MethodName: OnFactionDefeated
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &849013999081372196
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,11 +342,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnEndTurn: {fileID: 11400000, guid: f116f5c5be4074f73aaeccf9f40a600a, type: 2}
   planets: []
-  resourceIcons:
-  - {fileID: -5650137688854127968, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
-  - {fileID: -2038607626553853471, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
-  - {fileID: 3463778228977924227, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
-  - {fileID: -8675179632421524668, guid: 461946c4d4591fd4d85d3cb2f3a26ced, type: 3}
 --- !u!114 &6527233629504976147
 MonoBehaviour:
   m_ObjectHideFlags: 0

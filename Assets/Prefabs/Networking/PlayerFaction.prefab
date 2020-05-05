@@ -80,11 +80,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FactionName: 
+  factionColor: {r: 1, g: 0, b: 0, a: 1}
+  units: []
   onFactionResourcesChange: {fileID: 11400000, guid: 4e19e763c6bd2459a81d4603b0aec7f6,
     type: 2}
-  Points: 0
   onStartFactionTurn: {fileID: 11400000, guid: 59fb171ea1321481d8e9292d0aa31dba, type: 2}
   onEndFactionTurn: {fileID: 11400000, guid: f116f5c5be4074f73aaeccf9f40a600a, type: 2}
+  onFactionDefeated: {fileID: 11400000, guid: 4ff9a6349a582431d8372a894ed18096, type: 2}
+  isDefeated: 0
 --- !u!114 &3450641277085621976
 MonoBehaviour:
   m_ObjectHideFlags: 0

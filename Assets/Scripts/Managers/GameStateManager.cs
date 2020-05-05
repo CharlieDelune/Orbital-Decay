@@ -238,6 +238,7 @@ public class GameStateManager : MonoBehaviour {
 	public void OnFactionDefeated(Faction faction)
 	{
 		faction.isDefeated = true;
+		faction.RemoveAllUnits();
 
 		//If the player faction was the one destroyed, you lose mate
 		if (faction == playerFaction)

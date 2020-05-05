@@ -594,7 +594,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.66
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -708,6 +708,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c3671f3ca1b04c54c8187a2aac13cbf4, type: 3}
   - {fileID: 8300000, guid: 127af426e27b79140ae5d6f5ba27d5db, type: 3}
   audioSource: {fileID: 543875232}
+  currentTrack: 0
 --- !u!1 &1266513235 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 643048999833926712, guid: f167c534e6d8544188b89dc3ad86108c,

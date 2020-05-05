@@ -77,9 +77,17 @@ public abstract class Faction : MonoBehaviour
 	public void RemoveUnit(Unit unit)
 	{
 		this.units.Remove(unit);
-		if (units.Count == 0)
+		if (units.Count == 0 || unit.unitType == UnitType.Base)
 		{
 			this.onFactionDefeated.Raise(this);
+		}
+	}
+
+	public void RemoveAllUnits()
+	{
+		while (this.units.Count > 0)
+		{
+			this.units[0].TakeDamage(int.MaxValue);
 		}
 	}
 

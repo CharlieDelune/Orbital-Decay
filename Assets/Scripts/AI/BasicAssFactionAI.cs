@@ -25,6 +25,16 @@ public class BasicAssFactionAI : IFactionAI
     private Dictionary<Unit, bool> waitingForPlanet = new Dictionary<Unit, bool>();
 
     public override void UseBaseTurn(Unit unit){
+        //Is there an enemy in an adjoining cell
+        GridCell adjoiningCellContainingEnemy = GetAdjoiningCellContainingEnemy(unit);
+        if (adjoiningCellContainingEnemy != null)
+        {
+            if (unit.CanPerformAction(SelectableActionType.Attack, adjoiningCellContainingEnemy,null))
+            {
+                unit.PerformAction(SelectableActionType.Attack, adjoiningCellContainingEnemy, null);
+            }
+        }
+
         //If not currently moving anywhere...
         if (unit.target == null)
         {
@@ -216,6 +226,16 @@ public class BasicAssFactionAI : IFactionAI
     }
     public override void UseDefenderTurn(Unit unit)
     {
+        //Is there an enemy in an adjoining cell
+        GridCell adjoiningCellContainingEnemy = GetAdjoiningCellContainingEnemy(unit);
+        if (adjoiningCellContainingEnemy != null)
+        {
+            if (unit.CanPerformAction(SelectableActionType.Attack, adjoiningCellContainingEnemy,null))
+            {
+                unit.PerformAction(SelectableActionType.Attack, adjoiningCellContainingEnemy, null);
+            }
+        }
+        
         //If the defender isn't on a cell surrounding the main base,
         //See if we can path to one and then freakin do it
         //that base ain't like to defend itself

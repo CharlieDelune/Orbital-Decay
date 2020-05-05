@@ -1,10 +1,10 @@
 ﻿Name,MoveRange,Health,CloseDefense,LongDefense,CloseAttack,LongAttack,AttackRange,Extra
-Main Base,2,100,10,10,10,10,1,BUILD_MINE:Mine-BUILD_BUILDER:Builder
-Builder,3,10,2,2,2,2,1,BUILD_MINE:Mine-BUILD_ATTACKER:Attacker-BUILD_DEFENDER:Defender-BUILD_WALL:Wall
+Main Base,2,50,0,0,6,6,1,BUILD_MINE:Mine-BUILD_BUILDER:Builder
+Builder,3,10,0,0,0,0,1,BUILD_MINE:Mine-BUILD_ATTACKER:Attacker-BUILD_DEFENDER:Defender-BUILD_WALL:Wall
 Refinery,1,1,0,0,0,0,0,
 Mine,0,1,0,0,0,0,1,
-Attacker,3,20,3,5,5,8,2,
-Defender,2,30,5,8,2,3,1,
-Wall,0,75,10,10,0,0,1,
-Attack Frigate,1,50,5,14,4,15,3,
-Defense Frigate,1,55,9,19,3,6,2,
+Attacker,3,10,0,0,5,4,2,
+Defender,2,20,0,0,4,2,1,
+Wall,0,30,0,0,0,0,1,
+Attack Frigate,1,20,0,0,15,20,3,
+Defense Frigate,1,30,0,0,13,10,2,
